@@ -6,7 +6,7 @@ import {
   IconHome2,
   IconGauge,
   IconDeviceDesktopAnalytics,
-  IconRoute,
+  IconBinaryTree,
   IconUser,
   IconSettings,
   IconLogout,
@@ -35,10 +35,9 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 const mockdata = [
   { icon: IconGauge, label: 'Dashboard' },
   { icon: IconFilePencil, label: 'Questionnaire'},
-  { icon: IconRoute, label: 'Logic'},
+  { icon: IconBinaryTree, label: 'Logic'},
   { icon: IconEye, label: 'Preview' },
   { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-  // { icon: IconUser, label: 'Account' },
   { icon: IconSettings, label: 'Settings' },
 ];
 

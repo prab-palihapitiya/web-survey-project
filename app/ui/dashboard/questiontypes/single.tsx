@@ -2,6 +2,8 @@
 
 import { Button, CloseButton, Divider, FileInput, Select, Table, TextInput } from "@mantine/core";
 import { useState } from "react";
+import classes from './questions.module.css'
+import { IconPlus, IconX } from "@tabler/icons-react";
 
 export default function Single() {
     const [rows, setRows] = useState([
@@ -18,11 +20,11 @@ export default function Single() {
         <Table highlightOnHover withTableBorder withColumnBorders>
             <Table.Thead>
                 <Table.Tr>
-                    <Table.Th>Index</Table.Th>
-                    <Table.Th width={650}>Name</Table.Th>
+                    <Table.Th width={1}>Index</Table.Th>
+                    <Table.Th>Name</Table.Th>
                     <Table.Th>Resource</Table.Th>
-                    <Table.Th>SubQuestion</Table.Th>
-                    <Table.Th></Table.Th>
+                    <Table.Th width={150}>SubQuestion</Table.Th>
+                    <Table.Th width={1}></Table.Th>
                 </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -64,14 +66,12 @@ export default function Single() {
                                     }
                                 /> 
                             </Table.Td>
-                            <Table.Td><CloseButton /></Table.Td>
+                            <Table.Td><CloseButton icon={<IconX color='red' size={16}/>} variant="subtle"/></Table.Td>
                         </Table.Tr>
                     ))}
                 </Table.Tbody>
-            <Table.Tfoot>
-                <Table.Tr>
-                    <Button onClick={handleAddRow}>+</Button>
-                </Table.Tr> 
+            <Table.Tfoot className={classes.table_foot}>
+                <Button onClick={handleAddRow} m={4} color="black"><IconPlus size={16}/></Button>
             </Table.Tfoot>
         </Table>
         </>
