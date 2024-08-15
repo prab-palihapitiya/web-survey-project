@@ -1,3 +1,4 @@
 .table_foot {
-    border-top: calc(0.0625rem* var(--mantine-scale)) solid var(--table-border-color);
+  border-top: calc(0.0625rem * var(--mantine-scale)) solid
+    var(--table-border-color);
 }

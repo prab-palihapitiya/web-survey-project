@@ -1,7 +1,3 @@
 export default function Page() {
-    return (
-        <>
-            Dashboard home page
-        </>
-    )
+  return <>Dashboard home page</>;
 }

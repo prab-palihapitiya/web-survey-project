@@ -1,19 +1,20 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Center, Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
+import classes from "@/app/ui/dashboard/navigate/sidepane.module.css";
+import { useState } from "react";
+
+import { Center, Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
 import {
-  IconHome2,
-  IconGauge,
-  IconDeviceDesktopAnalytics,
   IconBinaryTree,
-  IconUser,
-  IconSettings,
-  IconLogout,
+  IconDeviceDesktopAnalytics,
   IconEye,
   IconFilePencil,
-} from '@tabler/icons-react';
-import classes from '@/app/ui/dashboard/navigate/sidepane.module.css';
+  IconGauge,
+  IconHome2,
+  IconLogout,
+  IconSettings,
+  IconUser
+} from "@tabler/icons-react";
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -24,21 +25,32 @@ interface NavbarLinkProps {
 
 function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   return (
-    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
-        <Icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
+    <Tooltip
+      label={label}
+      position="right"
+      transitionProps={{ duration: 0 }}
+    >
+      <UnstyledButton
+        onClick={onClick}
+        className={classes.link}
+        data-active={active || undefined}
+      >
+        <Icon
+          style={{ width: rem(20), height: rem(20) }}
+          stroke={1.5}
+        />
       </UnstyledButton>
     </Tooltip>
   );
 }
 
 const mockdata = [
-  { icon: IconGauge, label: 'Dashboard' },
-  { icon: IconFilePencil, label: 'Questionnaire'},
-  { icon: IconBinaryTree, label: 'Logic'},
-  { icon: IconEye, label: 'Preview' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-  { icon: IconSettings, label: 'Settings' },
+  { icon: IconGauge, label: "Dashboard" },
+  { icon: IconFilePencil, label: "Questionnaire" },
+  { icon: IconBinaryTree, label: "Logic" },
+  { icon: IconEye, label: "Preview" },
+  { icon: IconDeviceDesktopAnalytics, label: "Analytics" },
+  { icon: IconSettings, label: "Settings" }
 ];
 
 export default function SidePane() {
@@ -55,19 +67,29 @@ export default function SidePane() {
 
   return (
     <nav className={classes.navbar}>
-      <Center>
-        {/* <MantineLogo type="mark" inverted size={30} /> */}
-      </Center>
+      <Center>{/* <MantineLogo type="mark" inverted size={30} /> */}</Center>
 
       <div className={classes.navbarMain}>
-        <Stack justify="center" gap={0}>
+        <Stack
+          justify="center"
+          gap={0}
+        >
           {links}
         </Stack>
       </div>
 
-      <Stack justify="center" gap={0}>
-        <NavbarLink icon={IconUser} label="Account" />
-        <NavbarLink icon={IconLogout} label="Logout" />
+      <Stack
+        justify="center"
+        gap={0}
+      >
+        <NavbarLink
+          icon={IconUser}
+          label="Account"
+        />
+        <NavbarLink
+          icon={IconLogout}
+          label="Logout"
+        />
       </Stack>
     </nav>
   );
