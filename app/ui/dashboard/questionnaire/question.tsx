@@ -5,17 +5,19 @@ import { QuestionType } from "@/app/lib/types";
 import Numeric from "@/app/ui/dashboard/questiontypes/numeric";
 import Single from "@/app/ui/dashboard/questiontypes/single";
 import Text from "@/app/ui/dashboard/questiontypes/text";
+import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 
 import {
+  ActionIcon,
   Button,
   Checkbox,
-  CloseButton,
   Collapse,
   Flex,
   Grid,
   GridCol,
   Group,
+  Mark,
   Paper,
   Select,
   Space,
@@ -23,13 +25,17 @@ import {
   TextInput,
   Textarea
 } from "@mantine/core";
+import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 
 import classes from "./questionnaire.module.css";
 
-export default function Question({ questionData, onClose }) {
+export default function Question({ questionData, onClose, highlight }) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedQType, setSelectedQType] = useState<string | null>();
+  const [isFocused, setFocused] = useState<boolean>(false);
+
+  const questionRef = useRef<HTMLDivElement>(null);
 
   const questionTypeRef = useRef<HTMLSelectElement>(null);
   const canSkipRef = useRef<HTMLInputElement>(null);
@@ -49,6 +55,14 @@ export default function Question({ questionData, onClose }) {
       introduction: introductionRef.current?.value || ""
     };
     updateQuestionData(questionData.id, modifiedData);
+
+    if (highlight && questionRef.current) {
+      questionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+      questionRef.current.focus();
+    }
   }, []);
 
   if (!isOpen) {
@@ -91,22 +105,65 @@ export default function Question({ questionData, onClose }) {
         shadow="sm"
         p="sm"
         withBorder={true}
+        ref={questionRef}
+        className={clsx(
+          isFocused ? classes.focused : highlight ? classes.highlight : "",
+          classes.question_container
+        )}
+        onFocus={() => {
+          setFocused(true);
+        }}
+        onBlur={() => {
+          setFocused(false);
+        }}
       >
-        <Group justify="flex-end">
-          <Button onClick={handleCollapseToggle}>
-            {isCollapsed ? "Expand" : "Collapse"}
-          </Button>
-          <Button
-            variant="light"
-            color="red"
-            onClick={handleClose}
+        <Flex
+          justify={"space-between"}
+          align={"center"}
+        >
+          <Group
+            justify="flex-start"
+            gap={"xs"}
           >
-            Close
-          </Button>
-        </Group>
+            <ActionIcon
+              variant="subtle"
+              onClick={handleCollapseToggle}
+            >
+              {isCollapsed ? (
+                <IconChevronRight size={16} />
+              ) : (
+                <IconChevronDown size={16} />
+              )}
+            </ActionIcon>
+
+            <TextInput
+              variant="unstyled"
+              defaultValue={isCollapsed ? shortcutRef.current?.value : ""}
+              onChange={(e) => {
+                // Update the shortcut input field when the unstyled input changes
+                if (shortcutRef.current) {
+                  shortcutRef.current.value = e.target.value;
+
+                  updateQuestionData(questionData.id, {
+                    shortcut: e.target.value
+                  });
+                }
+              }}
+            />
+          </Group>
+          <Group justify="flex-end">
+            <Button
+              variant="light"
+              color="red"
+              onClick={handleClose}
+            >
+              Close
+            </Button>
+          </Group>
+        </Flex>
 
         <Collapse in={!isCollapsed}>
-          <Grid className={classes.question_container}>
+          <Grid>
             <GridCol span={6}>
               <Stack>
                 <Select
@@ -130,11 +187,10 @@ export default function Question({ questionData, onClose }) {
                       canSkip: event.currentTarget.checked
                     });
                   }}
+                  ref={canSkipRef}
                 />
               </Stack>
             </GridCol>
-            {/* <GridCol span={1} offset={5}>
-                    </GridCol> */}
             <GridCol>
               <TextInput
                 label="Shortcut"
@@ -146,6 +202,7 @@ export default function Question({ questionData, onClose }) {
                     shortcut: event.currentTarget.value
                   });
                 }}
+                ref={shortcutRef}
               />
             </GridCol>
             <GridCol>
@@ -159,6 +216,7 @@ export default function Question({ questionData, onClose }) {
                     introduction: event.currentTarget.value
                   });
                 }}
+                ref={introductionRef}
               />
             </GridCol>
             <GridCol>{selectedQType && <QuestionComponent />}</GridCol>

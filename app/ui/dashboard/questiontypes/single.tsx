@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import {
+  ActionIcon,
   Button,
   CloseButton,
   Divider,
@@ -96,27 +97,24 @@ export default function Single() {
                 />
               </Table.Td>
               <Table.Td>
-                <CloseButton
-                  icon={
-                    <IconX
-                      color="red"
-                      size={16}
-                    />
-                  }
+                <ActionIcon
+                  color="red"
                   variant="subtle"
-                />
+                >
+                  <IconX size={16} />
+                </ActionIcon>
               </Table.Td>
             </Table.Tr>
           ))}
         </Table.Tbody>
         <Table.Tfoot className={classes.table_foot}>
-          <Button
+          <ActionIcon
             onClick={handleAddRow}
             m={4}
-            color="black"
+            variant="subtle"
           >
             <IconPlus size={16} />
-          </Button>
+          </ActionIcon>
         </Table.Tfoot>
       </Table>
     </>

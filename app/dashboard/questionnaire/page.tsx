@@ -3,7 +3,7 @@
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import Question from "@/app/ui/dashboard/questionnaire/question";
 import classes from "@/app/ui/dashboard/questionnaire/questionnaire.module.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Button,
@@ -23,16 +23,32 @@ export default function Page() {
 
   const questionnaireNameRef = useRef<HTMLInputElement>(null);
 
+  const [nextQuestionId, setNextQuestionId] = useState(1);
+  const [newlyAddedQuestionId, setNewlyAddedQuestionId] = useState<
+    number | null
+  >(null);
+
   useEffect(() => {
-    console.log();
-  });
+    const highestId = questions.reduce(
+      (maxId, question) => Math.max(maxId, question.id),
+      0
+    );
+    setNextQuestionId(highestId + 1);
+  }, [questions]);
 
   const handleCreateQuestion = () => {
     const newQuestion = {
-      id: questions.length + 1,
-      shortcut: "Q" + (questions.length + 1)
+      id: nextQuestionId,
+      shortcut: "Q" + nextQuestionId
     };
+
     addQuestion(newQuestion);
+    setNewlyAddedQuestionId(nextQuestionId);
+    setNextQuestionId(nextQuestionId + 1);
+
+    setTimeout(() => {
+      setNewlyAddedQuestionId(null);
+    }, 5000);
   };
 
   const saveChanges = () => {
@@ -50,9 +66,9 @@ export default function Page() {
     // show cancel changes confirm dialog (yes/no)
   };
 
-  const handleQuestionClose = () => {
+  const handleQuestionClose = (questionId: string | number) => {
     // Handle the closing of the Question here, e.g., remove it from an array of questions
-    console.log("Question closed!");
+    console.log(`Question with id: ${questionId} is closed!`);
   };
 
   return (
@@ -70,17 +86,15 @@ export default function Page() {
             onChange={(event) => setName(event.currentTarget.value)}
           />
           <Space h="lg" />
-          {questions.map((question: any, index: number) => (
+          {questions.map((question: any) => (
             <Question
               key={question.id}
               questionData={question}
-              onClose={handleQuestionClose}
+              onClose={() => handleQuestionClose(question.id)}
+              highlight={question.id === newlyAddedQuestionId}
             />
           ))}
         </GridCol>
-        {/* <GridCol span={3}>
-                    Questionnaire History
-                </GridCol> */}
         <GridCol>
           <Group
             mb="md"
