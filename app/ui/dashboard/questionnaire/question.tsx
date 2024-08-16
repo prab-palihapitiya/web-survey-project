@@ -38,7 +38,7 @@ export default function Question({ questionData, onClose, highlight }) {
   const questionRef = useRef<HTMLDivElement>(null);
 
   const questionTypeRef = useRef<HTMLSelectElement>(null);
-  const canSkipRef = useRef<HTMLInputElement>(null);
+  const skippableRef = useRef<HTMLInputElement>(null);
   const shortcutRef = useRef<HTMLInputElement>(null);
   const introductionRef = useRef<HTMLTextAreaElement>(null);
 
@@ -50,7 +50,7 @@ export default function Question({ questionData, onClose, highlight }) {
   useEffect(() => {
     const modifiedData = {
       questionType: questionTypeRef.current?.value || "",
-      canSkip: canSkipRef.current?.checked || false,
+      skippable: skippableRef.current?.checked || false,
       shortcut: shortcutRef.current?.value || "",
       introduction: introductionRef.current?.value || ""
     };
@@ -136,20 +136,26 @@ export default function Question({ questionData, onClose, highlight }) {
               )}
             </ActionIcon>
 
-            <TextInput
-              variant="unstyled"
-              defaultValue={isCollapsed ? shortcutRef.current?.value : ""}
-              onChange={(e) => {
-                // Update the shortcut input field when the unstyled input changes
-                if (shortcutRef.current) {
-                  shortcutRef.current.value = e.target.value;
+            {isCollapsed ?
+              <Group>
+                <TextInput
+                  variant="unstyled"
+                  defaultValue={shortcutRef.current?.value}
+                  onChange={(e) => {
+                    if (shortcutRef.current) {
+                      shortcutRef.current.value = e.target.value;
 
-                  updateQuestionData(questionData.id, {
-                    shortcut: e.target.value
-                  });
-                }
-              }}
-            />
+                      updateQuestionData(questionData.id, {
+                        shortcut: e.target.value
+                      });
+                    }
+                  }}
+                />
+                {/* {selectedQType && ( // Conditionally render selectedQType
+                  <Mark>{selectedQType}</Mark>
+                )} */}
+              </Group>
+              : <></>}
           </Group>
           <Group justify="flex-end">
             <Button
@@ -182,12 +188,13 @@ export default function Question({ questionData, onClose, highlight }) {
 
                 <Checkbox
                   label="Respondent can skip the question"
+
                   onChange={(event) => {
                     updateQuestionData(questionData.id, {
-                      canSkip: event.currentTarget.checked
+                      skippable: event.currentTarget.checked
                     });
                   }}
-                  ref={canSkipRef}
+                  ref={skippableRef}
                 />
               </Stack>
             </GridCol>
@@ -219,7 +226,7 @@ export default function Question({ questionData, onClose, highlight }) {
                 ref={introductionRef}
               />
             </GridCol>
-            <GridCol>{selectedQType && <QuestionComponent />}</GridCol>
+            <GridCol>{selectedQType && <QuestionComponent questionId={questionData.id} />}</GridCol>
           </Grid>
         </Collapse>
       </Paper>

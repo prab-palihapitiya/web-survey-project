@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   ActionIcon,
@@ -15,16 +15,24 @@ import {
 import { IconPlus, IconX } from "@tabler/icons-react";
 
 import classes from "./questions.module.css";
+import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 
-export default function Single() {
+export default function Single({ questionId }) {
   const [rows, setRows] = useState([
-    { index: 1, name: "", resource: null, subQuestion: "None" } // Initial row
+    { index: 1, name: "Option 1", resource: null, subQuestion: "None" }
   ]);
 
+  const updateQuestionData = useQuestionnaireStore((state) => state.updateQuestionData);
+
+  useEffect(() => {
+    updateQuestionData(questionId, { options: rows });
+  }, [rows, questionId, updateQuestionData]);
+
   const handleAddRow = () => {
+    const rowIndex = rows.length + 1;
     setRows([
       ...rows,
-      { index: rows.length + 1, name: "", resource: null, subQuestion: "None" }
+      { index: rowIndex, name: "Option " + rowIndex, resource: null, subQuestion: "None" }
     ]);
   };
 

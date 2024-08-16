@@ -1,7 +1,19 @@
 "use client";
 
-import { createTheme } from "@mantine/core";
+import { Button, createTheme, Checkbox } from "@mantine/core";
 
 export const theme = createTheme({
-  /* Put your mantine theme override here */
+  components: {
+    Button: Button.extend({
+      styles: {
+        inner: { fontWeight: 500 }
+      }
+    }),
+    Checkbox: Checkbox.extend({
+      styles: {
+        input: { cursor: "pointer" },
+        label: { cursor: "pointer" }
+      }
+    })
+  },
 });
