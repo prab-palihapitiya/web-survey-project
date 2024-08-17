@@ -2,3 +2,22 @@
   border-top: calc(0.0625rem * var(--mantine-scale)) solid
     var(--table-border-color);
 }
+
+.dragHandle_td {
+  padding: 0;
+  cursor: grab;
+}
+
+.dragHandle {
+  padding-block: 1rem;
+  width: rem(40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
+}
+
+.item {
+  background-color: var(--mantine-color-body);
+}

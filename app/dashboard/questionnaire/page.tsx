@@ -63,11 +63,12 @@ export default function Page() {
   };
 
   const cancelChanges = () => {
-    // show cancel changes confirm dialog (yes/no)
+    //TODO: you have unsaved data, before quit, you wanna save them?
+    //TODO: show cancel changes confirm dialog (yes/no)
   };
 
   const handleQuestionClose = (questionId: string | number) => {
-    // Handle the closing of the Question here, e.g., remove it from an array of questions
+    //TODO: Handle the closing of the Question here, e.g., remove it from an array of questions
     console.log(`Question with id: ${questionId} is closed!`);
   };
 

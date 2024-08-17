@@ -14,6 +14,11 @@ export const theme = createTheme({
         input: { cursor: "pointer" },
         label: { cursor: "pointer" }
       }
-    })
+    }),
+    Table: {
+      styles: {
+        th: { fontWeight: 500 }
+      }
+    }
   },
 });

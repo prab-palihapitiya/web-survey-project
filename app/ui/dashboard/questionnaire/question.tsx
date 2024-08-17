@@ -17,7 +17,6 @@ import {
   Grid,
   GridCol,
   Group,
-  Mark,
   Paper,
   Select,
   Space,
@@ -151,9 +150,6 @@ export default function Question({ questionData, onClose, highlight }) {
                     }
                   }}
                 />
-                {/* {selectedQType && ( // Conditionally render selectedQType
-                  <Mark>{selectedQType}</Mark>
-                )} */}
               </Group>
               : <></>}
           </Group>
@@ -167,7 +163,6 @@ export default function Question({ questionData, onClose, highlight }) {
             </Button>
           </Group>
         </Flex>
-
         <Collapse in={!isCollapsed}>
           <Grid>
             <GridCol span={6}>
