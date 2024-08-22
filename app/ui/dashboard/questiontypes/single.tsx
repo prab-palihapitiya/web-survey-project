@@ -17,15 +17,16 @@ import classes from "./questions.module.css";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 
-export default function Single({ questionId }) {
-  const [rows, setRows] = useState([
+export default function Single(questionData: { id: string; options: any[] }) {
+  const [rows, setRows] = useState(questionData.options || [
     { index: 1, name: "Option 1", resource: null, subQuestion: "None" }
   ]);
+
   const updateQuestionData = useQuestionnaireStore((state) => state.updateQuestionData);
 
   useEffect(() => {
-    updateQuestionData(questionId, { options: rows });
-  }, [rows, questionId, updateQuestionData]);
+    updateQuestionData(questionData.id, { options: rows });
+  }, [rows, questionData.id, updateQuestionData]);
 
   const handleAddRow = () => {
     const newIndex = Math.max(...rows.map(row => row.index), 0) + 1; // Find the highest existing index (or 0 if no rows) and add 1

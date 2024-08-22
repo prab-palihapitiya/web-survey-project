@@ -28,7 +28,7 @@ import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 
 import classes from "./questionnaire.module.css";
 
-export default function Question({ questionData, onClose, highlight }) {
+export default function Question({ questionData, highlight, onClose }: { questionData: any; highlight: boolean; onClose?: () => void }) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedQType, setSelectedQType] = useState<string | null>();
@@ -47,6 +47,10 @@ export default function Question({ questionData, onClose, highlight }) {
   const removeQuestion = useQuestionnaireStore((state) => state.removeQuestion);
 
   useEffect(() => {
+    setSelectedQType(questionData.questionType);
+  }, [questionData.questionType]);
+
+  useEffect(() => {
     const modifiedData = {
       questionType: questionTypeRef.current?.value || "",
       skippable: skippableRef.current?.checked || false,
@@ -62,7 +66,7 @@ export default function Question({ questionData, onClose, highlight }) {
       });
       questionRef.current.focus();
     }
-  }, []);
+  }, [highlight, questionData.id, updateQuestionData]);
 
   if (!isOpen) {
     return null; // Don't render anything if closed
@@ -178,12 +182,13 @@ export default function Question({ questionData, onClose, highlight }) {
                     "Date Time",
                     "Ranking"
                   ]}
+                  value={questionData.questionType}
                   onChange={(_value) => handleTypeChange(_value)}
                 />
 
                 <Checkbox
                   label="Respondent can skip the question"
-
+                  checked={questionData.skippable}
                   onChange={(event) => {
                     updateQuestionData(questionData.id, {
                       skippable: event.currentTarget.checked
@@ -198,7 +203,7 @@ export default function Question({ questionData, onClose, highlight }) {
                 label="Shortcut"
                 description="You will use this name when defining question logic. Use CamelCase(e.x. MyQuestion1) or use the generated question shortcut."
                 placeholder="Give a name"
-                defaultValue={questionData.shortcut}
+                value={questionData.shortcut}
                 onChange={(event) => {
                   updateQuestionData(questionData.id, {
                     shortcut: event.currentTarget.value
@@ -213,6 +218,7 @@ export default function Question({ questionData, onClose, highlight }) {
                 placeholder="Type question here.."
                 autosize
                 minRows={2}
+                value={questionData.introduction}
                 onChange={(event) => {
                   updateQuestionData(questionData.id, {
                     introduction: event.currentTarget.value
@@ -221,7 +227,9 @@ export default function Question({ questionData, onClose, highlight }) {
                 ref={introductionRef}
               />
             </GridCol>
-            <GridCol>{selectedQType && <QuestionComponent questionId={questionData.id} />}</GridCol>
+            <GridCol>
+              {selectedQType && <QuestionComponent {...questionData} />}
+            </GridCol>
           </Grid>
         </Collapse>
       </Paper>
