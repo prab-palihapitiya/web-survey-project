@@ -3,7 +3,7 @@
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import Question from "@/app/ui/dashboard/questionnaire/question";
 import classes from "@/app/ui/dashboard/questionnaire/questionnaire.module.css";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Button,
@@ -12,18 +12,23 @@ import {
   GridCol,
   Group,
   Space,
-  TextInput
+  TextInput,
+  Badge,
+  Loader
 } from "@mantine/core";
-import { createEmptyQuestionnaire, fetchQuestionnaire, saveQuestionnaire } from "@/app/services/questionnaire-service";
+import { createEmptyQuestionnaire, fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/questionnaire-service";
 import { useRouter, useSearchParams } from "next/navigation";
+import DateTime from "@/app/ui/utils/datetime";
 
 export default function Page() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [lastModified, setLastModified] = useState(new Date());
+  const [isSaving, setIsSaving] = useState(false);
+  const [firstLoaded, setFirstLoaded] = useState(true);
   const [nextQuestionId, setNextQuestionId] = useState(1);
   const [newlyAddedQuestionId, setNewlyAddedQuestionId] = useState<
     number | null
   >(null);
-
-  // const [questionnaire, setQuestionnaire] = useState(null); // State to store the fetched questionnaire
 
   const questionnaireId = useQuestionnaireStore((state) => state.id);
   const questionnaireName = useQuestionnaireStore((state) => state.name);
@@ -59,10 +64,16 @@ export default function Page() {
 
   useEffect(() => {
     if (paramId) {
-      fetchQuestionnaire(paramId).then((response) => {
-        setQuestionnaireId(response.data.id);
-        setQuestionnaire(response.data.obj);
-      });
+      setIsLoading(true);
+      fetchQuestionnaire(paramId)
+        .then((response) => {
+          setLastModified(response.data.modifiedAt);
+          setQuestionnaireId(response.data.id);
+          setQuestionnaire(response.data.obj);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   }, [paramId, setQuestionnaire, setQuestionnaireId]);
 
@@ -81,12 +92,19 @@ export default function Page() {
     }, 5000);
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
+    setFirstLoaded(false);
+    setIsSaving(true);
     setQuestionnaire({ name: questionnaireName, questions: questions });
-    saveQuestionnaire(questionnaireId, questions, [], { name: questionnaireName });
-    // TODO: Show a 'saved successfully' message with the time saved, on the top of the page
+    try {
+      await saveQuestionnaireData(questionnaireId, questions, [], { name: questionnaireName });
+      setLastModified(new Date());
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSaving(false);
+    }
   };
-
 
   const cancelChanges = () => {
     //TODO: you have unsaved data, before quit, you wanna save them?
@@ -98,42 +116,75 @@ export default function Page() {
     console.log(`Question with id: ${questionId} is closed!`);
   };
 
+  function getSavedStatus() {
+    if (firstLoaded) {
+      return <DateTime datetime={lastModified} prefix="Saved" />;
+    }
+
+    if (isSaving) {
+      return 'Saving...';
+    }
+
+    return <DateTime datetime={lastModified} prefix="Saved" />;
+  }
+
   return (
     <Container
       mt="md"
       className={classes.container}
     >
-      <Grid>
-        <GridCol>
-          <TextInput
-            label="Questionnaire Name"
-            description="Name of your questionnaire (e.x. My simple survey). You'll refer this name everywhere, so try to put an identifiable/unique name."
-            placeholder="Type here..."
-            value={questionnaireName}
-            ref={questionnaireNameRef}
-            onChange={(event) => setName(event.currentTarget.value)}
-          />
-          <Space h="lg" />
-          {questions.map((question: any) => (
-            <Question
-              key={question.id}
-              questionData={question}
-              highlight={question.id === newlyAddedQuestionId}
-              onClose={() => handleQuestionClose(question.id)}
-            />
-          ))}
-        </GridCol>
-        <GridCol>
-          <Group
-            mb="md"
-            gap={"xs"}
+      {isLoading ? (
+        <div className={classes.loading_wrapper}>
+          <Loader size={30} />
+        </div>
+      ) : (
+        <>
+          <Badge
+            size="lg"
+            radius={'xs'}
+            color="green"
+            style={{
+              position: 'fixed',
+              top: 10,
+              right: 25,
+              zIndex: 1000
+            }}
           >
-            <Button onClick={handleCreateQuestion}>+ New Question</Button>
-            <Button onClick={saveChanges}>Save Changes</Button>
-            <Button onClick={cancelChanges}>Cancel</Button>
-          </Group>
-        </GridCol>
-      </Grid>
+            {getSavedStatus()}
+          </Badge>
+          <Grid>
+            <GridCol>
+              <TextInput
+                label="Questionnaire Name"
+                description="Name of your questionnaire (e.x. My simple survey). You'll refer this name everywhere, so try to put an identifiable/unique name."
+                placeholder="Type here..."
+                value={questionnaireName}
+                ref={questionnaireNameRef}
+                onChange={(event) => setName(event.currentTarget.value)}
+              />
+              <Space h="lg" />
+              {questions.map((question: any) => (
+                <Question
+                  key={question.id}
+                  questionData={question}
+                  highlight={question.id === newlyAddedQuestionId}
+                  onClose={() => handleQuestionClose(question.id)}
+                />
+              ))}
+            </GridCol>
+            <GridCol>
+              <Group
+                mb="md"
+                gap={"xs"}
+              >
+                <Button onClick={handleCreateQuestion}>+ New Question</Button>
+                <Button onClick={saveChanges}>Save Changes</Button>
+                <Button onClick={cancelChanges}>Cancel</Button>
+              </Group>
+            </GridCol>
+          </Grid>
+        </>
+      )}
     </Container>
   );
 }

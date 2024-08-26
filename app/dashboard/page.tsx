@@ -3,8 +3,9 @@
 import { Button, Container, Grid, GridCol, Table } from "@mantine/core";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { fetchQuestionnairesByUser } from "../services/questionnaire-service";
+import { fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
 import DateTime from "../ui/utils/datetime";
+import classes from "@/app/ui/dashboard/dashboard.module.css";
 
 export default function Page() {
   const [questionnaires, setQuestionnaires] = useState([]);
@@ -28,7 +29,7 @@ export default function Page() {
     fetchData();
   }, []);
   return (<>
-    <Container>
+    <Container className={classes.container}>
       <Grid>
         <GridCol span={12}>
           <p>Welcome to the dashboard</p>

@@ -1,16 +1,15 @@
 "use client";
 
 import classes from "@/app/ui/dashboard/navigate/sidepane.module.css";
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
 
-import { Center, Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
+import { Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
 import {
   IconBinaryTree,
   IconDeviceDesktopAnalytics,
   IconEye,
   IconFilePencil,
   IconGauge,
-  IconHome2,
   IconLogout,
   IconSettings,
   IconUser
@@ -19,7 +18,7 @@ import Link from "next/link";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 
 interface NavbarLinkProps {
-  icon: typeof IconHome2;
+  icon: typeof IconUser;
   label: string;
   active?: boolean;
   navigate?: string;
@@ -52,7 +51,6 @@ function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLink
           />
         </UnstyledButton>
       </Link>
-
     </Tooltip>
   );
 }
