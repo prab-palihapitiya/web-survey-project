@@ -151,18 +151,20 @@ export default function Single(questionData: { id: string; options: any[] }) {
               <Table.Tbody {...provided.droppableProps} ref={provided.innerRef}>
                 {items}
                 {provided.placeholder}
+                <Table.Tr>
+                  <Table.Td colSpan={6}>
+                    <ActionIcon
+                      onClick={handleAddRow}
+                      m={4}
+                      variant="subtle"
+                    >
+                      <IconPlus size={16} />
+                    </ActionIcon>
+                  </Table.Td>
+                </Table.Tr>
               </Table.Tbody>
             )}
           </Droppable>
-          <Table.Tfoot className={classes.table_foot}>
-            <ActionIcon
-              onClick={handleAddRow}
-              m={4}
-              variant="subtle"
-            >
-              <IconPlus size={16} />
-            </ActionIcon>
-          </Table.Tfoot>
         </Table>
       </DragDropContext>
     </>

@@ -1,12 +1,9 @@
 "use client";
 
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { QuestionType } from "@/app/lib/types";
-import Numeric from "@/app/ui/dashboard/questiontypes/numeric";
-import Single from "@/app/ui/dashboard/questiontypes/single";
-import Text from "@/app/ui/dashboard/questiontypes/text";
+import { QuestionControls, QuestionTypeMappings } from "@/app/lib/types";
 import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
   ActionIcon,
@@ -80,7 +77,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
     }
   };
 
-  const handleTypeChange = (value: QuestionType | null) => {
+  const handleTypeChange = (value: string | null) => {
     setSelectedQType(value);
     updateQuestionData(questionData.id, { questionType: value });
   };
@@ -89,18 +86,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
     setIsCollapsed(!isCollapsed);
   };
 
-  const typeToComponent: { [key in QuestionType]?: React.ComponentType } = {
-    "Text": Text,
-    "Numeric": Numeric,
-    "Single Choice": Single,
-    "Multiple Choice": Text,
-    "Date Time": Text,
-    "Ranking": Text
-  };
-
-  const QuestionComponent = selectedQType
-    ? typeToComponent[selectedQType]
-    : null;
+  const { Component: QuestionComponent } = QuestionTypeMappings[selectedQType] || {};
 
   return (
     <>
@@ -159,7 +145,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
           </Group>
           <Group justify="flex-end">
             <Button
-              variant="light"
+              size="xs"
               color="red"
               onClick={handleClose}
             >
@@ -174,16 +160,10 @@ export default function Question({ questionData, highlight, onClose }: { questio
                 <Select
                   label="Question Type"
                   placeholder="Select"
-                  data={[
-                    "Text",
-                    "Numeric",
-                    "Single Choice",
-                    "Multiple Choice",
-                    "Date Time",
-                    "Ranking"
-                  ]}
+                  data={QuestionControls}
                   value={questionData.questionType}
                   onChange={(_value) => handleTypeChange(_value)}
+                  ref={questionTypeRef}
                 />
 
                 <Checkbox

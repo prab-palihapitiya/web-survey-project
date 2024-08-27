@@ -1,30 +1,33 @@
-import { Button, Stack } from "@mantine/core";
+import { Radio, Stack } from "@mantine/core";
 import { useState } from 'react';
 
 export default function SingleList({ currentQuestion }: { currentQuestion: any }) {
-    const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
+    const [selectedOptionValue, setSelectedOptionValue] = useState<string | null>(null);
 
-    const handleOptionClick = (index: number) => {
-        setSelectedOptionIndex(index);
+    const handleOptionChange = (value: string) => {
+        setSelectedOptionValue(value);
     };
 
     return (
-        <Stack
-            bg="var(--mantine-color-body)"
-            align="stretch"
-            justify="flex-start"
-            gap="xs"
+        <Radio.Group
+            value={selectedOptionValue}
+            onChange={handleOptionChange}
         >
-            {currentQuestion.options?.map((option: any, index: number) => (
-                <Button
-                    key={index}
-                    variant={selectedOptionIndex === index ? 'filled' : 'default'}
-                    onClick={() => handleOptionClick(index)}
-                    styles={{ label: { textAlign: 'left' } }}
-                >
-                    {option.name}
-                </Button>
-            ))}
-        </Stack>
+            <Stack
+                bg="var(--mantine-color-body)"
+                align="stretch"
+                justify="flex-start"
+                gap="xs"
+            >
+                {currentQuestion.options?.map((option: any, index: number) => (
+                    <Radio
+                        key={index}
+                        value={index.toString()}
+                        label={option.name}
+                        styles={{ label: { textAlign: 'left', cursor: 'pointer' } }}
+                    />
+                ))}
+            </Stack>
+        </Radio.Group>
     );
 }

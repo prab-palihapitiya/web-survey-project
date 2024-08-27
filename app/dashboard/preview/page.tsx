@@ -1,13 +1,12 @@
 'use client';
 
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { Container, Text, Button, Group, Badge, Stack, Select, Space, Grid, GridCol } from "@mantine/core";
+import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol } from "@mantine/core";
 import { useEffect, useState } from 'react';
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
-import Multiple from "@/app/ui/surveys/controltypes/multiple";
-import SingleList from "@/app/ui/surveys/controltypes/singlelist";
+import { QuestionTypeMappings } from "@/app/lib/types";
 
 export default function Page() {
     const { name, questions } = useQuestionnaireStore();
@@ -35,7 +34,10 @@ export default function Page() {
             });
     }, []);
 
-    const handleQuestionnaireSelect = (value: string) => {
+    const handleQuestionnaireSelect = (value: string | null) => {
+        if (!value) {
+            return;
+        }
         setSelectedQuestionnaireId(value);
         setQuestionnaireId(value);
 
@@ -61,12 +63,7 @@ export default function Page() {
 
     const currentQuestion = questions[activeQuestionIndex];
 
-    const typeToControl: { [key: string]: React.ComponentType<{ currentQuestion: any }> } = {
-        "Single Choice": SingleList,
-        "Multiple Choice": Multiple
-    };
-
-    const ControlComponent = currentQuestion && typeToControl[currentQuestion.questionType];
+    const { Control: ControlComponent } = currentQuestion && QuestionTypeMappings[currentQuestion.questionType] || {};
 
     return (
         <Container className={classes.container}>

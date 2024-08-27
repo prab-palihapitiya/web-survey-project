@@ -19,6 +19,7 @@ import {
 import { createEmptyQuestionnaire, fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/questionnaire-service";
 import { useRouter, useSearchParams } from "next/navigation";
 import DateTime from "@/app/ui/utils/datetime";
+import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -52,7 +53,7 @@ export default function Page() {
     setNextQuestionId(highestId + 1);
   }, [questions]);
 
-  useEffect(() => {
+  useEffectAfterMount(() => {
     if (!paramId) {
       createEmptyQuestionnaire().then((newQuestionnaireId) => {
         setQuestionnaireId(newQuestionnaireId);
@@ -62,7 +63,7 @@ export default function Page() {
     }
   }, [paramId, questionnaireName, router, setQuestionnaire, setQuestionnaireId]);
 
-  useEffect(() => {
+  useEffectAfterMount(() => {
     if (paramId) {
       setIsLoading(true);
       fetchQuestionnaire(paramId)
