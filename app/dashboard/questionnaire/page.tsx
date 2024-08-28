@@ -61,7 +61,7 @@ export default function Page() {
         router.push(`/dashboard/questionnaire?id=${newQuestionnaireId}`);
       });
     }
-  }, [paramId, questionnaireName, router, setQuestionnaire, setQuestionnaireId]);
+  }, []);
 
   useEffectAfterMount(() => {
     if (paramId) {
@@ -147,7 +147,7 @@ export default function Page() {
             style={{
               position: 'fixed',
               top: 10,
-              right: 25,
+              right: 50,
               zIndex: 1000
             }}
           >
@@ -178,9 +178,9 @@ export default function Page() {
                 mb="md"
                 gap={"xs"}
               >
-                <Button onClick={handleCreateQuestion}>+ New Question</Button>
-                <Button onClick={saveChanges}>Save Changes</Button>
-                <Button onClick={cancelChanges}>Cancel</Button>
+                <Button size='xs' onClick={handleCreateQuestion}>+ New Question</Button>
+                <Button size='xs' onClick={saveChanges}>Save Changes</Button>
+                <Button size='xs' onClick={cancelChanges}>Cancel</Button>
               </Group>
             </GridCol>
           </Grid>

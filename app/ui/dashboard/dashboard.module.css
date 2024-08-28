@@ -1,4 +1,10 @@
 .container {
-  margin-inline: 1rem;
+  margin-inline: 0;
   max-width: 100%;
+}
+.loading_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
 }

@@ -1,12 +1,15 @@
 .container {
-  margin-inline: 1rem;
+  margin-inline: 0;
   max-width: 100%;
 }
 .highlight {
+  background-color: var(--mantine-color-gray-1);
   border: 1px solid rgb(139, 139, 139);
 }
 .focused {
-  border: calc(0.1rem * var(--mantine-scale)) solid var(--mantine-color-blue-5);
+  background-color: var(--mantine-color-gray-1);
+
+  /* border: calc(0.1rem * var(--mantine-scale)) solid var(--mantine-color-blue-5); */
 }
 .loading_wrapper {
   display: flex;

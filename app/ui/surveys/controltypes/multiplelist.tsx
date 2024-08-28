@@ -1,18 +1,16 @@
-import { Radio, Stack } from "@mantine/core";
+import { Checkbox, Stack, CheckboxGroup } from "@mantine/core";
 import { useState } from 'react';
 
-export default function SingleList({ currentQuestion }: { currentQuestion: any }) {
-    const [selectedOptionValue, setSelectedOptionValue] = useState<string | null>(null);
+export default function MultipleList({ currentQuestion }: { currentQuestion: any }) {
+    const [selectedOptionValues, setSelectedOptionValues] = useState<string[]>([]);
 
-    const handleOptionChange = (value: string) => {
-        console.log(value);
-
-        setSelectedOptionValue(value);
+    const handleOptionChange = (value: string[]) => {
+        setSelectedOptionValues(value);
     };
 
     return (
-        <Radio.Group
-            value={selectedOptionValue}
+        <CheckboxGroup
+            value={selectedOptionValues}
             onChange={handleOptionChange}
         >
             <Stack
@@ -22,7 +20,7 @@ export default function SingleList({ currentQuestion }: { currentQuestion: any }
                 gap="xs"
             >
                 {currentQuestion.options?.map((option: any, index: number) => (
-                    <Radio
+                    <Checkbox
                         key={index}
                         value={index.toString()}
                         label={option.name}
@@ -30,6 +28,6 @@ export default function SingleList({ currentQuestion }: { currentQuestion: any }
                     />
                 ))}
             </Stack>
-        </Radio.Group>
+        </CheckboxGroup>
     );
 }

@@ -162,8 +162,9 @@ export default function Question({ questionData, highlight, onClose }: { questio
                   placeholder="Select"
                   data={QuestionControls}
                   value={questionData.questionType}
-                  onChange={(_value) => handleTypeChange(_value)}
+                  onChange={(value) => handleTypeChange(value)}
                   ref={questionTypeRef}
+                  style={{ paddingBottom: "0" }}
                 />
 
                 <Checkbox
