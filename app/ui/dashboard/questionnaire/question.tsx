@@ -1,9 +1,9 @@
 "use client";
 
-import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { QuestionControls, QuestionTypeMappings } from "@/app/lib/types";
-import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
+import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
+import { QuestionControls, QuestionTypeMappings } from "@/app/lib/config/question-config";
+import clsx from "clsx";
 
 import {
   ActionIcon,
@@ -33,7 +33,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
 
   const questionRef = useRef<HTMLDivElement>(null);
 
-  const questionTypeRef = useRef<HTMLSelectElement>(null);
+  const questionTypeRef = useRef<HTMLInputElement>(null);
   const skippableRef = useRef<HTMLInputElement>(null);
   const shortcutRef = useRef<HTMLInputElement>(null);
   const introductionRef = useRef<HTMLTextAreaElement>(null);
@@ -125,7 +125,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
               )}
             </ActionIcon>
 
-            {isCollapsed ?
+            {isCollapsed && (
               <Group>
                 <TextInput
                   variant="unstyled"
@@ -141,7 +141,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
                   }}
                 />
               </Group>
-              : <></>}
+            )}
           </Group>
           <Group justify="flex-end">
             <Button

@@ -2,11 +2,11 @@
 
 import { Button, Container, Grid, GridCol, Group, Loader, Table } from "@mantine/core";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
-import DateTime from "../ui/utils/datetime";
+import { useCallback, useMemo, useState } from "react";
+import { deleteQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
+import DateTime from "@/app/ui/utils/datetime";
 import classes from "@/app/ui/dashboard/dashboard.module.css";
-import useEffectAfterMount from "../lib/hooks/useEffectAfterMount";
+import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -24,11 +24,24 @@ export default function Page() {
           console.error("No data received from the API.");
         }
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         console.error(error);
       })
       .finally(() => {
         setIsLoading(false);
+      });
+  }, []);
+
+  const handleDelete = useCallback((questionnaireId: string) => {
+    deleteQuestionnaire(questionnaireId)
+      .then((response) => {
+        console.log("Questionnaire deleted successfully:", response);
+        setQuestionnaires((prevQuestionnaires) =>
+          prevQuestionnaires.filter((q) => q.id !== questionnaireId)
+        );
+      })
+      .catch((error: Error) => {
+        console.error("Error deleting questionnaire:", error);
       });
   }, []);
 
@@ -49,12 +62,12 @@ export default function Page() {
             <Link href={`/dashboard/questionnaire/?id=${id}`}>
               <Button size="xs">Edit</Button>
             </Link>
-            <Button size="xs" color="red">Delete</Button>
+            <Button size="xs" color="red" onClick={() => handleDelete(id)}>Delete</Button>
           </Group>
         </Table.Td>
       </Table.Tr>
     ));
-  }, [questionnaires]);
+  }, [handleDelete, questionnaires]);
 
   return (
     <Container className={classes.container}>

@@ -74,3 +74,13 @@ export const fetchQuestionnairesByUser = async (userId: string) => {
         throw error; // Re-throw the error for handling in the component
     }
 };
+
+export const deleteQuestionnaire = async (questionnaireId: string) => {
+    try {
+        const response = await axios.delete(`${apiUrl}/questionnaires/${questionnaireId}`);
+        return response;
+    } catch (error) {
+        console.error("Error deleting questionnaire:", error);
+        throw error; // Re-throw the error for handling in the component
+    }
+};

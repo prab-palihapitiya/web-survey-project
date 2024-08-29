@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
-import { QuestionTypeMappings } from "@/app/lib/types";
+import { QuestionTypeMappings } from "@/app/lib/config/question-config";
 
 export default function Page() {
     const { name, questions } = useQuestionnaireStore();
