@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import {
   ActionIcon,
   Divider,
@@ -110,7 +109,7 @@ export default function Single(questionData: { id: string; options: any[] }) {
           <Table.Td>
             <ActionIcon
               color="red"
-              variant="subtle"
+              size='xs'
               onClick={() => handleDeleteRow(row.index)}
             >
               <IconX size={16} />

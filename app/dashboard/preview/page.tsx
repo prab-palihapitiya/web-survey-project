@@ -9,7 +9,7 @@ import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/service
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
 
 export default function Page() {
-    const { name, questions } = useQuestionnaireStore();
+    const { name, questions, answers } = useQuestionnaireStore();
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
     const [questionnaires, setQuestionnaires] = useState([]); // To store the list of questionnaires
     const [selectedQuestionnaireId, setSelectedQuestionnaireId] = useState(''); // To store the selected questionnaire ID
@@ -117,9 +117,9 @@ export default function Page() {
                         </Group>
                     </GridCol>
                 )}
-                {questions.length === 0 && (
+                {questionnaireId && questions.length === 0 && (
                     <GridCol>
-                        <Text>No questions to preview...</Text>
+                        <Text>Empty Questionnaire.</Text>
                     </GridCol>
                 )}
             </Grid>

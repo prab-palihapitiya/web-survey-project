@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import {
   ActionIcon,
   Divider,
@@ -12,7 +11,6 @@ import {
   TextInput
 } from "@mantine/core";
 import { IconGripVertical, IconPlus, IconX } from "@tabler/icons-react";
-
 import classes from "./questions.module.css";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
@@ -123,7 +121,7 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
           <Table.Td>
             <ActionIcon
               color="red"
-              variant="subtle"
+              size='xs'
               onClick={() => handleDeleteRow(row.index)}
             >
               <IconX size={16} />

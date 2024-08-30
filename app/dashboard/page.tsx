@@ -7,10 +7,11 @@ import { deleteQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/servic
 import DateTime from "@/app/ui/utils/datetime";
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
+import { Questionnaire } from "@/app/lib/types";
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
-  const [questionnaires, setQuestionnaires] = useState([]);
+  const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
 
   useEffectAfterMount(() => {
     const userId = "clzyfzfg300002y2l8a7du5lf"; // TODO: Replace with how you get the actual user ID
@@ -19,7 +20,7 @@ export default function Page() {
     fetchQuestionnairesByUser(userId)
       .then((response) => {
         if (response && response.data) {
-          setQuestionnaires(response.data);
+          setQuestionnaires(response.data as Questionnaire[]);
         } else {
           console.error("No data received from the API.");
         }
@@ -33,6 +34,7 @@ export default function Page() {
   }, []);
 
   const handleDelete = useCallback((questionnaireId: string) => {
+    //TODO: Delete confirmation
     deleteQuestionnaire(questionnaireId)
       .then((response) => {
         console.log("Questionnaire deleted successfully:", response);

@@ -3,7 +3,7 @@ import axios from "axios";
 const apiUrl = process.env.API_URL || "http://localhost:4000/api";
 const userId = "clzyfzfg300002y2l8a7du5lf"; //TODO: Get the user ID from the auth context
 
-export const saveQuestionnaireData = async (questionnaireId: string, questions: any[], logic: any[], questionnaireData: {
+export const saveQuestionnaireData = async (questionnaireId: string, questions: any[], logic: any[], answers: any[], questionnaireData: {
     userId?: string;
     name?: string;
     obj?: any;
@@ -12,7 +12,7 @@ export const saveQuestionnaireData = async (questionnaireId: string, questions: 
     status?: string;
 }) => {
     questionnaireData.userId = userId;
-    questionnaireData.obj = { name: questionnaireData.name, questions: questions, logic: logic };
+    questionnaireData.obj = { name: questionnaireData.name, questions: questions, logic: logic, answers: answers };
     questionnaireData.status = "DRAFT";
 
     try {

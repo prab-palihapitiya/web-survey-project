@@ -19,9 +19,10 @@ import {
   Space,
   Stack,
   TextInput,
-  Textarea
+  Textarea,
+  Tooltip
 } from "@mantine/core";
-import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronRight, IconQuestionMark } from "@tabler/icons-react";
 
 import classes from "./questionnaire.module.css";
 
@@ -32,7 +33,6 @@ export default function Question({ questionData, highlight, onClose }: { questio
   const [isFocused, setFocused] = useState<boolean>(false);
 
   const questionRef = useRef<HTMLDivElement>(null);
-
   const questionTypeRef = useRef<HTMLInputElement>(null);
   const skippableRef = useRef<HTMLInputElement>(null);
   const shortcutRef = useRef<HTMLInputElement>(null);
@@ -48,13 +48,13 @@ export default function Question({ questionData, highlight, onClose }: { questio
   }, [questionData.questionType]);
 
   useEffect(() => {
-    const modifiedData = {
+    const updatedQuestionData = {
       questionType: questionTypeRef.current?.value || "",
       skippable: skippableRef.current?.checked || false,
       shortcut: shortcutRef.current?.value || "",
       introduction: introductionRef.current?.value || ""
     };
-    updateQuestionData(questionData.id, modifiedData);
+    updateQuestionData(questionData.id, updatedQuestionData);
 
     if (highlight && questionRef.current) {
       questionRef.current.scrollIntoView({
@@ -64,10 +64,6 @@ export default function Question({ questionData, highlight, onClose }: { questio
       questionRef.current.focus();
     }
   }, [highlight, questionData.id, updateQuestionData]);
-
-  if (!isOpen) {
-    return null; // Don't render anything if closed
-  }
 
   const handleClose = () => {
     setIsOpen(false);
@@ -89,7 +85,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
   const { Component: QuestionComponent } = QuestionTypeMappings[selectedQType] || {};
 
   return (
-    <>
+    isOpen && (<>
       <Paper
         shadow="sm"
         p="sm"
@@ -115,7 +111,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
             gap={"xs"}
           >
             <ActionIcon
-              variant="subtle"
+              variant="outline"
               onClick={handleCollapseToggle}
             >
               {isCollapsed ? (
@@ -154,35 +150,22 @@ export default function Question({ questionData, highlight, onClose }: { questio
           </Group>
         </Flex>
         <Collapse in={!isCollapsed}>
+          <Space h="xs"></Space>
           <Grid>
-            <GridCol span={6}>
-              <Stack>
-                <Select
-                  label="Question Type"
-                  placeholder="Select"
-                  data={QuestionControls}
-                  value={questionData.questionType}
-                  onChange={(value) => handleTypeChange(value)}
-                  ref={questionTypeRef}
-                  style={{ paddingBottom: "0" }}
-                />
-
-                <Checkbox
-                  label="Respondent can skip the question"
-                  checked={questionData.skippable}
-                  onChange={(event) => {
-                    updateQuestionData(questionData.id, {
-                      skippable: event.currentTarget.checked
-                    });
-                  }}
-                  ref={skippableRef}
-                />
-              </Stack>
+            <GridCol span={3}>
+              <Select
+                label="Question Type"
+                placeholder="Select"
+                data={QuestionControls}
+                value={questionData.questionType}
+                onChange={(value) => handleTypeChange(value)}
+                ref={questionTypeRef}
+                style={{ paddingBottom: "0" }}
+              />
             </GridCol>
-            <GridCol>
+            <GridCol span={5}>
               <TextInput
                 label="Shortcut"
-                description="You will use this name when defining question logic. Use CamelCase(e.x. MyQuestion1) or use the generated question shortcut."
                 placeholder="Give a name"
                 value={questionData.shortcut}
                 onChange={(event) => {
@@ -191,8 +174,39 @@ export default function Question({ questionData, highlight, onClose }: { questio
                   });
                 }}
                 ref={shortcutRef}
+                rightSection={
+                  <Tooltip
+                    multiline
+                    w={250}
+                    withArrow
+                    transitionProps={{ duration: 200 }}
+                    color="gray"
+                    label="You will use this name when defining question logic. Use CamelCase(e.x. MyQuestion1) or use the generated question shortcut."
+                  >
+                    <ActionIcon variant="transparent">
+                      <IconQuestionMark size={16} />
+                    </ActionIcon>
+                  </Tooltip>
+                }
               />
             </GridCol>
+            <GridCol span={3} style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <Checkbox
+                label="Respondent can skip the question"
+                checked={questionData.skippable}
+                onChange={(event) => {
+                  updateQuestionData(questionData.id, {
+                    skippable: event.currentTarget.checked
+                  });
+                }}
+                ref={skippableRef}
+              />
+            </GridCol>
+
             <GridCol>
               <Textarea
                 label="Introduction"
@@ -215,6 +229,6 @@ export default function Question({ questionData, highlight, onClose }: { questio
         </Collapse>
       </Paper>
       <Space h="xs"></Space>
-    </>
+    </>)
   );
 }

@@ -1,12 +1,31 @@
 import { Radio, Stack } from "@mantine/core";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 
 export default function SingleList({ currentQuestion }: { currentQuestion: any }) {
     const [selectedOptionValue, setSelectedOptionValue] = useState<string | null>(null);
 
-    const handleOptionChange = (value: string) => {
-        console.log(value);
+    const getAnswerForQuestion = (questionId: string) => {
+        const answers = useQuestionnaireStore(state => state.answers);
+        const answerEntry = answers.find(a => a.questionId === questionId);
+        return answerEntry ? answerEntry.answer : null;
+    };
 
+    const answer = getAnswerForQuestion(currentQuestion.id);
+
+    useEffect(() => {
+        setSelectedOptionValue(null);
+
+        if (answer) {
+            setSelectedOptionValue(answer.toString());
+        }
+    }, [currentQuestion]);
+
+    useEffect(() => {
+        useQuestionnaireStore.getState().setAnswer(currentQuestion.id, selectedOptionValue);
+    }, [selectedOptionValue]);
+
+    const handleOptionChange = (value: string) => {
         setSelectedOptionValue(value);
     };
 

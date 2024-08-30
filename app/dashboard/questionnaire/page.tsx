@@ -98,7 +98,7 @@ export default function Page() {
     setIsSaving(true);
     setQuestionnaire({ name: questionnaireName, questions: questions });
     try {
-      await saveQuestionnaireData(questionnaireId, questions, [], { name: questionnaireName });
+      await saveQuestionnaireData(questionnaireId, questions, [], [], { name: questionnaireName });
       setLastModified(new Date());
     } catch (error) {
       console.error(error);

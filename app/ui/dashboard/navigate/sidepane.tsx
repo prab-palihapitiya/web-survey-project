@@ -1,29 +1,16 @@
 "use client";
 
-import classes from "@/app/ui/dashboard/navigate/sidepane.module.css";
 import { useState } from "react";
-
+import classes from "@/app/ui/dashboard/navigate/sidepane.module.css";
 import { Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
 import {
-  IconBinaryTree,
-  IconDeviceDesktopAnalytics,
-  IconEye,
-  IconFilePencil,
-  IconGauge,
   IconLogout,
-  IconSettings,
   IconUser
 } from "@tabler/icons-react";
 import Link from "next/link";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-
-interface NavbarLinkProps {
-  icon: typeof IconUser;
-  label: string;
-  active?: boolean;
-  navigate?: string;
-  onClick?(): void;
-}
+import { NavigationLinks } from "@/app/lib/config/navigation-config";
+import { NavbarLinkProps } from "@/app/lib/types";
 
 function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLinkProps) {
   const questionnaireId = useQuestionnaireStore((state) => state.id);
@@ -55,25 +42,20 @@ function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLink
   );
 }
 
-const mockdata = [
-  { icon: IconGauge, label: "Dashboard", href: "/dashboard" },
-  { icon: IconFilePencil, label: "Questionnaire", href: "/dashboard/questionnaire" },
-  { icon: IconBinaryTree, label: "Logic", href: "/dashboard/logic" },
-  { icon: IconEye, label: "Preview", href: "/dashboard/preview" },
-  { icon: IconDeviceDesktopAnalytics, label: "Analytics", href: "/dashboard/analytics" },
-  { icon: IconSettings, label: "Settings", href: "/dashboard/settings" }
-];
-
 export default function SidePane() {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState<number>(0);
 
-  const links = mockdata.map((link, index) => (
+  const handleClick = (index: number) => {
+    setActive(index);
+  }
+
+  const links = NavigationLinks.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
       active={index === active}
       navigate={link.href}
-      onClick={() => setActive(index)}
+      onClick={() => handleClick(link.index)}
     />
   ));
 
