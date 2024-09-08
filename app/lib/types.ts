@@ -15,6 +15,27 @@ export interface Questionnaire {
   modifiedAt: Date;
 }
 
+export enum exclusive {
+  Yes = "Yes",
+  No = "No",
+}
+export interface Option {
+  index: string;
+  name: string;
+  resource?: string;
+  exclusive?: exclusive;
+  subQuestion?: string;
+}
+
+export interface Question {
+  id: number;
+  shortcut: string;
+  introduction: string;
+  questionType: string;
+  options?: Option[];
+  skippable: boolean;
+}
+
 export interface NavbarLinkProps {
   icon: typeof IconUser;
   label: string;

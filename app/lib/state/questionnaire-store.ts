@@ -1,4 +1,3 @@
-import { log } from "console";
 import { create } from "zustand";
 
 interface Question {
@@ -21,11 +20,14 @@ interface QuestionnaireState {
 interface QuestionnaireActions {
   setId: (id: string) => void;
   setName: (name: string) => void;
-  addQuestion: (question: any) => void;
+  addQuestion: (question: any, index: number) => void;
   removeQuestion: (questionId: number | string) => void;
   updateQuestionData: (questionId: number | string, updatedData: any) => void;
   setQuestionnaire: (questionnaire: any) => void;
   setAnswer: (questionId: string, answer: any) => void;
+  addLogic: (logic: any) => void;
+  removeLogic: (logicIndex: number) => void;
+  updateLogic: (logicIndex: number, updatedLogic: any) => void;
 }
 
 const useQuestionnaireStore = create<
@@ -39,8 +41,16 @@ const useQuestionnaireStore = create<
   questionnaire: {},
   setId: (id) => set({ id }),
   setName: (name) => set({ name }),
-  addQuestion: (question) =>
-    set((state) => ({ questions: [...state.questions, question] })),
+  addQuestion: (question: Question, index: number) =>
+    set((state) => {
+      const updatedQuestions = [...state.questions];
+      if (typeof index === 'number' && index >= 0 && index <= updatedQuestions.length) {
+        updatedQuestions.splice(index, 0, question); // Insert before the given index
+      } else {
+        updatedQuestions.push(question); // Append if no valid index provided
+      }
+      return { questions: updatedQuestions };
+    }),
   removeQuestion: (questionId) =>
     set((state) => ({
       questions: state.questions.filter((q) => q.id !== questionId)
@@ -72,7 +82,17 @@ const useQuestionnaireStore = create<
       }
     });
   },
-  setLogic: (logic: any) => set({ logic })
+  addLogic: (logic: any) => set((state) => ({
+    logic: [...state.logic, logic]
+  })),
+  removeLogic: (logicIndex: number) => set((state) => ({
+    logic: state.logic.filter((_, index) => index !== logicIndex)
+  })),
+  updateLogic: (logicIndex, updatedLogic) =>
+    set((state) => ({
+      logic: state.logic.map((l) =>
+        l.index === logicIndex ? { ...l, ...updatedLogic } : l)
+    }))
 }));
 
 export default useQuestionnaireStore;

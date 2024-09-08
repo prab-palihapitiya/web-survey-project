@@ -14,14 +14,17 @@ import {
   Space,
   TextInput,
   Badge,
-  Loader
+  Loader,
+  Flex,
+  ActionIcon
 } from "@mantine/core";
 import { createEmptyQuestionnaire, fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/questionnaire-service";
 import { useRouter, useSearchParams } from "next/navigation";
 import DateTime from "@/app/ui/utils/datetime";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
+import { IconPlus } from "@tabler/icons-react";
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true);
   const [lastModified, setLastModified] = useState(new Date());
   const [isSaving, setIsSaving] = useState(false);
@@ -33,22 +36,22 @@ export default function Page() {
 
   const questionnaireId = useQuestionnaireStore((state) => state.id);
   const questionnaireName = useQuestionnaireStore((state) => state.name);
-  const questions = useQuestionnaireStore((state) => state.questions);
+  // const questions = useQuestionnaireStore((state) => state.questions);
+  const { name, questions, logic } = useQuestionnaireStore();
   const setName = useQuestionnaireStore((state) => state.setName);
   const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
   const addQuestion = useQuestionnaireStore((state) => state.addQuestion);
   const setQuestionnaire = useQuestionnaireStore((state) => state.setQuestionnaire);
 
   const router = useRouter();
-  const params = useSearchParams();
-  const paramId = params.get('id');
+  const pm = useSearchParams();
+  const paramId = pm.get("id");
 
   const questionnaireNameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const highestId = questions.reduce(
-      (maxId, question) => Math.max(maxId, question.id),
-      0
+      (maxId, question) => Math.max(maxId, question.id as unknown as number), 0
     );
     setNextQuestionId(highestId + 1);
   }, [questions]);
@@ -78,13 +81,15 @@ export default function Page() {
     }
   }, [paramId, setQuestionnaire, setQuestionnaireId]);
 
-  const handleCreateQuestion = () => {
+  const handleCreateQuestion = (questionIndex: number) => {
+    console.log(`Create question before question with id: ${questionIndex}`);
+
     const newQuestion = {
       id: nextQuestionId,
       shortcut: "Q" + nextQuestionId
     };
 
-    addQuestion(newQuestion);
+    addQuestion(newQuestion, questionIndex);
     setNewlyAddedQuestionId(nextQuestionId);
     setNextQuestionId(nextQuestionId + 1);
 
@@ -98,7 +103,7 @@ export default function Page() {
     setIsSaving(true);
     setQuestionnaire({ name: questionnaireName, questions: questions });
     try {
-      await saveQuestionnaireData(questionnaireId, questions, [], [], { name: questionnaireName });
+      await saveQuestionnaireData(questionnaireId, questions, logic, [], { name: questionnaireName });
       setLastModified(new Date());
     } catch (error) {
       console.error(error);
@@ -142,12 +147,12 @@ export default function Page() {
         <>
           <Badge
             size="lg"
-            radius={'xs'}
+            radius={0}
             color="green"
             style={{
               position: 'fixed',
-              top: 10,
-              right: 50,
+              top: 0,
+              right: '2.5vw',
               zIndex: 1000
             }}
           >
@@ -164,21 +169,43 @@ export default function Page() {
                 onChange={(event) => setName(event.currentTarget.value)}
               />
               <Space h="lg" />
-              {questions.map((question: any) => (
-                <Question
-                  key={question.id}
-                  questionData={question}
-                  highlight={question.id === newlyAddedQuestionId}
-                  onClose={() => handleQuestionClose(question.id)}
-                />
+              {questions.map((question: any, index: number) => (
+                <>
+                  <Flex justify="center">
+                    <ActionIcon
+                      title="Add Question Here"
+                      className={classes.plus_icon}
+                      variant="transparent"
+                      onClick={() => handleCreateQuestion(index)}
+                    >
+                      <IconPlus size={16} />
+                    </ActionIcon>
+                  </Flex>
+                  <Space h="xs" />
+                  <Question
+                    key={question.id}
+                    questionData={question}
+                    highlight={question.id === newlyAddedQuestionId}
+                    onClose={() => handleQuestionClose(question.id)}
+                  />
+                </>
               ))}
+              <Flex justify="center">
+                <ActionIcon
+                  title="Add Question Here"
+                  className={classes.plus_icon}
+                  variant="transparent"
+                  onClick={() => handleCreateQuestion(questions.length)}
+                >
+                  <IconPlus size={16} />
+                </ActionIcon>
+              </Flex>
             </GridCol>
             <GridCol>
               <Group
                 mb="md"
                 gap={"xs"}
               >
-                <Button size='xs' onClick={handleCreateQuestion}>+ New Question</Button>
                 <Button size='xs' onClick={saveChanges}>Save Changes</Button>
                 <Button size='xs' onClick={cancelChanges}>Cancel</Button>
               </Group>

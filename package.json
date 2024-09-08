@@ -9,7 +9,11 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "pw:install": "pnpm exec playwright install",
+    "pw:ui": "pnpm pw:install && pnpm pw:ui:chromium",
+    "pw:ui:all": "pnpm pw:install && playwright test --ui",
+    "pw:headless": "pnpm pw:install && playwright test"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.6.0",
@@ -30,6 +34,7 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.46.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/node": "^20",
     "@types/react": "^18",

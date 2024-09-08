@@ -47,3 +47,13 @@ export const QuestionTypeMappings: Record<string, { Component: React.ComponentTy
         Control: SingleMenu
     }
 };
+
+export const QuestionTypesWithOptions = ["Single Choice List", "Multiple Choice List", "Single Choice Buttons", "Dropdown Menu"];
+
+export const SingleChoiceQuestionTypes = ["Single Choice List", "Single Choice Buttons", "Dropdown Menu"];
+
+export const MultipleChoiceQuestionTypes = ["Multiple Choice List"];
+
+export const NumericQuestionTypes = ["Numeric Input"];
+
+export const TextQuestionTypes = ["Text Input", "Text Area"];

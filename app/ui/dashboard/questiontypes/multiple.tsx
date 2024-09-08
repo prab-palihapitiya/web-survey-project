@@ -78,8 +78,13 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
               }
             />
           </Table.Td>
-          <Table.Td>
+          <Table.Td style={
+            {
+              maxWidth: rem(150),
+            }
+          }>
             <FileInput
+              variant="unstyled"
               clearable
               placeholder="Upload"
               value={row.resource}
@@ -90,10 +95,16 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
                   )
                 )
               }
+              styles={{
+                input: {
+                  textAlign: "center"
+                },
+              }}
             />
           </Table.Td>
           <Table.Td>
             <Select
+              variant="unstyled"
               data={["None", "Enabled"]}
               value={row.subQuestion}
               onChange={(value) =>
@@ -107,6 +118,7 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
           </Table.Td>
           <Table.Td>
             <Select
+              variant="unstyled"
               data={["Yes", "No"]}
               value={row.exclusive}
               onChange={(value) =>
@@ -136,7 +148,13 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
     <>
       <Divider
         my="xs"
-        label="Put your choices here"
+        size={2}
+        color="#228be6"
+        label={
+          <div className={classes.divider_label}>
+            Options
+          </div>
+        }
         labelPosition="left"
       />
       <DragDropContext
@@ -164,11 +182,14 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
                 {items}
                 {provided.placeholder}
                 <Table.Tr>
-                  <Table.Td colSpan={6}>
+                  <Table.Td
+                    colSpan={7}
+                    p={0}
+                  >
                     <ActionIcon
                       onClick={handleAddRow}
-                      m={4}
-                      variant="subtle"
+                      variant="transparent"
+                      className={classes.plus_item}
                     >
                       <IconPlus size={16} />
                     </ActionIcon>

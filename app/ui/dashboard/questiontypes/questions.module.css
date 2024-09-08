@@ -1,15 +1,10 @@
-.table_foot {
-  border-top: calc(0.0625rem * var(--mantine-scale)) solid
-    var(--table-border-color);
-}
-
 .dragHandle_td {
   padding: 0;
   cursor: grab;
 }
 
 .dragHandle {
-  padding-block: 1rem;
+  /* padding-block: 1rem; */
   width: rem(40px);
   display: flex;
   align-items: center;
@@ -20,4 +15,22 @@
 
 .item {
   background-color: var(--mantine-color-body);
+}
+.item:hover {
+  background-color: var(--mantine-color-blue-light-hover);
+}
+.plus_item {
+  width: 100%;
+  text-align: center;
+}
+.plus_item:hover {
+  background-color: var(--mantine-color-blue-6);
+  color: var(--mantine-color-white);
+}
+.divider_label {
+  color: var(--mantine-color-gray-9);
+  font-size: var(--mantine-font-size-sm);
+  margin-block: var(--mantine-space-xs);
+  margin-inline: 0;
+  font-weight: 500;
 }

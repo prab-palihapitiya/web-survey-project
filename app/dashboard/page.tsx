@@ -60,11 +60,12 @@ export default function Page() {
         </Table.Td>
         <Table.Td>You</Table.Td>
         <Table.Td align="center">
-          <Group gap={'xs'}>
+          <Group gap={'xs'} justify="space-evenly">
             <Link href={`/dashboard/questionnaire/?id=${id}`}>
-              <Button size="xs">Edit</Button>
+              <Button size="xs" variant="subtle">Edit</Button>
             </Link>
-            <Button size="xs" color="red" onClick={() => handleDelete(id)}>Delete</Button>
+            <Button size="xs" color="red" variant="subtle" onClick={() => handleDelete(id)}>Delete</Button>
+            <Button size="xs" color="purple" variant="subtle" onClick={() => { }}>Publish</Button>
           </Group>
         </Table.Td>
       </Table.Tr>

@@ -1,24 +1,130 @@
 "use client";
 
-import { Button, createTheme, Checkbox } from "@mantine/core";
+import { Button, createTheme, Checkbox, TextInput, Select, Textarea, ActionIcon, Table, MultiSelect, Paper } from "@mantine/core";
 
 export const theme = createTheme({
   components: {
-    Button: Button.extend({
+    Paper: Paper.extend({
       styles: {
+        root: {
+          borderRadius: 0,
+        }
+      }
+    }),
+    Button: Button.extend({
+      defaultProps: {
+        size: "xs",
+      },
+      styles: {
+        root: {
+          borderRadius: 0,
+          // borderWidth: 2,
+          fontWeight: 500
+        },
         inner: { fontWeight: 500 }
       }
     }),
-    Checkbox: Checkbox.extend({
+    ActionIcon: ActionIcon.extend({
+      // defaultProps: {
+      //   size: "xs",
+      // },
       styles: {
-        input: { cursor: "pointer" },
+        root: {
+          borderRadius: 0,
+          // borderWidth: 2,
+        }
+      }
+    }),
+    Checkbox: Checkbox.extend({
+      defaultProps: {
+        size: "xs",
+      },
+      styles: {
+        input: {
+          cursor: "pointer",
+          // borderWidth: 2,
+          borderRadius: 0
+        },
         label: { cursor: "pointer" }
       }
     }),
-    Table: {
+    TextInput: TextInput.extend({
+      defaultProps: {
+        size: "xs",
+      },
       styles: {
-        th: { fontWeight: 500 }
+        input: {
+          // borderColor: "grey",
+          // borderWidth: 2,
+          borderRadius: 0
+        },
+      },
+    }),
+    Textarea: Textarea.extend({
+      defaultProps: {
+        size: "xs",
+      },
+      styles: {
+        input: {
+          // borderColor: "grey",
+          // borderWidth: 2,
+          borderRadius: 0
+        },
+      },
+    }),
+    Select: Select.extend({
+      defaultProps: {
+        size: "xs",
+      },
+      styles: {
+        input: {
+          // borderColor: "grey",
+          // borderWidth: 2,
+          borderRadius: 0
+        },
+        dropdown: {
+          // borderColor: "grey",
+          // borderWidth: 2,
+          borderRadius: 0
+        },
+        option: {
+          // borderColor: "grey",
+          // borderWidth: 2,
+          borderRadius: 0
+        }
+      },
+    }),
+    Table: Table.extend({
+      styles: {
+        table: { borderCollapse: "collapse", borderColor: "#228be6" },
+        thead: { backgroundColor: "#228be6", color: "white" },
+        th: { fontWeight: 500, borderColor: "#228be6" },
+        td: { borderColor: "#228be6", paddingBlock: 0 },
+        tr: { borderColor: "#228be6" },
       }
+    }),
+    FileInput: {
+      defaultProps: {
+        size: "xs",
+      },
+      styles: {
+        input: {
+          // borderWidth: 2,
+          borderRadius: 0,
+        }
+      }
+    },
+    MultiSelect: {
+      defaultProps: {
+        size: "xs",
+      },
+      styles: {
+        input: {
+          // borderWidth: 2,
+          borderRadius: 0,
+        }
+      }
+
     }
   },
 });

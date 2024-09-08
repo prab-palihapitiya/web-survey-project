@@ -4,12 +4,19 @@ import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol } from "@mantine/core";
 import { useEffect, useState } from 'react';
 import classes from "@/app/ui/dashboard/dashboard.module.css";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
 
-export default function Page() {
-    const { name, questions, answers } = useQuestionnaireStore();
+export default function Page({
+    searchParams
+}: {
+    searchParams?: {
+        query?: string;
+        page?: string;
+    };
+}) {
+    const { name, questions } = useQuestionnaireStore();
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
     const [questionnaires, setQuestionnaires] = useState([]); // To store the list of questionnaires
     const [selectedQuestionnaireId, setSelectedQuestionnaireId] = useState(''); // To store the selected questionnaire ID
@@ -18,9 +25,9 @@ export default function Page() {
     const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
     const setQuestionnaire = useQuestionnaireStore((state) => state.setQuestionnaire);
 
+    const { id } = searchParams;
     const router = useRouter();
-    const params = useSearchParams();
-    const paramId = params.get('id');
+    const paramId = id;
 
     useEffect(() => {
         const userId = "clzyfzfg300002y2l8a7du5lf"; // TODO: Replace with how you get the actual user ID
@@ -81,7 +88,7 @@ export default function Page() {
                     <GridCol>
                         <Badge
                             size="lg"
-                            radius={'xs'}
+                            radius={0}
                             style={{ textTransform: 'none' }}
                         >
                             {name}
@@ -90,7 +97,7 @@ export default function Page() {
                             <>
                                 <Badge
                                     size="lg"
-                                    radius={'xs'}
+                                    radius={0}
                                     color="green"
                                     style={{ marginLeft: 5, textTransform: 'none' }}
                                     autoCapitalize="false"
