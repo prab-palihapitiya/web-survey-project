@@ -1,11 +1,46 @@
 .container {
   margin-inline: 0;
   max-width: 100%;
+  margin-top: 40px;
+  padding-bottom: 70px;
 }
+
+.scrollable_container {
+  height: calc(
+    100vh - 70px
+  ); /* Adjust the height to ensure it's scrollable (minus header/footer height if needed) */
+  overflow-y: auto; /* Enables vertical scrolling */
+  padding-top: 40px; /* Creates the top margin for the scrollbar */
+}
+
+.top_bar {
+  position: fixed;
+  top: 0; /* Adjust based on how far down from the top you want the grid to appear */
+  left: 80px; /* Set to center it horizontally if needed */
+  right: 0; /* To ensure it spans the full width */
+  z-index: 1000; /* Ensure it stays above other content */
+  background-color: white; /* Optional: Set a background to prevent overlap of content */
+  padding: 10px; /* Optional: Adjust padding or margins as needed */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+
+.bottom_bar {
+  position: fixed;
+  bottom: 0; /* Fixes the grid to the bottom of the viewport */
+  left: 80px;
+  width: 100%; /* Ensures the grid spans the full width */
+  z-index: 1000; /* Adjust as needed to stay above other content */
+  background-color: white; /* Optional: Prevents content from showing through */
+  padding: 10px; /* Adjust padding as needed */
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow above the grid */
+}
+
 .question_container {
   /* border-width: 1px; */
   border-radius: 0;
   border: none;
+  background-color: var(--mantine-color-blue-light-hover);
+
   /* border-color: var(--mantine-color-grey-6); */
 }
 .questionnaire_name_input {
@@ -13,8 +48,9 @@
 }
 .focused,
 .highlight {
-  background-color: var(--mantine-color-blue-light-hover);
-  border: 1px solid var(--mantine-color-blue-5);
+  /* background-color: var(--mantine-color-blue-light-hover); */
+  border: 1px solid var(--mantine-color-blue-outline);
+
   /* transition: 0.3s; */
 }
 .loading_wrapper {

@@ -12,7 +12,7 @@ import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import DateTime from "@/app/ui/utils/datetime";
 
 export default function Page() {
-    const { name, questions, logic, answers } = useQuestionnaireStore();
+    const { name, questions, logic } = useQuestionnaireStore();
     const [isLoading, setIsLoading] = useState(false);
     const [questionnaires, setQuestionnaires] = useState([]); // To store the list of questionnaires
     const [selectedQuestionnaireId, setSelectedQuestionnaireId] = useState<string | null>(''); // To store the selected questionnaire ID
@@ -133,9 +133,6 @@ export default function Page() {
                                 size="lg"
                                 radius={0}
                                 color="green"
-                                style={{
-                                    zIndex: 1000
-                                }}
                             >
                                 {getSavedStatus()}
                             </Badge>}

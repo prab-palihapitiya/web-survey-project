@@ -36,7 +36,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const questionnaireId = useQuestionnaireStore((state) => state.id);
   const questionnaireName = useQuestionnaireStore((state) => state.name);
-  // const questions = useQuestionnaireStore((state) => state.questions);
   const { name, questions, logic } = useQuestionnaireStore();
   const setName = useQuestionnaireStore((state) => state.setName);
   const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
@@ -145,19 +144,24 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
       ) : (
         <>
-          <Badge
-            size="lg"
-            radius={0}
-            color="green"
-            style={{
-              position: 'fixed',
-              top: 0,
-              right: '2.5vw',
-              zIndex: 1000
-            }}
-          >
-            {getSavedStatus()}
-          </Badge>
+          <Grid className={classes.top_bar}>
+            <GridCol>
+              <Flex justify={"space-between"}>
+                <Group justify="flex-start"></Group>
+                <Group justify="flex-end">
+                  <Badge
+                    size="lg"
+                    radius={0}
+                    color="green"
+                  >
+                    {getSavedStatus()}
+                  </Badge>
+                </Group>
+              </Flex>
+            </GridCol>
+          </Grid>
+          <Space h="sm" />
+          <Space h="sm" />
           <Grid>
             <GridCol>
               <TextInput
@@ -201,18 +205,17 @@ export default function Page({ params }: { params: { id: string } }) {
                 </ActionIcon>
               </Flex>
             </GridCol>
-            <GridCol>
-              <Group
-                mb="md"
-                gap={"xs"}
-              >
-                <Button size='xs' onClick={saveChanges}>Save Changes</Button>
-                <Button size='xs' onClick={cancelChanges}>Cancel</Button>
-              </Group>
-            </GridCol>
           </Grid>
         </>
       )}
+      <Grid className={classes.bottom_bar}>
+        <GridCol>
+          <Group gap={"xs"}>
+            <Button size='xs' onClick={saveChanges}>Save Changes</Button>
+            <Button size='xs' onClick={cancelChanges}>Cancel</Button>
+          </Group>
+        </GridCol>
+      </Grid>
     </Container>
   );
 }

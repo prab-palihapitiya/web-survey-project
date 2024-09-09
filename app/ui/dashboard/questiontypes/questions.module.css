@@ -29,8 +29,5 @@
 }
 .divider_label {
   color: var(--mantine-color-gray-9);
-  font-size: var(--mantine-font-size-sm);
-  margin-block: var(--mantine-space-xs);
-  margin-inline: 0;
   font-weight: 500;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, createTheme, Checkbox, TextInput, Select, Textarea, ActionIcon, Table, MultiSelect, Paper } from "@mantine/core";
+import { Button, createTheme, Checkbox, TextInput, Select, Textarea, ActionIcon, Table, MultiSelect, Paper, NumberInput, Radio } from "@mantine/core";
 
 export const theme = createTheme({
   components: {
@@ -48,7 +48,24 @@ export const theme = createTheme({
         label: { cursor: "pointer" }
       }
     }),
+    Radio: Radio.extend({
+      defaultProps: {
+        size: "xs",
+      }
+    }),
     TextInput: TextInput.extend({
+      defaultProps: {
+        size: "xs",
+      },
+      styles: {
+        input: {
+          // borderColor: "grey",
+          // borderWidth: 2,
+          borderRadius: 0
+        },
+      },
+    }),
+    NumberInput: NumberInput.extend({
       defaultProps: {
         size: "xs",
       },
@@ -96,7 +113,7 @@ export const theme = createTheme({
     }),
     Table: Table.extend({
       styles: {
-        table: { borderCollapse: "collapse", borderColor: "#228be6" },
+        table: { borderCollapse: "collapse", borderColor: "#228be6", fontSize: 'var(--mantine-font-size-xs)' },
         thead: { backgroundColor: "#228be6", color: "white" },
         th: { fontWeight: 500, borderColor: "#228be6" },
         td: { borderColor: "#228be6", paddingBlock: 0 },
