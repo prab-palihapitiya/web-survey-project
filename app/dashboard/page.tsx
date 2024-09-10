@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Container, Grid, GridCol, Group, Loader, Table } from "@mantine/core";
+import { Button, Container, Grid, GridCol, Group, Loader, rem, Table } from "@mantine/core";
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { deleteQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
@@ -60,7 +60,7 @@ export default function Page() {
         </Table.Td>
         <Table.Td>You</Table.Td>
         <Table.Td align="center">
-          <Group gap={'xs'} justify="space-evenly">
+          <Group gap={0} justify="space-evenly">
             <Link href={`/dashboard/questionnaire/?id=${id}`}>
               <Button size="xs" variant="subtle">Edit</Button>
             </Link>
@@ -104,7 +104,7 @@ export default function Page() {
                   <Table.Th>Created At</Table.Th>
                   <Table.Th>Last Modified</Table.Th>
                   <Table.Th>Last Modified By</Table.Th>
-                  <Table.Th>Actions</Table.Th>
+                  <Table.Th w={rem(215)}>Actions</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>

@@ -9,19 +9,19 @@ export const LogicOperators = [
 ];
 
 export const LogicConditions = [
-    { value: "has", label: "Has" },
-    { value: "equals", label: "Equals" },
-    { value: "not equals", label: "Not Equals" },
-    { value: "contains", label: "Contains" },
-    { value: "does not contain", label: "Does Not Contain" },
-    { value: "greater than", label: "Greater Than" },
-    { value: "less than", label: "Less Than" }
+    { value: "Has", label: "Has" },
+    { value: "Equals", label: "Equals" },
+    { value: "Not equals", label: "Not Equals" },
+    { value: "Contains", label: "Contains" },
+    { value: "Does not contain", label: "Does Not Contain" },
+    { value: "Greater than", label: "Greater Than" },
+    { value: "Less than", label: "Less Than" }
 ];
 
 export const LogicActions = [
-    { value: "show", label: "Show" },
-    { value: "hide", label: "Hide" },
-    { value: "hide options", label: "Hide Options" },
-    { value: "set value", label: "Set Value" },
-    { value: "end", label: "End" }
+    { value: "Show", label: "Show" },
+    { value: "Hide", label: "Hide" },
+    { value: "Hide options", label: "Hide Options" },
+    { value: "Set value", label: "Set Value" },
+    { value: "End", label: "End" }
 ];

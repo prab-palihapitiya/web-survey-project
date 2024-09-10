@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Flex, Group, MultiSelect, NumberInput, Paper, Select, TextInput } from "@mantine/core";
-import { IconArrowNarrowRight, IconCopyPlus, IconX } from "@tabler/icons-react";
+import { IconArrowBadgeRight, IconArrowBadgeRightFilled, IconArrowNarrowRight, IconArrowRightCircle, IconCopyPlus, IconSquareArrowRightFilled, IconX } from "@tabler/icons-react";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { LogicConditions, LogicActions, LogicOptions } from "@/app/lib/config/logic-config";
 import { MultipleChoiceQuestionTypes, NumericQuestionTypes, QuestionTypesWithOptions, SingleChoiceQuestionTypes, TextQuestionTypes } from "@/app/lib/config/question-config";
 import { Option, Question } from "@/app/lib/types";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
+import classes from "./logic.module.css";
 
 export default function Logic({ logicData }: { logicData: any }) {
     const selectedQuestionIdRef = useRef<HTMLInputElement>(null);
@@ -116,6 +117,8 @@ export default function Logic({ logicData }: { logicData: any }) {
         <Paper
             shadow="lg"
             p={'xs'}
+            pt={0}
+            pr={0}
         >
             <Flex
                 justify={"space-between"}
@@ -125,7 +128,7 @@ export default function Logic({ logicData }: { logicData: any }) {
                     gap={"xs"}
                 >
                 </Group>
-                <Group justify="flex-end" gap={'xs'}>
+                <Group justify="flex-end" gap={0}>
                     <Button
                         size="xs"
                         variant="subtle"
@@ -142,11 +145,11 @@ export default function Logic({ logicData }: { logicData: any }) {
                     </Button>
                 </Group>
             </Flex>
-            <Group>
+            <Group gap={0}>
                 <Select
                     data={questions.map((question) => ({ value: question.id.toString(), label: question.shortcut }))}
                     placeholder="Select a question"
-                    label="IF Question"
+                    label="(IF) Question"
                     value={selectedQuestionId}
                     ref={selectedQuestionIdRef}
                     onChange={(value) => { handleIfQuestionChange(value) }}
@@ -154,11 +157,11 @@ export default function Logic({ logicData }: { logicData: any }) {
                 />
                 {selectedQuestion && (
                     <>
-                        <IconArrowNarrowRight color="black" />
+                        <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />
                         <Select
                             data={LogicConditions}
                             placeholder="Select a condition"
-                            label="Condition"
+                            label="(IF) Condition"
                             value={selectedCondition}
                             ref={selectedConditionRef}
                             onChange={(value) => {
@@ -176,20 +179,20 @@ export default function Logic({ logicData }: { logicData: any }) {
 
                         {selectedCondition && (
                             <>
-                                <IconArrowNarrowRight color="black" />
+                                <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />
                                 {QuestionTypesWithOptions.includes(selectedQuestion.questionType) ? (
                                     <MultiSelect
                                         data={recreateAnswerList(selectedQuestion)}
                                         placeholder="Select"
-                                        label="Answer"
+                                        label={`Answer (${selectedCondition})`}
                                         value={selectedAnswer as string[]}
                                         ref={selectedAnswerRef}
                                         onChange={(value) => handleAnswerChange(value)} />
                                 ) : (
                                     NumericQuestionTypes.includes(selectedQuestion.questionType) ? (
                                         <NumberInput
-                                            placeholder="Type value"
-                                            label="Value"
+                                            placeholder="Type here"
+                                            label={`Answer (${selectedCondition})`}
                                             value={selectedAnswer as number}
                                             ref={selectedAnswerRef}
                                             onChange={() => {
@@ -199,8 +202,8 @@ export default function Logic({ logicData }: { logicData: any }) {
                                         />
                                     ) : (
                                         <TextInput
-                                            placeholder="Type value"
-                                            label="Value"
+                                            placeholder="Type here"
+                                            label={`Answer (${selectedCondition})`}
                                             value={selectedAnswer as string}
                                             ref={selectedAnswerRef}
                                             onChange={() => {
@@ -212,11 +215,11 @@ export default function Logic({ logicData }: { logicData: any }) {
                                 )}
                                 {selectedAnswer && (
                                     <>
-                                        <IconArrowNarrowRight color="black" />
+                                        <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />
                                         <Select
                                             data={LogicActions}
                                             placeholder="Select"
-                                            label="Action"
+                                            label="Action (Do)"
                                             value={selectedAction}
                                             ref={selectedActionRef}
                                             onChange={(value) => {
@@ -230,25 +233,35 @@ export default function Logic({ logicData }: { logicData: any }) {
                                         />
                                         {selectedAction && (
                                             <>
-                                                <IconArrowNarrowRight color="black" />
+                                                <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />
                                                 <Select
                                                     data={questions
-                                                        .filter((question) => question.id.toString() !== selectedQuestionId)
-                                                        .map((question) => ({ value: question.id.toString(), label: question.shortcut }))}
+                                                        .filter((question) => question.id.toString() !== selectedQuestionId) // Exclude the current "If" question
+                                                        .map((question) => {
+                                                            const questionIndex = questions.findIndex((q) => q.id.toString() === question.id.toString());
+                                                            const ifQuestionIndex = questions.findIndex((q) => q.id.toString() === selectedQuestionId);
+
+                                                            return {
+                                                                value: question.id.toString(),
+                                                                label: question.shortcut,
+                                                                disabled: questionIndex < ifQuestionIndex // Disable questions that appear before the "If" question
+                                                            };
+                                                        })
+                                                    }
                                                     placeholder="Select a question"
-                                                    label="Target Question"
+                                                    label={`(${selectedAction}) Target`}
                                                     value={selectedTargetQuestionId}
                                                     ref={selectedTargetQuestionIdRef}
                                                     onChange={(value) => { handleTargetQuestionChange(value) }}
                                                     style={{ width: 150 }}
                                                 />
-                                                {selectedTargetQuestion && selectedAction === 'set value' && (
+                                                {selectedTargetQuestion && selectedAction === 'Set value' && (
                                                     <>
-                                                        <IconArrowNarrowRight color="black" />
+                                                        <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />
                                                         {NumericQuestionTypes.includes(selectedTargetQuestion?.questionType) && (
                                                             <NumberInput
                                                                 placeholder="Type value to set"
-                                                                label={`Set '${selectedTargetQuestion.shortcut}' Value`}
+                                                                label={`'${selectedTargetQuestion.shortcut}' Value`}
                                                                 value={selectedSetValue as number}
                                                                 ref={selectedSetValueRef}
                                                                 onChange={() => {

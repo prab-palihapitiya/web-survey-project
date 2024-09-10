@@ -1,7 +1,7 @@
 'use client';
 
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol } from "@mantine/core";
+import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader } from "@mantine/core";
 import { useEffect, useState } from 'react';
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter } from "next/navigation";
@@ -17,6 +17,7 @@ export default function Page({
     };
 }) {
     const { name, questions } = useQuestionnaireStore();
+    const [isLoading, setIsLoading] = useState(false);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
     const [questionnaires, setQuestionnaires] = useState([]); // To store the list of questionnaires
     const [selectedQuestionnaireId, setSelectedQuestionnaireId] = useState(''); // To store the selected questionnaire ID
@@ -48,7 +49,7 @@ export default function Page({
         setSelectedQuestionnaireId(value);
         setQuestionnaireId(value);
 
-        // setIsLoading(true);
+        setIsLoading(true);
         fetchQuestionnaire(value)
             .then((response) => {
                 setQuestionnaireId(response.data.id);
@@ -56,7 +57,7 @@ export default function Page({
                 router.push(`/dashboard/preview?id=${value}`); // Navigate to the selected questionnaire preview
             })
             .finally(() => {
-                // setIsLoading(false);
+                setIsLoading(false);
             });
     };
 
@@ -74,61 +75,90 @@ export default function Page({
 
     return (
         <Container className={classes.container}>
-            <Grid>
+            <Grid className={classes.top_bar}>
                 <GridCol>
-                    <Select
-                        placeholder="Select a Questionnaire"
-                        data={questionnaires.map((q: { id: string, name: string }) => ({ value: q.id, label: q.name }))}
-                        value={selectedQuestionnaireId || questionnaireId === paramId ? questionnaireId : ''}
-                        onChange={handleQuestionnaireSelect}
-                    />
-                    <Space h="xs" />
-                </GridCol>
-                {questionnaireId && paramId && questionnaireId === paramId && questions.length > 0 && (
-                    <GridCol>
-                        <Badge
-                            size="lg"
-                            radius={0}
-                            style={{ textTransform: 'none' }}
-                        >
-                            {name}
-                        </Badge>
-                        {currentQuestion && (
-                            <>
-                                <Badge
-                                    size="lg"
-                                    radius={0}
-                                    color="green"
-                                    style={{ marginLeft: 5, textTransform: 'none' }}
-                                    autoCapitalize="false"
-                                >
-                                    {currentQuestion.shortcut}
-                                </Badge>
-                                <div>
-                                    <Space h="lg" />
-                                    <Text>{currentQuestion.introduction}</Text>
-                                    <Space h="md" />
-                                    {ControlComponent && <ControlComponent currentQuestion={currentQuestion} />}
-                                    <Space h="md" />
-                                </div>
-                            </>
-                        )}
-
-                        <Group mt="md">
-                            <Button onClick={handlePrevious} disabled={activeQuestionIndex === 0}>
-                                Previous
-                            </Button>
-                            <Button onClick={handleNext} disabled={activeQuestionIndex === questions.length - 1}>
-                                Next
-                            </Button>
+                    <Flex justify={"space-between"}>
+                        <Group justify="flex-start">
+                            <Select
+                                variant="filled"
+                                placeholder="Select a Questionnaire"
+                                data={questionnaires.map((q: { id: string, name: string }) => ({ value: q.id, label: q.name }))}
+                                value={selectedQuestionnaireId || questionnaireId === paramId ? questionnaireId : ''}
+                                onChange={handleQuestionnaireSelect}
+                            />
+                            <Space h="xs" />
                         </Group>
-                    </GridCol>
-                )}
-                {questionnaireId && questions.length === 0 && (
-                    <GridCol>
-                        <Text>Empty Questionnaire.</Text>
-                    </GridCol>
-                )}
+                        {/* <Group justify="flex-end">
+                            {paramId && <Badge
+                                size="lg"
+                                radius={0}
+                                color="green"
+                            >
+                                {getSavedStatus()}
+                            </Badge>}
+                        </Group> */}
+                    </Flex>
+                </GridCol>
+            </Grid>
+            <Space h="xs" />
+            {isLoading ? (
+                <div className={classes.loading_wrapper}>
+                    <Loader size={30} />
+                </div>
+            ) : (
+                <Grid>
+                    {questionnaireId && paramId && questionnaireId === paramId && questions.length > 0 && (
+                        <GridCol>
+                            <Badge
+                                size="lg"
+                                radius={0}
+                                style={{ textTransform: 'none', fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem' }}
+                            >
+                                {name}
+                            </Badge>
+                            {currentQuestion && (
+                                <>
+                                    <Badge
+                                        size="lg"
+                                        radius={0}
+                                        style={{ marginLeft: 5, textTransform: 'none', backgroundColor: 'var(--mantine-color-green-6)', fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem' }}
+                                    >
+                                        {currentQuestion.shortcut}
+                                    </Badge>
+                                    <div>
+                                        <Space h="lg" />
+                                        <Text size="sm">{currentQuestion.introduction}</Text>
+                                        <Space h="md" />
+                                        {ControlComponent && <ControlComponent currentQuestion={currentQuestion} />}
+                                        <Space h="md" />
+                                    </div>
+                                </>
+                            )}
+
+                            <Group mt="md">
+                                <Button onClick={handlePrevious} disabled={activeQuestionIndex === 0}>
+                                    Previous
+                                </Button>
+                                <Button onClick={handleNext} disabled={activeQuestionIndex === questions.length - 1}>
+                                    Next
+                                </Button>
+                            </Group>
+                        </GridCol>
+                    )}
+                    {questionnaireId && questions.length === 0 && (
+                        <GridCol>
+                            <Text>Empty Questionnaire</Text>
+                        </GridCol>
+                    )}
+                </Grid>
+            )}
+            <Grid className={classes.bottom_bar}>
+                <GridCol>
+                    <Group gap={"xs"}>
+                        {/* <Button size='xs'>Save Changes</Button> */}
+                        <Button size='xs'>Cancel</Button>
+                    </Group>
+                </GridCol>
             </Grid>
         </Container >
     );

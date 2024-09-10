@@ -16,13 +16,14 @@ import {
   Badge,
   Loader,
   Flex,
-  ActionIcon
+  ActionIcon,
+  Tooltip
 } from "@mantine/core";
 import { createEmptyQuestionnaire, fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/questionnaire-service";
 import { useRouter, useSearchParams } from "next/navigation";
 import DateTime from "@/app/ui/utils/datetime";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { IconPlus } from "@tabler/icons-react";
+import { IconPlus, IconQuestionMark } from "@tabler/icons-react";
 
 export default function Page({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -147,12 +148,37 @@ export default function Page({ params }: { params: { id: string } }) {
           <Grid className={classes.top_bar}>
             <GridCol>
               <Flex justify={"space-between"}>
-                <Group justify="flex-start"></Group>
+                <Group justify="flex-start">
+                  <TextInput
+                    variant="filled"
+                    rightSection={
+                      <Tooltip
+                        multiline
+                        w={350}
+                        withArrow
+                        transitionProps={{ duration: 200 }}
+                        style={{
+                          fontSize: 'var(--mantine-font-size-xs)',
+                          backgroundColor: "var(--mantine-color-blue-6)"
+                        }}
+                        label="Write the name of your questionnaire (e.x. My simple survey). You'll refer this name everywhere, so try to put an identifiable, unique name."
+                      >
+                        <ActionIcon variant="light">
+                          <IconQuestionMark size={14} />
+                        </ActionIcon>
+                      </Tooltip>
+                    }
+                    placeholder="Type here..."
+                    value={questionnaireName}
+                    ref={questionnaireNameRef}
+                    onChange={(event) => setName(event.currentTarget.value)}
+                  />
+                </Group>
                 <Group justify="flex-end">
                   <Badge
                     size="lg"
                     radius={0}
-                    color="green"
+                    style={{ backgroundColor: 'var(--mantine-color-green-6)', fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem' }}
                   >
                     {getSavedStatus()}
                   </Badge>
@@ -160,21 +186,20 @@ export default function Page({ params }: { params: { id: string } }) {
               </Flex>
             </GridCol>
           </Grid>
-          <Space h="sm" />
-          <Space h="sm" />
+          <Space h="xs" />
           <Grid>
             <GridCol>
-              <TextInput
+              {/* <TextInput
                 label="Questionnaire Name"
                 description="Name of your questionnaire (e.x. My simple survey). You'll refer this name everywhere, so try to put an identifiable/unique name."
                 placeholder="Type here..."
                 value={questionnaireName}
                 ref={questionnaireNameRef}
                 onChange={(event) => setName(event.currentTarget.value)}
-              />
+              /> */}
               <Space h="lg" />
               {questions.map((question: any, index: number) => (
-                <>
+                <div key={`question-${question.id}`}>
                   <Flex justify="center">
                     <ActionIcon
                       title="Add Question Here"
@@ -192,7 +217,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     highlight={question.id === newlyAddedQuestionId}
                     onClose={() => handleQuestionClose(question.id)}
                   />
-                </>
+                </div>
               ))}
               <Flex justify="center">
                 <ActionIcon

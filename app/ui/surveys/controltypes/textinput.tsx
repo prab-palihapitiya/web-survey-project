@@ -1,7 +1,8 @@
+import { Question } from "@/app/lib/types";
 import { Textarea, TextInput } from "@mantine/core";
 import { useState } from "react";
 
-export default function TextInputControl({ currentQuestion }: { currentQuestion: any }) {
+export default function TextInputControl({ currentQuestion }: { currentQuestion: Question }) {
     const [answer, setAnswer] = useState<string>('');
 
     const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {

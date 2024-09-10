@@ -122,6 +122,7 @@ export default function Page() {
                     <Flex justify={"space-between"}>
                         <Group justify="flex-start">
                             <Select
+                                variant="filled"
                                 placeholder="Select a Questionnaire"
                                 data={questionnaires.map((q: { id: string, name: string }) => ({ value: q.id, label: q.name }))}
                                 value={selectedQuestionnaireId || questionnaireId === paramId ? questionnaireId : ''}
@@ -132,8 +133,11 @@ export default function Page() {
                             {paramId && <Badge
                                 size="lg"
                                 radius={0}
-                                color="green"
-                            >
+                                style={{
+                                    backgroundColor: 'var(--mantine-color-green-6)',
+                                    fontSize: 'var(--mantine-font-size-xs)',
+                                    padding: '0.8rem'
+                                }}>
                                 {getSavedStatus()}
                             </Badge>}
                         </Group>

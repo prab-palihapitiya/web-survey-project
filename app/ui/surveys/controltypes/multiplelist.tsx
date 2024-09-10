@@ -1,9 +1,10 @@
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
+import { Question } from "@/app/lib/types";
 import { Checkbox, Stack, CheckboxGroup, Radio, TextInput, Group } from "@mantine/core";
 import { useState } from 'react';
 
-export default function MultipleList({ currentQuestion }: { currentQuestion: any }) {
+export default function MultipleList({ currentQuestion }: { currentQuestion: Question }) {
     const [selectedOptionValues, setSelectedOptionValues] = useState<string[]>([]);
     const [isExclusiveSelected, setIsExclusiveSelected] = useState(false);
     const [subQuestionAnswers, setSubQuestionAnswers] = useState<{ [key: string]: string }>({}); // { 0: 'answer1', 1: 'answer2' }

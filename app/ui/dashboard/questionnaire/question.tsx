@@ -99,8 +99,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
       <>
         <Paper
           shadow="lg"
-          p={isCollapsed ? 4 : 'xs'}
-          // withBorder={true}
+          p={0}
           ref={questionRef}
           className={clsx(
             isFocused ? classes.focused : highlight ? classes.highlight : "",
@@ -152,7 +151,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
                 </Group>
               )}
             </Group>
-            <Group justify="flex-end" gap={'xs'}>
+            <Group justify="flex-end" gap={0}>
               <Button
                 size="xs"
                 color="blue"
@@ -194,7 +193,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
           </Flex>
           <Collapse in={!isCollapsed}>
             <Space h="xs"></Space>
-            <Grid>
+            <Grid p={'xs'}>
               <GridCol span={3}>
                 <Select
                   label="Question Type"
@@ -219,14 +218,14 @@ export default function Question({ questionData, highlight, onClose }: { questio
                   rightSection={
                     <Tooltip
                       multiline
-                      w={300}
+                      w={350}
                       withArrow
                       transitionProps={{ duration: 200 }}
-                      color="#228be6"
+                      style={{ fontSize: 12, backgroundColor: "#228be6" }}
                       label="You will use this name when defining question logic. Use CamelCase(e.x. MyQuestion1) or use the generated question shortcut."
                     >
-                      <ActionIcon variant="transparent">
-                        <IconQuestionMark size={16} />
+                      <ActionIcon variant="light">
+                        <IconQuestionMark size={14} />
                       </ActionIcon>
                     </Tooltip>
                   }
