@@ -1,39 +1,26 @@
-import { Radio, Stack } from "@mantine/core";
-import { useEffect, useState } from 'react';
+import { Group, Radio, Stack, TextInput } from "@mantine/core";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { Question } from "@/app/lib/types";
+import { Option, Question, SubQuestionAnswer } from "@/app/lib/types";
 
 export default function SingleList({ currentQuestion }: { currentQuestion: Question }) {
-    const [selectedOptionValue, setSelectedOptionValue] = useState<string | null>(null);
+    const setAnswer = useQuestionnaireStore(state => state.setAnswer);
+    const answers = useQuestionnaireStore(state => state.answers);
 
-    const getAnswerForQuestion = (questionId: string) => {
-        const answers = useQuestionnaireStore(state => state.answers);
-        const answerEntry = answers.find(a => a.questionId === questionId);
-        return answerEntry ? answerEntry.answer : null;
+    const getCurrentQuestionAnswerEntry = (questionId: string) => {
+        const entry = answers.find(a => a.questionId === questionId);
+        return entry || null;
     };
 
-    const answer = getAnswerForQuestion(currentQuestion.id.toString());
+    const answerEntry = getCurrentQuestionAnswerEntry(currentQuestion.id.toString());
 
-    useEffect(() => {
-        setSelectedOptionValue(null);
-
-        if (answer) {
-            setSelectedOptionValue(answer.toString());
-        }
-    }, [currentQuestion]);
-
-    useEffect(() => {
-        useQuestionnaireStore.getState().setAnswer(currentQuestion.id.toString(), selectedOptionValue);
-    }, [selectedOptionValue]);
-
-    const handleOptionChange = (value: string) => {
-        setSelectedOptionValue(value);
+    const handleOptionChange = (value: string, subQuestionAnswers: SubQuestionAnswer[]) => {
+        setAnswer(currentQuestion.id.toString(), value, subQuestionAnswers);
     };
 
     return (
         <Radio.Group
-            value={selectedOptionValue}
-            onChange={handleOptionChange}
+            value={answerEntry?.answer as string}
+            onChange={(value) => handleOptionChange(value, [])}
         >
             <Stack
                 bg="var(--mantine-color-body)"
@@ -41,13 +28,25 @@ export default function SingleList({ currentQuestion }: { currentQuestion: Quest
                 justify="flex-start"
                 gap="xs"
             >
-                {currentQuestion.options?.map((option: any, index: number) => (
-                    <Radio
-                        key={index}
-                        value={index.toString()}
-                        label={option.name}
-                        styles={{ label: { textAlign: 'left', cursor: 'pointer' } }}
-                    />
+                {currentQuestion.options?.map((option: Option, index: number) => (
+                    <Group key={index}>
+                        <Radio
+                            key={index}
+                            value={index.toString()}
+                            label={option.name}
+                            styles={{ label: { textAlign: 'left', cursor: 'pointer' } }}
+                        />
+                        {option.subQuestion === "Enabled" && (
+                            <TextInput size="xs"
+                                placeholder="Type your answer here"
+                                value={answerEntry?.subQuestionAnswers?.find(a => a.index === index.toString())?.value || ''}
+                                onChange={(event) => {
+                                    const subQuestionAnswer = { index: index.toString(), value: event.target.value };
+                                    handleOptionChange(index.toString(), [subQuestionAnswer]);
+                                }}
+                            />
+                        )}
+                    </Group>
                 ))}
             </Stack>
         </Radio.Group>

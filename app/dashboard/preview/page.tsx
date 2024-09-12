@@ -7,6 +7,8 @@ import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter } from "next/navigation";
 import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
+import { Logic, Question, Actions, Navigate } from "@/app/lib/types";
+import LogicService from "@/app/lib/services/logic";
 
 export default function Page({
     searchParams
@@ -16,7 +18,7 @@ export default function Page({
         page?: string;
     };
 }) {
-    const { name, questions } = useQuestionnaireStore();
+    const { name, questions, logic, answers } = useQuestionnaireStore();
     const [isLoading, setIsLoading] = useState(false);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
     const [questionnaires, setQuestionnaires] = useState([]); // To store the list of questionnaires
@@ -61,16 +63,50 @@ export default function Page({
             });
     };
 
+
+    const doHide = (index: number, direction: Navigate): number => {
+        const isNext = direction === Navigate.Next;
+        let newIndex = index;
+
+        // Loop through questions until a non-hidden question is found
+        while (newIndex >= 0 && newIndex < questions.length) {
+            const currentLogics = LogicService.getTargetedLogic(questions[newIndex], logic);
+
+            // If "Hide" is found, continue to the next or previous question based on direction
+            if (currentLogics.includes(Actions.Hide)) {
+                newIndex = isNext ? newIndex + 1 : newIndex - 1;
+            } else {
+                break; // Found a question that is not hidden
+            }
+
+            // Prevent going beyond the question array boundaries
+            if (newIndex < 0 || newIndex >= questions.length) {
+                break;
+            }
+        }
+
+        return newIndex;
+    };
+
     const handleNext = () => {
-        setActiveQuestionIndex((prevIndex) => Math.min(prevIndex + 1, questions.length - 1));
+        setActiveQuestionIndex((prevIndex) => {
+            const nextIndex = Math.min(prevIndex + 1, questions.length - 1);
+            return doHide(nextIndex, Navigate.Next); // Call doHide to skip hidden questions
+        });
     };
 
     const handlePrevious = () => {
-        setActiveQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+        setActiveQuestionIndex((prevIndex) => {
+            const prevIndexVal = Math.max(prevIndex - 1, 0);
+            if (prevIndexVal === 0) {
+                return prevIndexVal; // Stop if it's the first question
+            }
+            return doHide(prevIndexVal, Navigate.Previous); // Call doHide to skip hidden questions
+        });
     };
 
-    const currentQuestion = questions[activeQuestionIndex];
 
+    const currentQuestion = questions[activeQuestionIndex];
     const { Control: ControlComponent } = currentQuestion && QuestionTypeMappings[currentQuestion.questionType] || {};
 
     return (
@@ -88,19 +124,12 @@ export default function Page({
                             />
                             <Space h="xs" />
                         </Group>
-                        {/* <Group justify="flex-end">
-                            {paramId && <Badge
-                                size="lg"
-                                radius={0}
-                                color="green"
-                            >
-                                {getSavedStatus()}
-                            </Badge>}
-                        </Group> */}
                     </Flex>
                 </GridCol>
             </Grid>
+            <Space h="md" />
             <Space h="xs" />
+
             {isLoading ? (
                 <div className={classes.loading_wrapper}>
                     <Loader size={30} />
@@ -112,7 +141,11 @@ export default function Page({
                             <Badge
                                 size="lg"
                                 radius={0}
-                                style={{ textTransform: 'none', fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem' }}
+                                style={{
+                                    textTransform: 'none',
+                                    fontSize: 'var(--mantine-font-size-xs)',
+                                    padding: '0.8rem'
+                                }}
                             >
                                 {name}
                             </Badge>
@@ -121,7 +154,13 @@ export default function Page({
                                     <Badge
                                         size="lg"
                                         radius={0}
-                                        style={{ marginLeft: 5, textTransform: 'none', backgroundColor: 'var(--mantine-color-green-6)', fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem' }}
+                                        style={{
+                                            marginLeft: 5,
+                                            textTransform: 'none',
+                                            backgroundColor: 'var(--mantine-color-green-6)',
+                                            fontSize: 'var(--mantine-font-size-xs)',
+                                            padding: '0.8rem'
+                                        }}
                                     >
                                         {currentQuestion.shortcut}
                                     </Badge>

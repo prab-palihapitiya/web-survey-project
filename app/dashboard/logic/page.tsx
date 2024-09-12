@@ -115,6 +115,10 @@ export default function Page() {
         return <DateTime datetime={lastModified} prefix="Saved" />;
     }
 
+    const handleLogicClose = (index: number) => {
+        console.log(`Logic with index: ${index} is closed!`);
+    }
+
     return (
         <Container className={classes.container}>
             <Grid className={classes.top_bar}>
@@ -130,21 +134,24 @@ export default function Page() {
                             />
                         </Group>
                         <Group justify="flex-end">
-                            {paramId && <Badge
-                                size="lg"
-                                radius={0}
-                                style={{
-                                    backgroundColor: 'var(--mantine-color-green-6)',
-                                    fontSize: 'var(--mantine-font-size-xs)',
-                                    padding: '0.8rem'
-                                }}>
-                                {getSavedStatus()}
-                            </Badge>}
+                            {paramId &&
+                                <Badge
+                                    size="lg"
+                                    radius={0}
+                                    style={{
+                                        backgroundColor: 'var(--mantine-color-green-6)',
+                                        fontSize: 'var(--mantine-font-size-xs)',
+                                        padding: '0.8rem'
+                                    }}>
+                                    {getSavedStatus()}
+                                </Badge>}
                         </Group>
                     </Flex>
                 </GridCol>
             </Grid>
+            <Space h="md" />
             <Space h="xs" />
+
             {isLoading ? (
                 <div className={classes.loading_wrapper}>
                     <Loader size={30} />
@@ -156,7 +163,10 @@ export default function Page() {
                             <>
                                 {logic.map((l, index) => (
                                     <div key={index}>
-                                        <Logic key={index} logicData={l} />
+                                        <Logic
+                                            logicData={l}
+                                            onClose={() => handleLogicClose(l.index)}
+                                        />
                                         <Space h="lg" />
                                     </div>
                                 ))}

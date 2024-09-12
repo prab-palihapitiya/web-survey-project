@@ -151,6 +151,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 <Group justify="flex-start">
                   <TextInput
                     variant="filled"
+                    w={350}
                     rightSection={
                       <Tooltip
                         multiline

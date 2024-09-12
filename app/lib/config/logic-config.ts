@@ -19,8 +19,8 @@ export const LogicConditions = [
 ];
 
 export const LogicActions = [
-    { value: "Show", label: "Show" },
-    { value: "Hide", label: "Hide" },
+    { value: "Show", label: "Show" }, // Goto
+    { value: "Hide", label: "Hide" }, // Skip
     { value: "Hide options", label: "Hide Options" },
     { value: "Set value", label: "Set Value" },
     { value: "End", label: "End" }

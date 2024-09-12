@@ -1,25 +1,30 @@
+import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { Question } from "@/app/lib/types";
 import { Textarea, TextInput } from "@mantine/core";
-import { useState } from "react";
 
 export default function TextInputControl({ currentQuestion }: { currentQuestion: Question }) {
-    const [answer, setAnswer] = useState<string>('');
+    const setAnswer = useQuestionnaireStore(state => state.setAnswer);
+    const answers = useQuestionnaireStore(state => state.answers);
 
-    const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-        setAnswer(event.target.value);
+    const getCurrentQuestionAnswerEntry = (questionId: string) => {
+        const entry = answers.find(a => a.questionId === questionId);
+        return entry || null;
     };
+
+    const answerEntry = getCurrentQuestionAnswerEntry(currentQuestion.id.toString());
 
     return (
         currentQuestion.questionType === "Text Input" ? (
             <TextInput
-                value={answer}
-                onChange={(event) => handleAnswerChange(event)}
+                value={answerEntry?.answer as string}
                 placeholder="Type your answer here..."
+                onChange={
+                    (event) => setAnswer(currentQuestion.id.toString(), event.target.value, [])
+                }
             />
         ) : (
             <Textarea
-                value={answer}
-                onChange={(event) => handleAnswerChange(event)}
+                value={answerEntry?.answer as string}
                 placeholder="Type your answer here..."
             ></Textarea>
         ))

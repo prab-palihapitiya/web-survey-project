@@ -5,12 +5,9 @@
   padding-bottom: 70px;
 }
 
-.scrollable_container {
-  height: calc(
-    100vh - 70px
-  ); /* Adjust the height to ensure it's scrollable (minus header/footer height if needed) */
-  overflow-y: auto; /* Enables vertical scrolling */
-  padding-top: 40px; /* Creates the top margin for the scrollbar */
+.logic_container {
+  background-color: var(--mantine-color-blue-1);
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 .top_bar {

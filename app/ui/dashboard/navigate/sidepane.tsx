@@ -4,8 +4,7 @@ import { useState } from "react";
 import classes from "@/app/ui/dashboard/navigate/sidepane.module.css";
 import { Center, Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
 import {
-  IconBuildingCottage,
-  IconHomeFilled,
+  IconHome,
   IconLogout,
   IconUser
 } from "@tabler/icons-react";
@@ -65,7 +64,7 @@ export default function SidePane() {
     <nav className={classes.navbar}>
       {/* <Center>{<MantineLogo type="mark" inverted size={30} />}</Center> */}
       <Center>
-        <NavbarLink icon={IconHomeFilled} label="Home" />
+        <NavbarLink icon={IconHome} label="Home" />
       </Center>
 
       <div className={classes.navbarMain}>

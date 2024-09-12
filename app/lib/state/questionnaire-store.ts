@@ -1,20 +1,15 @@
 import { create } from "zustand";
+import { Answer, Question, SubQuestionAnswer } from "@/app/lib/types";
 
-interface Question {
-  id: string;
-  options?: { name: string; index: number; resource: any; exclusive: string; subQuestion: string }[];
-  shortcut: string;
-  skippable: boolean;
-  introduction: string;
-  questionType: string;
-}
+// { questionId: "6", answer: ['2','4'], subQuestionAnswers: [{index:'2', value: 'Any answer'}] } // Multichoice Answer
+// { questionId: "6", answer: '2', subQuestionAnswers: [{index:'2', value: 'Any answer'}] } // Singlechoice Answer
 
 interface QuestionnaireState {
   id: string;
   name: string;
   questions: Question[];
   logic: any[]; //TODO: Adjust the type based on logic data structure
-  answers: any[]; //TODO: Adjust the type based on question data structure
+  answers: Answer[]; //TODO: Adjust the type based on question data structure
 }
 
 interface QuestionnaireActions {
@@ -24,7 +19,7 @@ interface QuestionnaireActions {
   removeQuestion: (questionId: number | string) => void;
   updateQuestionData: (questionId: number | string, updatedData: any) => void;
   setQuestionnaire: (questionnaire: any) => void;
-  setAnswer: (questionId: string, answer: any) => void;
+  setAnswer: (questionId: string, answer: string | string[] | number, subQuestionAnswers: SubQuestionAnswer[]) => void;
   addLogic: (logic: any) => void;
   removeLogic: (logicIndex: number) => void;
   updateLogic: (logicIndex: number, updatedLogic: any) => void;
@@ -68,26 +63,27 @@ const useQuestionnaireStore = create<
       logic: questionnaire.logic || [],
       answers: questionnaire.answers || []
     })),
-  setAnswer: (questionId, answer) => {
+  setAnswer: (questionId, answer, subQuestionAnswers) => {
     set((state) => {
       const existingAnswerIndex = state.answers.findIndex(a => a.questionId === questionId);
       if (existingAnswerIndex !== -1) {
         // Answer exists, update it
         const updatedAnswers = [...state.answers];
-        updatedAnswers[existingAnswerIndex] = { questionId, answer };
+        updatedAnswers[existingAnswerIndex] = { questionId, answer, subQuestionAnswers };
         return { answers: updatedAnswers };
       } else {
         // Answer doesn't exist, add a new one
-        return { answers: [...state.answers, { questionId, answer }] };
+        return { answers: [...state.answers, { questionId, answer, subQuestionAnswers }] };
       }
     });
   },
   addLogic: (logic: any) => set((state) => ({
     logic: [...state.logic, logic]
   })),
-  removeLogic: (logicIndex: number) => set((state) => ({
-    logic: state.logic.filter((_, index) => index !== logicIndex)
-  })),
+  removeLogic: (logicIndex: number) =>
+    set((state) => ({
+      logic: state.logic.filter((l) => l.index !== logicIndex)
+    })),
   updateLogic: (logicIndex, updatedLogic) =>
     set((state) => ({
       logic: state.logic.map((l) =>
