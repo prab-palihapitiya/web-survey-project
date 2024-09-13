@@ -1,3 +1,4 @@
+import { Option } from "@/app/lib/types";
 import { Button, Stack } from "@mantine/core";
 import { useState } from 'react';
 
@@ -15,11 +16,11 @@ export default function SingleButtons({ currentQuestion }: { currentQuestion: an
             justify="flex-start"
             gap="xs"
         >
-            {currentQuestion.options?.map((option: any, index: number) => (
+            {currentQuestion.options?.map((option: Option) => (
                 <Button
-                    key={index}
-                    variant={selectedOptionIndex === index ? 'filled' : 'default'}
-                    onClick={() => handleOptionClick(index)}
+                    key={option.index}
+                    variant={selectedOptionIndex === parseInt(option.index) ? 'filled' : 'default'}
+                    onClick={() => handleOptionClick(parseInt(option.index))}
                 >
                     {option.name}
                 </Button>

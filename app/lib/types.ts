@@ -4,7 +4,6 @@ export enum Navigate {
   Next = 'Next',
   Previous = 'Previous'
 }
-
 export enum Status {
   NEW = "NEW",
   DRAFT = "DRAFT",
@@ -15,9 +14,13 @@ export enum Status {
 export enum Actions {
   Show = "Show",
   Hide = "Hide",
-  HideOptions = "Hide Options",
-  SetValue = "Set Value",
-  End = "End",
+  HideOptions = "Hide options",
+  SetValue = "Set value",
+  Goto = "Goto",
+}
+export enum Conditions {
+  Has = "Has",
+  Contains = "Contains"
 }
 export interface Questionnaire {
   id: string;

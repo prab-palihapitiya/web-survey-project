@@ -28,21 +28,21 @@ export default function SingleList({ currentQuestion }: { currentQuestion: Quest
                 justify="flex-start"
                 gap="xs"
             >
-                {currentQuestion.options?.map((option: Option, index: number) => (
-                    <Group key={index}>
+                {currentQuestion.options?.map((option: Option) => (
+                    <Group key={option.index}>
                         <Radio
-                            key={index}
-                            value={index.toString()}
+                            key={option.index}
+                            value={option.index.toString()}
                             label={option.name}
                             styles={{ label: { textAlign: 'left', cursor: 'pointer' } }}
                         />
                         {option.subQuestion === "Enabled" && (
                             <TextInput size="xs"
                                 placeholder="Type your answer here"
-                                value={answerEntry?.subQuestionAnswers?.find(a => a.index === index.toString())?.value || ''}
+                                value={answerEntry?.subQuestionAnswers?.find(a => a.index === option.index.toString())?.value || ''}
                                 onChange={(event) => {
-                                    const subQuestionAnswer = { index: index.toString(), value: event.target.value };
-                                    handleOptionChange(index.toString(), [subQuestionAnswer]);
+                                    const subQuestionAnswer = { index: option.index.toString(), value: event.target.value };
+                                    handleOptionChange(option.index.toString(), [subQuestionAnswer]);
                                 }}
                             />
                         )}

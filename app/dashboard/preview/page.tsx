@@ -7,8 +7,8 @@ import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter } from "next/navigation";
 import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
-import { Logic, Question, Actions, Navigate } from "@/app/lib/types";
-import LogicService from "@/app/lib/services/logic";
+import { Actions, Answer, Logic, Navigate, Question, SubQuestionAnswer } from "@/app/lib/types";
+import LogicService from "@/app/lib/utils/logic";
 
 export default function Page({
     searchParams
@@ -27,6 +27,7 @@ export default function Page({
     const questionnaireId = useQuestionnaireStore((state) => state.id);
     const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
     const setQuestionnaire = useQuestionnaireStore((state) => state.setQuestionnaire);
+    const setAnswer = useQuestionnaireStore((state) => state.setAnswer);
 
     const { id } = searchParams;
     const router = useRouter();
@@ -63,19 +64,33 @@ export default function Page({
             });
     };
 
-
-    const doHide = (index: number, direction: Navigate): number => {
+    const doAction = (newIndex: number, direction: Navigate): number => {
         const isNext = direction === Navigate.Next;
-        let newIndex = index;
 
         // Loop through questions until a non-hidden question is found
         while (newIndex >= 0 && newIndex < questions.length) {
-            const currentLogics = LogicService.getTargetedLogic(questions[newIndex], logic);
+            const currentLogics: Logic[] = LogicService.getTargetedLogics(questions[newIndex], logic);
+
+            const isHide: boolean = currentLogics && currentLogics.map((l: Logic) => l.action).includes(Actions.Hide);
+            const isSetValue: boolean = currentLogics && currentLogics.map((l: Logic) => l.action).includes(Actions.SetValue);
 
             // If "Hide" is found, continue to the next or previous question based on direction
-            if (currentLogics.includes(Actions.Hide)) {
-                newIndex = isNext ? newIndex + 1 : newIndex - 1;
+            if (isHide) {
+                const targetLogic = currentLogics.find((l: Logic) => l.action === Actions.Hide);
+                const answer: Answer = answers.find((a: Answer) => a.questionId === targetLogic?.ifQuestionId) as Answer;
+                const hasConditionMet = LogicService.checkIfConditionMet(answer, targetLogic);
+                if (hasConditionMet) {
+                    newIndex = isNext ? newIndex + 1 : newIndex - 1;
+                } else {
+                    if (isSetValue) {
+                        setValue(currentLogics, answers);
+                    }
+                    break;
+                }
             } else {
+                if (isSetValue) {
+                    setValue(currentLogics, answers);
+                }
                 break; // Found a question that is not hidden
             }
 
@@ -88,10 +103,19 @@ export default function Page({
         return newIndex;
     };
 
+    const setValue = (currentLogics: Logic[], answers: Answer[]) => {
+        const targetLogic: Logic | undefined = currentLogics.find((l: Logic) => l.action === Actions.SetValue);
+        const answer: Answer = answers.find((a: Answer) => a.questionId === targetLogic?.ifQuestionId) as Answer;
+        const hasConditionMet = LogicService.checkIfConditionMet(answer, targetLogic);
+        if (hasConditionMet) {
+            setAnswer(targetLogic?.targetQuestionId as string, targetLogic?.setValue as string, []);
+        }
+    };
+
     const handleNext = () => {
         setActiveQuestionIndex((prevIndex) => {
             const nextIndex = Math.min(prevIndex + 1, questions.length - 1);
-            return doHide(nextIndex, Navigate.Next); // Call doHide to skip hidden questions
+            return doAction(nextIndex, Navigate.Next); // Call doAction to skip question
         });
     };
 
@@ -101,7 +125,7 @@ export default function Page({
             if (prevIndexVal === 0) {
                 return prevIndexVal; // Stop if it's the first question
             }
-            return doHide(prevIndexVal, Navigate.Previous); // Call doHide to skip hidden questions
+            return doAction(prevIndexVal, Navigate.Previous); // Call doAction to skip question
         });
     };
 
