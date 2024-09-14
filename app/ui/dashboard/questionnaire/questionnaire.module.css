@@ -39,15 +39,15 @@
   /* border-width: 1px; */
   border-radius: 0;
   border: none;
-  background-color: var(--mantine-color-blue-1);
+  /* background-color: var(--mantine-color-blue-1); */
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
 
   /* border-color: var(--mantine-color-grey-6); */
 }
 .focused,
 .highlight {
-  /* background-color: var(--mantine-color-blue-light-hover); */
-  border: 1px solid var(--mantine-color-blue-outline);
+  background-color: var(--mantine-color-gray-2);
+  /* border: 1px solid var(--mantine-color-blue-outline); */
 
   /* transition: 0.3s; */
 }

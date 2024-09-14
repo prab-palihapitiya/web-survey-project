@@ -126,13 +126,12 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
         isOpen && (
             <Paper
                 className={classes.logic_container}
-                p={'xs'}
-                pt={0}
-                pr={0}
             >
                 <Flex
                     justify={"space-between"}
-                    align={"center"} >
+                    align={"center"}
+                    style={{ backgroundColor: "var(--mantine-color-gray-7)" }}
+                >
                     <Group
                         justify="flex-start"
                         gap={"xs"}
@@ -142,6 +141,7 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                         <Button
                             size="xs"
                             variant="subtle"
+                            autoContrast
                         >
                             <IconCopyPlus size={16} />
                         </Button>
@@ -155,7 +155,7 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                         </Button>
                     </Group>
                 </Flex>
-                <Group gap={0}>
+                <Group gap={0} p={'0.5rem'}>
                     <Select
                         data={questions.map((question) => ({ value: question.id.toString(), label: question.shortcut }))}
                         placeholder="Select a question"

@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { QuestionControls, QuestionTypeMappings } from "@/app/lib/config/question-config";
 import clsx from "clsx";
-
 import {
   ActionIcon,
   Button,
@@ -17,14 +16,12 @@ import {
   Paper,
   Select,
   Space,
-  Stack,
   TextInput,
-  Textarea,
   Tooltip
 } from "@mantine/core";
-import { IconChevronDown, IconChevronRight, IconClipboard, IconCopy, IconCross, IconQuestionMark, IconX } from "@tabler/icons-react";
-
+import { IconChevronDown, IconChevronRight, IconClipboard, IconCopy, IconQuestionMark, IconX } from "@tabler/icons-react";
 import classes from "./questionnaire.module.css";
+import TextEditor from "./texteditor";
 
 export default function Question({ questionData, highlight, onClose }: { questionData: any; highlight: boolean; onClose?: () => void }) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -41,17 +38,24 @@ export default function Question({ questionData, highlight, onClose }: { questio
   const updateQuestionData = useQuestionnaireStore((state) => state.updateQuestionData);
   const removeQuestion = useQuestionnaireStore((state) => state.removeQuestion);
 
+  const formControlValues = useMemo(() => ({
+    questionType: questionData.questionType,
+    skippable: questionData.skippable,
+    shortcut: questionData.shortcut,
+  }), [questionData]);
+
   useEffect(() => {
-    setSelectedQType(questionData.questionType);
-  }, [questionData.questionType]);
+    setSelectedQType(formControlValues.questionType);
+  }, [formControlValues.questionType]);
 
   useEffect(() => {
     const updatedQuestionData = {
       questionType: questionTypeRef.current?.value || "",
       skippable: skippableRef.current?.checked || false,
       shortcut: shortcutRef.current?.value || "",
-      introduction: introductionRef.current?.value || ""
+      // introduction: introductionRef.current?.value || ""
     };
+
     updateQuestionData(questionData.id, updatedQuestionData);
 
     if (highlight && questionRef.current) {
@@ -115,7 +119,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
           <Flex
             justify={"space-between"}
             align={"center"}
-          // style={{ backgroundColor: "#228be6" }}
+            style={{ backgroundColor: "var(--mantine-color-gray-7)" }}
           >
             <Group
               justify="flex-start"
@@ -146,6 +150,12 @@ export default function Question({ questionData, highlight, onClose }: { questio
                           shortcut: e.target.value
                         });
                       }
+                    }}
+                    styles={{
+                      input: {
+                        color: 'white',
+                        fontWeight: 'bold',
+                      },
                     }}
                   />
                 </Group>
@@ -199,7 +209,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
                   label="Question Type"
                   placeholder="Select"
                   data={QuestionControls}
-                  value={questionData.questionType}
+                  value={formControlValues.questionType}
                   onChange={(value) => handleTypeChange(value)}
                   ref={questionTypeRef}
                 />
@@ -208,7 +218,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
                 <TextInput
                   label="Shortcut"
                   placeholder="Give a name"
-                  value={questionData.shortcut}
+                  value={formControlValues.shortcut}
                   onChange={(event) => {
                     updateQuestionData(questionData.id, {
                       shortcut: event.currentTarget.value
@@ -240,7 +250,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
                 <Checkbox
                   variant="outline"
                   label="Respondent can skip the question"
-                  checked={questionData.skippable}
+                  checked={formControlValues.skippable}
                   onChange={(event) => {
                     updateQuestionData(questionData.id, {
                       skippable: event.currentTarget.checked
@@ -250,7 +260,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
                 />
               </GridCol>
               <GridCol>
-                <Textarea
+                {/* <Textarea
                   label="Introduction"
                   placeholder="Type question here.."
                   autosize
@@ -262,6 +272,11 @@ export default function Question({ questionData, highlight, onClose }: { questio
                     });
                   }}
                   ref={introductionRef}
+                /> */}
+                <TextEditor
+                  qid={questionData.id}
+                  introduction={questionData.introduction}
+                // onChange={handleOnChange}
                 />
               </GridCol>
               <GridCol>

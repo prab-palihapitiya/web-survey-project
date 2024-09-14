@@ -102,6 +102,7 @@ export default function Page({ params }: { params: { id: string } }) {
     setFirstLoaded(false);
     setIsSaving(true);
     setQuestionnaire({ name: questionnaireName, questions: questions });
+    console.log(questions);
     try {
       await saveQuestionnaireData(questionnaireId, questions, logic, [], { name: questionnaireName });
       setLastModified(new Date());
@@ -190,14 +191,6 @@ export default function Page({ params }: { params: { id: string } }) {
           <Space h="xs" />
           <Grid>
             <GridCol>
-              {/* <TextInput
-                label="Questionnaire Name"
-                description="Name of your questionnaire (e.x. My simple survey). You'll refer this name everywhere, so try to put an identifiable/unique name."
-                placeholder="Type here..."
-                value={questionnaireName}
-                ref={questionnaireNameRef}
-                onChange={(event) => setName(event.currentTarget.value)}
-              /> */}
               <Space h="lg" />
               {questions.map((question: any, index: number) => (
                 <div key={`question-${question.id}`}>

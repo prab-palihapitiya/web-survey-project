@@ -9,6 +9,7 @@ import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/service
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
 import { Actions, Answer, Logic, Navigate, Question, SubQuestionAnswer } from "@/app/lib/types";
 import LogicService from "@/app/lib/utils/logic";
+import RichText from "@/app/ui/utils/richtext";
 
 export default function Page({
     searchParams
@@ -190,7 +191,7 @@ export default function Page({
                                     </Badge>
                                     <div>
                                         <Space h="lg" />
-                                        <Text size="sm">{currentQuestion.introduction}</Text>
+                                        <Text size="sm"><RichText content={currentQuestion.introduction}></RichText></Text>
                                         <Space h="md" />
                                         {ControlComponent && <ControlComponent currentQuestion={currentQuestion} />}
                                         <Space h="md" />
