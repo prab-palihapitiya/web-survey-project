@@ -15,14 +15,16 @@ export const LogicConditions = [
     { value: "Contains", label: "Contains" },
     { value: "Does not contain", label: "Does Not Contain" },
     { value: "Greater than", label: "Greater Than" },
-    { value: "Less than", label: "Less Than" }
+    { value: "Less than", label: "Less Than" },
+    { value: "In between", label: "In Between" }
 ];
 
 export const NumericConditions = [
     { value: "Equals", label: "Equals" },
     { value: "Not equals", label: "Not Equals" },
     { value: "Greater than", label: "Greater Than" },
-    { value: "Less than", label: "Less Than" }
+    { value: "Less than", label: "Less Than" },
+    { value: "In between", label: "In Between" }
 ];
 
 export const TextConditions = [
@@ -36,7 +38,8 @@ export const DateTimeConditions = [
     { value: "Equals", label: "Equals" },
     { value: "Not equals", label: "Not Equals" },
     { value: "Greater than", label: "Greater Than" },
-    { value: "Less than", label: "Less Than" }
+    { value: "Less than", label: "Less Than" },
+    { value: "In between", label: "In Between" }
 ];
 
 export const MultiChoiceConditions = [

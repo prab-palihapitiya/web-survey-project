@@ -1,4 +1,4 @@
-import { RichTextEditor, Link } from '@mantine/tiptap';
+import { RichTextEditor, Link, useRichTextEditorContext } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
@@ -8,12 +8,46 @@ import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import '@mantine/tiptap/styles.css';
 import useQuestionnaireStore from '@/app/lib/state/questionnaire-store';
-import { IconColorPicker } from '@tabler/icons-react';
+import { IconBraces, IconColorPicker, IconSettings } from '@tabler/icons-react';
 import { Color } from '@tiptap/extension-color';
 import TextStyle from '@tiptap/extension-text-style';
+import Placeholder from '@tiptap/extension-placeholder';
+import { Menu, rem } from '@mantine/core';
 
-export default function TextEditor({ qid, introduction }: { qid: number, introduction: string }) {
+export default function TextEditor({ qid, intro, placeholderText }: { qid: number, intro: string, placeholderText: string }) {
     const updateQuestionData = useQuestionnaireStore((state) => state.updateQuestionData);
+    const shortcuts = useQuestionnaireStore((state) =>
+        state.questions
+            ?.filter((q) => q.id !== qid) // Filter out the current question
+            .map((q) => q.shortcut)
+    );
+
+    const PlaceholderControl = () => {
+        const { editor } = useRichTextEditorContext();
+        return (
+            <RichTextEditor.Control
+                aria-label="Insert placeholder data"
+                title="Insert placeholder data">
+                <Menu shadow="md" trigger="hover" openDelay={100} closeDelay={400}>
+                    <Menu.Target>
+                        <IconBraces stroke={1.5} size="1rem" color='blue' />
+                    </Menu.Target>
+
+                    <Menu.Dropdown>
+                        {shortcuts?.map((shortcut) => (
+                            <Menu.Item
+                                key={shortcut}
+                                onClick={() => editor?.commands.insertContent(`{{${shortcut}}}`)}
+                            >
+                                {shortcut}
+                            </Menu.Item>
+                        ))}
+                    </Menu.Dropdown>
+                </Menu>
+            </RichTextEditor.Control>
+
+        );
+    }
 
     const editor = useEditor({
         extensions: [
@@ -25,11 +59,12 @@ export default function TextEditor({ qid, introduction }: { qid: number, introdu
             Highlight,
             TextStyle,
             Color,
+            Placeholder.configure({ placeholder: placeholderText }),
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
         ],
-        content: introduction || '',  // Bind content to each question's introduction
+        content: intro || '',  // Bind content to each question's intro
         onUpdate({ editor }) {
-            updateQuestionData(qid, { introduction: editor.getHTML() });  // Update only this question's introduction
+            updateQuestionData(qid, { introduction: editor.getHTML() });  // Update only this question's intro
         },
         immediatelyRender: false,
     });
@@ -110,8 +145,10 @@ export default function TextEditor({ qid, introduction }: { qid: number, introdu
                     <RichTextEditor.Undo />
                     <RichTextEditor.Redo />
                 </RichTextEditor.ControlsGroup>
-            </RichTextEditor.Toolbar>
 
+                <PlaceholderControl />
+
+            </RichTextEditor.Toolbar>
             <RichTextEditor.Content style={{ fontSize: "12px", maxHeight: '10rem', overflowY: 'auto' }} />
         </RichTextEditor>
     );

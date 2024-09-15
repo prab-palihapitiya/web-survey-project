@@ -33,7 +33,6 @@ export default function Question({ questionData, highlight, onClose }: { questio
   const questionTypeRef = useRef<HTMLInputElement>(null);
   const skippableRef = useRef<HTMLInputElement>(null);
   const shortcutRef = useRef<HTMLInputElement>(null);
-  const introductionRef = useRef<HTMLTextAreaElement>(null);
 
   const updateQuestionData = useQuestionnaireStore((state) => state.updateQuestionData);
   const removeQuestion = useQuestionnaireStore((state) => state.removeQuestion);
@@ -53,7 +52,6 @@ export default function Question({ questionData, highlight, onClose }: { questio
       questionType: questionTypeRef.current?.value || "",
       skippable: skippableRef.current?.checked || false,
       shortcut: shortcutRef.current?.value || "",
-      // introduction: introductionRef.current?.value || ""
     };
 
     updateQuestionData(questionData.id, updatedQuestionData);
@@ -94,7 +92,6 @@ export default function Question({ questionData, highlight, onClose }: { questio
       },
       function (err) {
         console.error("Failed to copy to clipboard", err);
-
       });
   }
 
@@ -260,23 +257,10 @@ export default function Question({ questionData, highlight, onClose }: { questio
                 />
               </GridCol>
               <GridCol>
-                {/* <Textarea
-                  label="Introduction"
-                  placeholder="Type question here.."
-                  autosize
-                  minRows={2}
-                  value={questionData.introduction}
-                  onChange={(event) => {
-                    updateQuestionData(questionData.id, {
-                      introduction: event.currentTarget.value
-                    });
-                  }}
-                  ref={introductionRef}
-                /> */}
                 <TextEditor
                   qid={questionData.id}
-                  introduction={questionData.introduction}
-                // onChange={handleOnChange}
+                  intro={questionData.introduction}
+                  placeholderText="Your question intro here"
                 />
               </GridCol>
               <GridCol>

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Button, Flex, Group, MultiSelect, NumberInput, Paper, Select, TextInput } from "@mantine/core";
+import { Button, Fieldset, Flex, Group, MultiSelect, NumberInput, Paper, Select, TextInput } from "@mantine/core";
 import { IconArrowBadgeRight, IconArrowBadgeRightFilled, IconArrowNarrowRight, IconArrowRightCircle, IconCopyPlus, IconSquareArrowRightFilled, IconX } from "@tabler/icons-react";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { LogicConditions, LogicActions, LogicOptions } from "@/app/lib/config/logic-config";
@@ -7,12 +7,12 @@ import { MultipleChoiceQuestionTypes, NumericQuestionTypes, QuestionTypesWithOpt
 import { Option, Question } from "@/app/lib/types";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import classes from "./logic.module.css";
+import { log } from "console";
 
 export default function Logic({ logicData, onClose }: { logicData: any, onClose?: () => void }) {
     const selectedQuestionIdRef = useRef<HTMLInputElement>(null);
     const selectedConditionRef = useRef<HTMLInputElement>(null);
     const selectedAnswerRef = useRef<HTMLInputElement>(null);
-    const selectedValueRef = useRef<HTMLInputElement>(null);
     const selectedActionRef = useRef<HTMLInputElement>(null);
     const selectedSetValueRef = useRef<HTMLInputElement>(null);
     const selectedTargetQuestionIdRef = useRef<HTMLInputElement>(null);
@@ -28,12 +28,16 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
     const [selectedSetValue, setSelectedSetValue] = useState<string | number | string[] | null>(logicData?.setValue || null);
     const [selectedTargetQuestionId, setSelectedTargetQuestionId] = useState<string | null>(logicData?.targetQuestionId || null);
     const [selectedTargetQuestion, setSelectedTargetQuestion] = useState<Question | undefined>();
+    const [selectedFromValue, setSelectedFromValue] = useState<string | number>(logicData?.answer ? (logicData.answer as string[])[0] : 0);
+    const [selectedToValue, setSelectedToValue] = useState<string | number>(logicData?.answer ? (logicData.answer as string[])[1] : 0);
 
-    const { questions, logic } = useQuestionnaireStore();
+    const { questions } = useQuestionnaireStore();
     const updateLogic = useQuestionnaireStore((state) => state.updateLogic);
     const removeLogic = useQuestionnaireStore((state) => state.removeLogic);
 
     const exclusiveOptions = LogicOptions.map((option) => option.value);
+
+
 
     useEffectAfterMount(() => {
         if (logicData.ifQuestionId) {
@@ -141,7 +145,6 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                         <Button
                             size="xs"
                             variant="subtle"
-                            autoContrast
                         >
                             <IconCopyPlus size={16} />
                         </Button>
@@ -190,39 +193,63 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                             {selectedCondition && (
                                 <>
                                     <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />
-                                    {QuestionTypesWithOptions.includes(selectedQuestion.questionType) ? (
-                                        <MultiSelect
-                                            data={recreateAnswerList(selectedQuestion)}
-                                            placeholder="Select"
-                                            label={`Answer (${selectedCondition})`}
-                                            value={selectedAnswer as string[]}
-                                            ref={selectedAnswerRef}
-                                            onChange={(value) => handleAnswerChange(value)} />
+                                    {selectedCondition === 'In between' ? (
+                                        <Fieldset legend={`Value (${selectedCondition})`} p={5}>
+                                            <Group gap={'xs'} mt={5}>
+                                                <NumberInput
+                                                    value={selectedFromValue}
+                                                    placeholder="From"
+                                                    style={{ width: 80 }}
+                                                    onChange={(value) => {
+                                                        setSelectedFromValue(value);
+                                                        handleAnswerChange([value as unknown as string, selectedToValue as unknown as string]);
+                                                    }}
+                                                />
+                                                <NumberInput
+                                                    value={selectedToValue}
+                                                    placeholder="To"
+                                                    style={{ width: 80 }}
+                                                    onChange={(value) => {
+                                                        setSelectedToValue(value)
+                                                        handleAnswerChange([selectedFromValue as unknown as string, value as unknown as string]);
+                                                    }}
+                                                />
+                                            </Group>
+                                        </Fieldset>
                                     ) : (
-                                        NumericQuestionTypes.includes(selectedQuestion.questionType) ? (
-                                            <NumberInput
-                                                placeholder="Type here"
+                                        QuestionTypesWithOptions.includes(selectedQuestion.questionType) ? (
+                                            <MultiSelect
+                                                data={recreateAnswerList(selectedQuestion)}
+                                                placeholder="Select"
                                                 label={`Answer (${selectedCondition})`}
-                                                value={selectedAnswer as number}
+                                                value={selectedAnswer as string[]}
                                                 ref={selectedAnswerRef}
-                                                onChange={() => {
-                                                    handleAnswerChange(selectedAnswerRef.current?.value as unknown as number);
-                                                }}
-                                                style={{ width: 150 }}
-                                            />
+                                                onChange={(value) => handleAnswerChange(value)} />
                                         ) : (
-                                            <TextInput
-                                                placeholder="Type here"
-                                                label={`Answer (${selectedCondition})`}
-                                                value={selectedAnswer as string}
-                                                ref={selectedAnswerRef}
-                                                onChange={() => {
-                                                    handleAnswerChange(selectedAnswerRef.current?.value as unknown as string);
-                                                }}
-                                                style={{ width: 150 }}
-                                            />
-                                        )
-                                    )}
+                                            NumericQuestionTypes.includes(selectedQuestion.questionType) ? (
+                                                <NumberInput
+                                                    placeholder="Type here"
+                                                    label={`Answer (${selectedCondition})`}
+                                                    value={selectedAnswer as number}
+                                                    ref={selectedAnswerRef}
+                                                    onChange={() => {
+                                                        handleAnswerChange(selectedAnswerRef.current?.value as unknown as number);
+                                                    }}
+                                                    style={{ width: 150 }}
+                                                />
+                                            ) : (
+                                                <TextInput
+                                                    placeholder="Type here"
+                                                    label={`Answer (${selectedCondition})`}
+                                                    value={selectedAnswer as string}
+                                                    ref={selectedAnswerRef}
+                                                    onChange={() => {
+                                                        handleAnswerChange(selectedAnswerRef.current?.value as unknown as string);
+                                                    }}
+                                                    style={{ width: 150 }}
+                                                />
+                                            )
+                                        ))}
                                     {selectedAnswer && (
                                         <>
                                             <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />

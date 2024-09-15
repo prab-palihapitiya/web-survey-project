@@ -1,6 +1,7 @@
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { Question, SubQuestionAnswer } from "@/app/lib/types";
 import { Checkbox, Stack, CheckboxGroup, Radio, TextInput, Group } from "@mantine/core";
+import RichText from "@/app/ui/utils/richtext";
 
 export default function MultipleList({ currentQuestion }: { currentQuestion: Question }) {
     const setAnswer = useQuestionnaireStore(state => state.setAnswer);
@@ -73,7 +74,7 @@ export default function MultipleList({ currentQuestion }: { currentQuestion: Que
                         {option.exclusive === "Yes" ? (
                             <Radio
                                 key={index}
-                                label={option.name}
+                                label={<RichText content={option.name} />}
                                 value={index.toString()}
                                 checked={(answerEntry?.answer as string[]).includes(index.toString())}
                                 onChange={() => {
@@ -85,7 +86,7 @@ export default function MultipleList({ currentQuestion }: { currentQuestion: Que
                             <Checkbox
                                 key={index}
                                 value={index.toString()}
-                                label={option.name}
+                                label={<RichText content={option.name} />}
                                 styles={{ label: { textAlign: 'left', cursor: 'pointer' } }} />
                         )}
                         {option.subQuestion === "Enabled" && (

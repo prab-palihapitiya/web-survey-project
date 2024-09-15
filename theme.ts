@@ -1,11 +1,22 @@
 "use client";
 
-import { Button, createTheme, Checkbox, TextInput, Select, Textarea, ActionIcon, Table, MultiSelect, Paper, NumberInput, Radio } from "@mantine/core";
+import { Button, createTheme, Checkbox, TextInput, Select, Textarea, ActionIcon, Table, MultiSelect, Paper, NumberInput, Radio, Fieldset } from "@mantine/core";
 
 export const theme = createTheme({
   components: {
     Paper: Paper.extend({
       styles: {
+        root: {
+          borderRadius: 0,
+        }
+      }
+    }),
+    Fieldset: Fieldset.extend({
+      styles: {
+        legend: {
+          fontSize: 'var(--mantine-font-size-xs)',
+          fontWeight: 500,
+        },
         root: {
           borderRadius: 0,
         }

@@ -1,6 +1,7 @@
 import { Group, Radio, Stack, TextInput } from "@mantine/core";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { Option, Question, SubQuestionAnswer } from "@/app/lib/types";
+import RichText from "@/app/ui/utils/richtext";
 
 export default function SingleList({ currentQuestion }: { currentQuestion: Question }) {
     const setAnswer = useQuestionnaireStore(state => state.setAnswer);
@@ -33,7 +34,7 @@ export default function SingleList({ currentQuestion }: { currentQuestion: Quest
                         <Radio
                             key={option.index}
                             value={option.index.toString()}
-                            label={option.name}
+                            label={<RichText content={option.name} />}
                             styles={{ label: { textAlign: 'left', cursor: 'pointer' } }}
                         />
                         {option.subQuestion === "Enabled" && (

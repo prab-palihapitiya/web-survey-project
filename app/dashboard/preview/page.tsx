@@ -130,7 +130,6 @@ export default function Page({
         });
     };
 
-
     const currentQuestion = questions[activeQuestionIndex];
     const { Control: ControlComponent } = currentQuestion && QuestionTypeMappings[currentQuestion.questionType] || {};
 
