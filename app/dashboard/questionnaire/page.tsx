@@ -230,8 +230,8 @@ export default function Page({ params }: { params: { id: string } }) {
       <Grid className={classes.bottom_bar}>
         <GridCol>
           <Group gap={"xs"}>
-            <Button size='xs' onClick={saveChanges}>Save Changes</Button>
-            <Button size='xs' onClick={cancelChanges}>Cancel</Button>
+            <Button size='xs' variant="gradient" onClick={saveChanges}>Save Changes</Button>
+            <Button size='xs' variant="gradient" onClick={cancelChanges}>Cancel</Button>
           </Group>
         </GridCol>
       </Grid>

@@ -1,15 +1,18 @@
 'use client';
 
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader } from "@mantine/core";
+import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader, ActionIcon } from "@mantine/core";
 import { useEffect, useState } from 'react';
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter } from "next/navigation";
 import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
-import { Actions, Answer, Logic, Navigate, Question, SubQuestionAnswer } from "@/app/lib/types";
+import { Actions, Answer, ErrorKey, Logic, Navigate, Question } from "@/app/lib/types";
 import LogicService from "@/app/lib/utils/logic";
 import RichText from "@/app/ui/utils/richtext";
+import ErrorMessage from "@/app/ui/utils/errormessage";
+import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
+import { IconRefresh, IconReload } from "@tabler/icons-react";
 
 export default function Page({
     searchParams
@@ -19,20 +22,25 @@ export default function Page({
         page?: string;
     };
 }) {
-    const { name, questions, logic, answers } = useQuestionnaireStore();
+    const { questions, logic, answers } = useQuestionnaireStore();
     const [isLoading, setIsLoading] = useState(false);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
     const [questionnaires, setQuestionnaires] = useState([]); // To store the list of questionnaires
     const [selectedQuestionnaireId, setSelectedQuestionnaireId] = useState(''); // To store the selected questionnaire ID
+    const [errorMessages, setErrorMessages] = useState<string[]>([]); // To store the error message
 
     const questionnaireId = useQuestionnaireStore((state) => state.id);
     const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
     const setQuestionnaire = useQuestionnaireStore((state) => state.setQuestionnaire);
     const setAnswer = useQuestionnaireStore((state) => state.setAnswer);
+    const resetAnswers = useQuestionnaireStore((state) => state.resetAnswers);
 
     const { id } = searchParams;
     const router = useRouter();
     const paramId = id;
+
+    const currentQuestion = questions[activeQuestionIndex];
+    const { Control: ControlComponent } = currentQuestion && QuestionTypeMappings[currentQuestion.questionType] || {};
 
     useEffect(() => {
         const userId = "clzyfzfg300002y2l8a7du5lf"; // TODO: Replace with how you get the actual user ID
@@ -45,6 +53,25 @@ export default function Page({
                 console.error("Error fetching questionnaires:", error);
             });
     }, []);
+
+    useEffectAfterMount(() => {
+        setErrorMessages([]); // Clear error message
+    }, [answers]);
+
+    // TODO: Implement keyboard navigation
+    // useEffect(() => {
+    //     const handleKeyPress = (event: KeyboardEvent) => {
+    //         if (event.key === 'Enter') {
+    //             handleNext();
+    //         }
+    //     };
+
+    //     window.addEventListener('keydown', handleKeyPress);
+
+    //     return () => {
+    //         window.removeEventListener('keydown', handleKeyPress);
+    //     };
+    // }, []);
 
     const handleQuestionnaireSelect = (value: string | null) => {
         if (!value) {
@@ -113,7 +140,19 @@ export default function Page({
         }
     };
 
+    const validateAnswer = (currentQuestion: Question, answers: Answer[]) => {
+        const answer = answers.find((a: Answer) => a.questionId === currentQuestion.id?.toString());
+        if (!currentQuestion.skippable && (!answer || !answer.answer)) {
+            setErrorMessages(['no_answer']); // Set error message
+            return false;
+        }
+        return true;
+    }
+
     const handleNext = () => {
+        if (!validateAnswer(currentQuestion as Question, answers as Answer[])) {
+            return;
+        }
         setActiveQuestionIndex((prevIndex) => {
             const nextIndex = Math.min(prevIndex + 1, questions.length - 1);
             return doAction(nextIndex, Navigate.Next); // Call doAction to skip question
@@ -121,6 +160,7 @@ export default function Page({
     };
 
     const handlePrevious = () => {
+        setErrorMessages([]); // Clear error message
         setActiveQuestionIndex((prevIndex) => {
             const prevIndexVal = Math.max(prevIndex - 1, 0);
             if (prevIndexVal === 0) {
@@ -130,8 +170,10 @@ export default function Page({
         });
     };
 
-    const currentQuestion = questions[activeQuestionIndex];
-    const { Control: ControlComponent } = currentQuestion && QuestionTypeMappings[currentQuestion.questionType] || {};
+    const handleReset = () => {
+        resetAnswers();
+        setActiveQuestionIndex(0);
+    };
 
     return (
         <Container className={classes.container}>
@@ -161,52 +203,53 @@ export default function Page({
             ) : (
                 <Grid>
                     {questionnaireId && paramId && questionnaireId === paramId && questions.length > 0 && (
-                        <GridCol>
-                            <Badge
-                                size="lg"
-                                radius={0}
-                                style={{
-                                    textTransform: 'none',
-                                    fontSize: 'var(--mantine-font-size-xs)',
-                                    padding: '0.8rem'
-                                }}
-                            >
-                                {name}
-                            </Badge>
-                            {currentQuestion && (
-                                <>
-                                    <Badge
-                                        size="lg"
-                                        radius={0}
-                                        style={{
-                                            marginLeft: 5,
-                                            textTransform: 'none',
-                                            backgroundColor: 'var(--mantine-color-green-6)',
-                                            fontSize: 'var(--mantine-font-size-xs)',
-                                            padding: '0.8rem'
-                                        }}
-                                    >
-                                        {currentQuestion.shortcut}
-                                    </Badge>
-                                    <div>
+                        <>
+                            {errorMessages.length > 0 && (
+                                errorMessages.map((message, index) => (
+                                    <GridCol key={index}><ErrorMessage message={message as ErrorKey} /></GridCol>
+                                ))
+                            )}
+
+                            <GridCol>
+                                {currentQuestion && (
+                                    <>
+                                        <Badge
+                                            size="lg"
+                                            radius={0}
+                                            style={{
+                                                textTransform: 'none',
+                                                backgroundColor: 'var(--mantine-color-green-6)',
+                                                fontSize: 'var(--mantine-font-size-xs)',
+                                                padding: '0.8rem'
+                                            }}
+                                        >
+                                            {currentQuestion.shortcut}
+                                        </Badge>
+
                                         <Space h="lg" />
                                         <Text size="sm"><RichText content={currentQuestion.introduction}></RichText></Text>
                                         <Space h="md" />
-                                        {ControlComponent && <ControlComponent currentQuestion={currentQuestion} />}
+                                        {ControlComponent && <ControlComponent currentQuestion={currentQuestion as Question} />}
                                         <Space h="md" />
-                                    </div>
-                                </>
-                            )}
+                                    </>
+                                )}
 
-                            <Group mt="md">
-                                <Button onClick={handlePrevious} disabled={activeQuestionIndex === 0}>
-                                    Previous
-                                </Button>
-                                <Button onClick={handleNext} disabled={activeQuestionIndex === questions.length - 1}>
-                                    Next
-                                </Button>
-                            </Group>
-                        </GridCol>
+                                <Group mt="md">
+                                    <Button variant="gradient" onClick={handlePrevious} disabled={activeQuestionIndex === 0}>
+                                        Previous
+                                    </Button>
+                                    {activeQuestionIndex === questions.length - 1 ? (
+                                        <Button variant='light' onClick={handleReset}>
+                                            <IconRefresh size={20} />
+                                        </Button>
+                                    ) : (
+                                        <Button variant="gradient" onClick={handleNext}>
+                                            Next
+                                        </Button>
+                                    )}
+                                </Group>
+                            </GridCol>
+                        </>
                     )}
                     {questionnaireId && questions.length === 0 && (
                         <GridCol>
@@ -219,7 +262,7 @@ export default function Page({
                 <GridCol>
                     <Group gap={"xs"}>
                         {/* <Button size='xs'>Save Changes</Button> */}
-                        <Button size='xs'>Cancel</Button>
+                        <Button size='xs' variant="gradient" >Cancel</Button>
                     </Group>
                 </GridCol>
             </Grid>

@@ -20,6 +20,7 @@ interface QuestionnaireActions {
   updateQuestionData: (questionId: number | string, updatedData: any) => void;
   setQuestionnaire: (questionnaire: any) => void;
   setAnswer: (questionId: string, answer: string | string[] | number, subQuestionAnswers: SubQuestionAnswer[]) => void;
+  resetAnswers: () => void;
   addLogic: (logic: any) => void;
   removeLogic: (logicIndex: number) => void;
   updateLogic: (logicIndex: number, updatedLogic: any) => void;
@@ -77,6 +78,7 @@ const useQuestionnaireStore = create<
       }
     });
   },
+  resetAnswers: () => set({ answers: [] }),
   addLogic: (logic: any) => set((state) => ({
     logic: [...state.logic, logic]
   })),

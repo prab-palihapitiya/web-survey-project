@@ -1,4 +1,5 @@
 import { IconUser } from "@tabler/icons-react";
+import { translations } from "@/app/lib/translations/default";
 
 export enum Navigate {
   Next = 'Next',
@@ -73,3 +74,6 @@ export interface NavbarLinkProps {
   navigate?: string;
   onClick?(): void;
 }
+
+export type ErrorKey = keyof typeof translations.survey.error;
+

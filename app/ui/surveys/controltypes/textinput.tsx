@@ -26,6 +26,9 @@ export default function TextInputControl({ currentQuestion }: { currentQuestion:
             <Textarea
                 value={answerEntry?.answer as string}
                 placeholder="Type your answer here..."
+                onChange={
+                    (event) => setAnswer(currentQuestion.id.toString(), event.target.value, [])
+                }
             ></Textarea>
         ))
 };
