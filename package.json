@@ -37,10 +37,13 @@
     "axios": "^1.7.4",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "i18next": "^23.15.1",
     "next": "14.2.5",
+    "next-i18next": "^15.3.1",
     "postcss-preset-mantine": "^1.17.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-i18next": "^15.0.2",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

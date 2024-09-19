@@ -82,7 +82,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
     setIsCollapsed(!isCollapsed);
   };
 
-  const { Component: QuestionComponent } = QuestionTypeMappings[selectedQType] || {};
+  const { Component: QuestionComponent } = selectedQType && QuestionTypeMappings[selectedQType] || {};
 
   function copyToClipboard(questionData: any) {
     const copyText = JSON.stringify(questionData, null, 2);
@@ -245,7 +245,6 @@ export default function Question({ questionData, highlight, onClose }: { questio
                   justifyContent: "center"
                 }}>
                 <Checkbox
-                  variant="outline"
                   label="Respondent can skip the question"
                   checked={formControlValues.skippable}
                   onChange={(event) => {
@@ -254,6 +253,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
                     });
                   }}
                   ref={skippableRef}
+                  style={{ marginBlockEnd: '-25px' }}
                 />
               </GridCol>
               <GridCol>

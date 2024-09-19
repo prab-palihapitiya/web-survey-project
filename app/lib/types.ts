@@ -8,9 +8,8 @@ export enum Navigate {
 export enum Status {
   NEW = "NEW",
   DRAFT = "DRAFT",
-  PUBLISHED = "PUBLISHED",
-  ARCHIVED = "ARCHIVED",
-  DELETED = "DELETED",
+  PUBLISHED = "ACTIVE",
+  EXPIRED = "INACTIVE",
 }
 export enum Actions {
   Show = "Show",
@@ -34,6 +33,23 @@ export enum exclusive {
   Yes = "Yes",
   No = "No",
 }
+export interface TextConfig {
+  placeholder?: string;
+  maxCharLength?: number;
+  showCharCount?: boolean;
+  maxWordLength?: number;
+  showWordCount?: boolean;
+}
+export interface NumericConfig {
+  min: number;
+  max: number;
+  step: number;
+  decimalPlaces: number;
+}
+export interface MultipleConfig {
+  min: number;
+  max: number;
+}
 export interface Option {
   index: string;
   name: string;
@@ -48,6 +64,7 @@ export interface Question {
   questionType: string;
   options?: Option[];
   skippable: boolean;
+  config?: any;
 }
 export interface SubQuestionAnswer {
   index: string;

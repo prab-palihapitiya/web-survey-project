@@ -124,11 +124,11 @@ export const theme = createTheme({
     }),
     Table: Table.extend({
       styles: {
-        table: { borderCollapse: "collapse", borderColor: "#228be6", fontSize: 'var(--mantine-font-size-xs)' },
-        thead: { backgroundColor: "#228be6", color: "white" },
-        th: { fontWeight: 500, borderColor: "#228be6" },
-        td: { borderColor: "#228be6", paddingBlock: 0 },
-        tr: { borderColor: "#228be6" },
+        table: { borderCollapse: "collapse", borderColor: "var(--mantine-color-blue-4)", fontSize: 'var(--mantine-font-size-xs)' },
+        thead: { backgroundColor: "var(--mantine-color-blue-4)", color: "white" },
+        th: { fontWeight: 500, borderColor: "var(--mantine-color-blue-4)" },
+        td: { borderColor: "var(--mantine-color-blue-4)", paddingBlock: 0 },
+        tr: { borderColor: "var(--mantine-color-blue-4)" },
       }
     }),
     FileInput: {

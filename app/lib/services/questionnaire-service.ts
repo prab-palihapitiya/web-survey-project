@@ -13,7 +13,6 @@ export const saveQuestionnaireData = async (questionnaireId: string, questions: 
 }) => {
     questionnaireData.userId = userId;
     questionnaireData.obj = { name: questionnaireData.name, questions: questions, logic: logic, answers: answers };
-    questionnaireData.status = "DRAFT";
 
     try {
         const response = await axios.put(`${apiUrl}/questionnaires/${questionnaireId}`, questionnaireData);
@@ -24,6 +23,26 @@ export const saveQuestionnaireData = async (questionnaireId: string, questions: 
     }
 };
 
+export const saveQuestionnaireDataAndPublish = async (questionnaireId: string, questions: any[], logic: any[], answers: any[], questionnaireData: {
+    userId?: string;
+    name?: string;
+    obj?: any;
+    testUrl?: string;
+    pubUrl?: string;
+    status?: string;
+}) => {
+    questionnaireData.userId = userId;
+    questionnaireData.obj = { name: questionnaireData.name, questions: questions, logic: logic, answers: answers };
+    // questionnaireData.status = "ACTIVE";
+
+    try {
+        const response = await axios.put(`${apiUrl}/questionnaires/${questionnaireId}`, questionnaireData);
+        return response;
+    } catch (error) {
+        console.error("Error saving published questionnaire:", error);
+        throw error; // Re-throw the error for handling in the component
+    }
+}
 
 export const createEmptyQuestionnaire = async () => {
     const postQuestionnaireData = {

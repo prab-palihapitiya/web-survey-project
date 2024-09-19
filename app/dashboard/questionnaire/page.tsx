@@ -17,15 +17,26 @@ import {
   Loader,
   Flex,
   ActionIcon,
-  Tooltip
+  Tooltip,
+  Modal,
+  Text
 } from "@mantine/core";
 import { createEmptyQuestionnaire, fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/questionnaire-service";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import DateTime from "@/app/ui/utils/datetime";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { IconPlus, IconQuestionMark } from "@tabler/icons-react";
+import { IconCopyPlus, IconHomeDown, IconPlus, IconQuestionMark } from "@tabler/icons-react";
+import { useDisclosure } from '@mantine/hooks';
+import PublishButton from "../common/publish";
+import { Status } from "@/app/lib/types";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({
+  searchParams
+}: {
+  searchParams?: {
+    id?: string;
+  };
+}) {
   const [isLoading, setIsLoading] = useState(true);
   const [lastModified, setLastModified] = useState(new Date());
   const [isSaving, setIsSaving] = useState(false);
@@ -34,18 +45,21 @@ export default function Page({ params }: { params: { id: string } }) {
   const [newlyAddedQuestionId, setNewlyAddedQuestionId] = useState<
     number | null
   >(null);
+  const [published, setPublished] = useState(false);
+  const [publicUrl, setPublicUrl] = useState('');
 
   const questionnaireId = useQuestionnaireStore((state) => state.id);
   const questionnaireName = useQuestionnaireStore((state) => state.name);
-  const { name, questions, logic } = useQuestionnaireStore();
+  const { name, questions, logic, answers } = useQuestionnaireStore();
   const setName = useQuestionnaireStore((state) => state.setName);
   const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
   const addQuestion = useQuestionnaireStore((state) => state.addQuestion);
   const setQuestionnaire = useQuestionnaireStore((state) => state.setQuestionnaire);
 
+  const [opened, { open, close }] = useDisclosure(false);
+
   const router = useRouter();
-  const pm = useSearchParams();
-  const paramId = pm.get("id");
+  const paramId = searchParams?.id;
 
   const questionnaireNameRef = useRef<HTMLInputElement>(null);
 
@@ -74,6 +88,8 @@ export default function Page({ params }: { params: { id: string } }) {
           setLastModified(response.data.modifiedAt);
           setQuestionnaireId(response.data.id);
           setQuestionnaire(response.data.obj);
+          setPublished(response.data.status === Status.PUBLISHED);
+          setPublicUrl(response.data.pubUrl);
         })
         .finally(() => {
           setIsLoading(false);
@@ -82,8 +98,6 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [paramId, setQuestionnaire, setQuestionnaireId]);
 
   const handleCreateQuestion = (questionIndex: number) => {
-    console.log(`Create question before question with id: ${questionIndex}`);
-
     const newQuestion = {
       id: nextQuestionId,
       shortcut: "Q" + nextQuestionId
@@ -98,40 +112,54 @@ export default function Page({ params }: { params: { id: string } }) {
     }, 5000);
   };
 
-  const saveChanges = async () => {
+  const saveChanges = () => {
+    if (published) {
+      open(); // Open the dialog if published
+      return; // Prevent further execution until confirmed
+    }
+    saveQuestionnaire();
+  };
+
+  const saveQuestionnaire = () => {
+    setPublicUrl('');
+    setPublished(false);
     setFirstLoaded(false);
     setIsSaving(true);
-    setQuestionnaire({ name: questionnaireName, questions: questions });
-    console.log(questions);
+    setQuestionnaire({ name: questionnaireName, questions: questions, logic: logic });
     try {
-      await saveQuestionnaireData(questionnaireId, questions, logic, [], { name: questionnaireName });
+      saveQuestionnaireData(questionnaireId, questions, logic, answers, { name: questionnaireName, status: Status.DRAFT, pubUrl: '' });
       setLastModified(new Date());
+      close();
     } catch (error) {
       console.error(error);
     } finally {
       setIsSaving(false);
     }
-  };
+  }
 
   const cancelChanges = () => {
     //TODO: you have unsaved data, before quit, you wanna save them?
     //TODO: show cancel changes confirm dialog (yes/no)
   };
 
-  const handleQuestionClose = (questionId: string | number) => {
+  const handleDeleteQuestion = (questionId: string | number) => {
     //TODO: Handle the closing of the Question here, e.g., remove it from an array of questions
     console.log(`Question with id: ${questionId} is closed!`);
+  };
+
+  const handlePublish = (url: string) => {
+    setPublished(true);
+    setPublicUrl(url);
+    setLastModified(new Date());
   };
 
   function getSavedStatus() {
     if (firstLoaded) {
       return <DateTime datetime={lastModified} prefix="Saved" />;
     }
-
     if (isSaving) {
       return 'Saving...';
     }
-
     return <DateTime datetime={lastModified} prefix="Saved" />;
   }
 
@@ -142,10 +170,28 @@ export default function Page({ params }: { params: { id: string } }) {
     >
       {isLoading ? (
         <div className={classes.loading_wrapper}>
-          <Loader size={30} />
+          <Loader />
         </div>
       ) : (
         <>
+          <Modal
+            opened={opened}
+            onClose={close}
+            title="Unpublish Questionnaire"
+            centered
+          >
+            <Text size="xs">This questionnaire is published. Saving changes will unpublish it. Are you sure you want to continue? Else you can <b>create a new survey</b> with the changes you made.</Text>
+            <Group mt="md" justify="space-between">
+              <Button onClick={() => {
+                saveQuestionnaire();
+              }} variant="gradient">
+                <IconHomeDown size={16} style={{ marginInlineEnd: '0.5rem' }} /> Save & Unpublish
+              </Button>
+              <Button onClick={close} variant="gradient"><IconCopyPlus size={16} style={{ marginInlineEnd: '0.5rem' }} />Duplicate</Button>
+              <Button onClick={close} color="dark">Cancel</Button>
+            </Group>
+          </Modal>
+
           <Grid className={classes.top_bar}>
             <GridCol>
               <Flex justify={"space-between"}>
@@ -175,6 +221,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     ref={questionnaireNameRef}
                     onChange={(event) => setName(event.currentTarget.value)}
                   />
+                  <PublishButton id={questionnaireId} onPublish={(url: string) => handlePublish(url)} published={published} url={publicUrl} />
                 </Group>
                 <Group justify="flex-end">
                   <Badge
@@ -209,7 +256,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     key={question.id}
                     questionData={question}
                     highlight={question.id === newlyAddedQuestionId}
-                    onClose={() => handleQuestionClose(question.id)}
+                    onClose={() => handleDeleteQuestion(question.id)}
                   />
                 </div>
               ))}
@@ -231,7 +278,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <GridCol>
           <Group gap={"xs"}>
             <Button size='xs' variant="gradient" onClick={saveChanges}>Save Changes</Button>
-            <Button size='xs' variant="gradient" onClick={cancelChanges}>Cancel</Button>
+            <Button size='xs' color="dark" onClick={cancelChanges}>Cancel</Button>
           </Group>
         </GridCol>
       </Grid>

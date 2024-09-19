@@ -1,7 +1,7 @@
 'use client';
 
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader, ActionIcon } from "@mantine/core";
+import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader, ActionIcon, Progress } from "@mantine/core";
 import { useEffect, useState } from 'react';
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter } from "next/navigation";
@@ -12,14 +12,15 @@ import LogicService from "@/app/lib/utils/logic";
 import RichText from "@/app/ui/utils/richtext";
 import ErrorMessage from "@/app/ui/utils/errormessage";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { IconRefresh, IconReload } from "@tabler/icons-react";
+import { IconRefresh } from "@tabler/icons-react";
+import ErrorService from "@/app/lib/utils/error";
+import TestButton from "../common/testpreview";
 
 export default function Page({
     searchParams
 }: {
     searchParams?: {
-        query?: string;
-        page?: string;
+        id?: string;
     };
 }) {
     const { questions, logic, answers } = useQuestionnaireStore();
@@ -28,6 +29,7 @@ export default function Page({
     const [questionnaires, setQuestionnaires] = useState([]); // To store the list of questionnaires
     const [selectedQuestionnaireId, setSelectedQuestionnaireId] = useState(''); // To store the selected questionnaire ID
     const [errorMessages, setErrorMessages] = useState<string[]>([]); // To store the error message
+    const [progressValue, setProgressValue] = useState(0); // To store the progress percentage
 
     const questionnaireId = useQuestionnaireStore((state) => state.id);
     const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
@@ -35,9 +37,8 @@ export default function Page({
     const setAnswer = useQuestionnaireStore((state) => state.setAnswer);
     const resetAnswers = useQuestionnaireStore((state) => state.resetAnswers);
 
-    const { id } = searchParams;
     const router = useRouter();
-    const paramId = id;
+    const paramId = searchParams?.id;
 
     const currentQuestion = questions[activeQuestionIndex];
     const { Control: ControlComponent } = currentQuestion && QuestionTypeMappings[currentQuestion.questionType] || {};
@@ -57,6 +58,13 @@ export default function Page({
     useEffectAfterMount(() => {
         setErrorMessages([]); // Clear error message
     }, [answers]);
+
+    useEffect(() => {
+        if (questions.length > 0) {
+            const progress = ((activeQuestionIndex) / questions.length) * 100;
+            setProgressValue(progress);
+        }
+    }, [activeQuestionIndex]);
 
     // TODO: Implement keyboard navigation
     // useEffect(() => {
@@ -140,23 +148,20 @@ export default function Page({
         }
     };
 
-    const validateAnswer = (currentQuestion: Question, answers: Answer[]) => {
-        const answer = answers.find((a: Answer) => a.questionId === currentQuestion.id?.toString());
-        if (!currentQuestion.skippable && (!answer || !answer.answer)) {
-            setErrorMessages(['no_answer']); // Set error message
-            return false;
-        }
-        return true;
-    }
 
     const handleNext = () => {
-        if (!validateAnswer(currentQuestion as Question, answers as Answer[])) {
+        const err = ErrorService.validateAnswer(currentQuestion as Question, answers as Answer[]);
+        if (err && err.length > 0) {
+            setErrorMessages(err);
             return;
         }
         setActiveQuestionIndex((prevIndex) => {
-            const nextIndex = Math.min(prevIndex + 1, questions.length - 1);
+            const nextIndex = Math.min(prevIndex + 1, questions.length);
             return doAction(nextIndex, Navigate.Next); // Call doAction to skip question
         });
+
+        console.log(activeQuestionIndex);
+
     };
 
     const handlePrevious = () => {
@@ -190,6 +195,9 @@ export default function Page({
                             />
                             <Space h="xs" />
                         </Group>
+                        <Group justify="flex-end">
+                            {questionnaireId && <TestButton id={questionnaireId} />}
+                        </Group>
                     </Flex>
                 </GridCol>
             </Grid>
@@ -198,18 +206,23 @@ export default function Page({
 
             {isLoading ? (
                 <div className={classes.loading_wrapper}>
-                    <Loader size={30} />
+                    <Loader />
                 </div>
             ) : (
                 <Grid>
                     {questionnaireId && paramId && questionnaireId === paramId && questions.length > 0 && (
                         <>
-                            {errorMessages.length > 0 && (
-                                errorMessages.map((message, index) => (
-                                    <GridCol key={index}><ErrorMessage message={message as ErrorKey} /></GridCol>
-                                ))
-                            )}
-
+                            <GridCol>
+                                <Progress value={progressValue} size={'lg'} animated={progressValue === 100 ? false : true} />
+                                <Space h="lg" />
+                            </GridCol>
+                            <GridCol>
+                                {errorMessages.length > 0 && (
+                                    errorMessages.map((error, index) => (
+                                        <ErrorMessage key={index} message={error as ErrorKey} />
+                                    ))
+                                )}
+                            </GridCol>
                             <GridCol>
                                 {currentQuestion && (
                                     <>
@@ -226,7 +239,7 @@ export default function Page({
                                             {currentQuestion.shortcut}
                                         </Badge>
 
-                                        <Space h="lg" />
+                                        <Space h="md" />
                                         <Text size="sm"><RichText content={currentQuestion.introduction}></RichText></Text>
                                         <Space h="md" />
                                         {ControlComponent && <ControlComponent currentQuestion={currentQuestion as Question} />}
@@ -238,7 +251,7 @@ export default function Page({
                                     <Button variant="gradient" onClick={handlePrevious} disabled={activeQuestionIndex === 0}>
                                         Previous
                                     </Button>
-                                    {activeQuestionIndex === questions.length - 1 ? (
+                                    {activeQuestionIndex === questions.length ? (
                                         <Button variant='light' onClick={handleReset}>
                                             <IconRefresh size={20} />
                                         </Button>

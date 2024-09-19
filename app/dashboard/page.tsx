@@ -1,13 +1,14 @@
 'use client';
 
-import { Button, Container, Grid, GridCol, Group, Loader, rem, Table } from "@mantine/core";
+import { Badge, Button, Container, Grid, GridCol, Group, Loader, rem, Table } from "@mantine/core";
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { deleteQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
 import DateTime from "@/app/ui/utils/datetime";
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { Questionnaire } from "@/app/lib/types";
+import { Questionnaire, Status } from "@/app/lib/types";
+import { IconTrash } from "@tabler/icons-react";
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -47,11 +48,26 @@ export default function Page() {
       });
   }, []);
 
+  const setColorStatus = (status: Status) => {
+    switch (status) {
+      case Status.NEW:
+        return 'gray';
+      case Status.DRAFT:
+        return 'red';
+      case Status.PUBLISHED:
+        return 'green';
+    }
+  }
+
   const memoizedTableRows = useMemo(() => {
     return questionnaires.map(({ id, name, status, createdAt, modifiedAt }) => (
       <Table.Tr key={id}>
-        <Table.Td>{name}</Table.Td>
-        <Table.Td>{status}</Table.Td>
+        <Table.Td>
+          <Link href={`/dashboard/questionnaire/?id=${id}`} style={{ color: 'var(--mantine-color-blue-7)', textDecoration: 'none' }}>
+            {name}
+          </Link>
+        </Table.Td>
+        <Table.Td><Badge size="xs" color={setColorStatus(status)}>{status}</Badge></Table.Td>
         <Table.Td>
           <DateTime datetime={createdAt} />
         </Table.Td>
@@ -60,12 +76,8 @@ export default function Page() {
         </Table.Td>
         <Table.Td>You</Table.Td>
         <Table.Td align="center">
-          <Group gap={0} justify="space-evenly">
-            <Link href={`/dashboard/questionnaire/?id=${id}`}>
-              <Button size="xs" variant="subtle">Edit</Button>
-            </Link>
-            <Button size="xs" color="red" variant="subtle" onClick={() => handleDelete(id)}>Delete</Button>
-            <Button size="xs" color="purple" variant="subtle" onClick={() => { }}>Publish</Button>
+          <Group gap={0}>
+            <Button size="xs" color="red" variant="subtle" onClick={() => handleDelete(id)}><IconTrash size={16} /></Button>
           </Group>
         </Table.Td>
       </Table.Tr>
@@ -81,12 +93,12 @@ export default function Page() {
 
         <GridCol span={4}>
           <Link href="/dashboard/questionnaire">
-            <Button>+ New Questionnaire</Button>
+            <Button variant="gradient">+ New Questionnaire</Button>
           </Link>
         </GridCol>
 
         <GridCol span={12}>
-          <p>Recent questionnaires</p>
+          <p>Recent Questionnaires</p>
 
           {isLoading ? (
             <div className={classes.loading_wrapper}>
@@ -104,7 +116,7 @@ export default function Page() {
                   <Table.Th>Created At</Table.Th>
                   <Table.Th>Last Modified</Table.Th>
                   <Table.Th>Last Modified By</Table.Th>
-                  <Table.Th w={rem(215)}>Actions</Table.Th>
+                  <Table.Th></Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>

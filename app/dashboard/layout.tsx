@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   description: "Easy surveys, rich results."
 };
 
-
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ display: "flex" }}>
