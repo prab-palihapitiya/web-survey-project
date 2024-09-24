@@ -1,8 +1,8 @@
 .container {
-  margin-inline: 0;
   max-width: 100%;
-  margin-top: 40px;
+  margin-top: 60px;
   padding-bottom: 70px;
+  padding-inline: 0.5rem;
 }
 
 .loading_wrapper {
@@ -34,11 +34,34 @@
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow above the grid */
 }
 
-.thead {
-  background: linear-gradient(
-    to left,
-    var(--mantine-color-green-5),
-    var(--mantine-color-blue-6),
-    var(--mantine-color-blue-6)
-  );
+.template_container {
+  width: 14rem;
+}
+
+.new_template,
+.template {
+  cursor: pointer;
+  transition: all 0.5s;
+  height: 5rem;
+  width: 13rem;
+}
+.new_template:hover {
+  background-color: var(--mantine-color-blue-8) !important;
+}
+
+.hidden_buttons {
+  display: none;
+}
+
+.template:hover .hidden_buttons {
+  transition: all 0.5s;
+  display: flex;
+}
+
+.template_text {
+  color: white;
+}
+.template:hover .template_text {
+  transition: all 0.5s;
+  display: none;
 }

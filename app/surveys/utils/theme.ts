@@ -1,4 +1,4 @@
-import { Button, createTheme } from "@mantine/core";
+import { Button, Checkbox, createTheme, NumberInput, Progress, Radio, TextInput } from "@mantine/core";
 
 export const getStyle = (color: string) => {
     return createTheme({
@@ -17,6 +17,57 @@ export const getStyle = (color: string) => {
                     size: 'sm',
                 },
             }),
+            Radio: Radio.extend({
+                styles: (theme) => ({
+                    label: {
+                        fontSize: theme.fontSizes.sm,
+                    },
+                }),
+                defaultProps: {
+                    size: 'sm',
+                },
+            }),
+            Checkbox: Checkbox.extend({
+                styles: (theme) => ({
+                    label: {
+                        fontSize: theme.fontSizes.sm,
+                    },
+                }),
+                defaultProps: {
+                    size: 'sm',
+                },
+            }),
+            TextInput: TextInput.extend({
+                styles: (theme) => ({
+                    input: {
+                        borderRadius: theme.radius.sm,
+                    },
+                }),
+                defaultProps: {
+                    size: 'sm',
+                    variant: 'default',
+                },
+            }),
+            NumberInput: NumberInput.extend({
+                styles: (theme) => ({
+                    input: {
+                        borderRadius: theme.radius.sm,
+                    },
+                }),
+                defaultProps: {
+                    size: 'sm',
+                    variant: 'default',
+                },
+            }),
+            Progress: Progress.extend({
+                defaultProps: {
+                    color: color,
+                    mt: 'md',
+                    radius: 'xs',
+                    size: 'lg',
+                    animated: true,
+                }
+            })
         }
     });
 }

@@ -4,7 +4,14 @@
   padding: var(--mantine-spacing-md);
   display: flex;
   flex-direction: column;
-  background-color: var(--mantine-color-green-filled);
+  /* background-color: var(--mantine-color-green-filled); */
+  background: linear-gradient(
+    to left,
+    var(--mantine-color-green-7),
+    var(--mantine-color-green-filled),
+    var(--mantine-color-green-filled),
+    var(--mantine-color-green-filled)
+  );
   z-index: 300;
 }
 

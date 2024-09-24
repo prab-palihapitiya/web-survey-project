@@ -123,7 +123,6 @@ export default function Question({ questionData, highlight, onClose }: { questio
               gap={"xs"}
             >
               <ActionIcon
-                // className={classes.collapse_icon}
                 variant="subtle"
                 onClick={handleCollapseToggle}
               >

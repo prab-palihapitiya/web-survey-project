@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, createTheme, Checkbox, TextInput, Select, Textarea, ActionIcon, Table, MultiSelect, Paper, NumberInput, Radio, Fieldset } from "@mantine/core";
+import { Button, createTheme, Checkbox, TextInput, Select, Textarea, ActionIcon, Table, MultiSelect, Paper, NumberInput, Radio, Fieldset, ColorInput } from "@mantine/core";
 
 export const theme = createTheme({
   components: {
@@ -29,20 +29,15 @@ export const theme = createTheme({
       styles: {
         root: {
           borderRadius: 0,
-          // borderWidth: 2,
           fontWeight: 500
         },
         inner: { fontWeight: 500 }
       }
     }),
     ActionIcon: ActionIcon.extend({
-      // defaultProps: {
-      //   size: "xs",
-      // },
       styles: {
         root: {
           borderRadius: 0,
-          // borderWidth: 2,
         }
       }
     }),
@@ -53,7 +48,6 @@ export const theme = createTheme({
       styles: {
         input: {
           cursor: "pointer",
-          // borderWidth: 2,
           borderRadius: 0
         },
         label: { cursor: "pointer" }
@@ -70,8 +64,6 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          // borderColor: "grey",
-          // borderWidth: 2,
           borderRadius: 0
         },
       },
@@ -82,20 +74,27 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          // borderColor: "grey",
-          // borderWidth: 2,
           borderRadius: 0
         },
       },
     }),
+    ColorInput: ColorInput.extend({
+      defaultProps: {
+        size: "xs",
+      },
+      styles: {
+        input: {
+          borderRadius: 0
+        },
+      },
+    }),
+
     Textarea: Textarea.extend({
       defaultProps: {
         size: "xs",
       },
       styles: {
         input: {
-          // borderColor: "grey",
-          // borderWidth: 2,
           borderRadius: 0
         },
       },
@@ -106,18 +105,12 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          // borderColor: "grey",
-          // borderWidth: 2,
           borderRadius: 0
         },
         dropdown: {
-          // borderColor: "grey",
-          // borderWidth: 2,
           borderRadius: 0
         },
         option: {
-          // borderColor: "grey",
-          // borderWidth: 2,
           borderRadius: 0
         }
       },
@@ -137,7 +130,6 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          // borderWidth: 2,
           borderRadius: 0,
         }
       }
@@ -148,7 +140,6 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          // borderWidth: 2,
           borderRadius: 0,
         }
       }

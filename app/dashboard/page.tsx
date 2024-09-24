@@ -87,7 +87,7 @@ export default function Page() {
   return (
     <Container className={classes.container}>
       <Grid>
-        <GridCol span={12}>
+        <GridCol>
           <p>Welcome to the dashboard</p>
         </GridCol>
 
@@ -97,7 +97,7 @@ export default function Page() {
           </Link>
         </GridCol>
 
-        <GridCol span={12}>
+        <GridCol>
           <p>Recent Questionnaires</p>
 
           {isLoading ? (
@@ -109,7 +109,7 @@ export default function Page() {
               highlightOnHover
               withTableBorder
               withColumnBorders>
-              <Table.Thead>
+              <Table.Thead className={classes.thead}>
                 <Table.Tr>
                   <Table.Th>Questionnaire Name</Table.Th>
                   <Table.Th>Status</Table.Th>

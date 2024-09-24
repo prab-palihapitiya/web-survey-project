@@ -1,7 +1,7 @@
 'use client';
 
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader, ActionIcon, Progress } from "@mantine/core";
+import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader, Progress, MantineProvider } from "@mantine/core";
 import { useEffect, useState } from 'react';
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import { IconRefresh } from "@tabler/icons-react";
 import ErrorService from "@/app/lib/utils/error";
 import TestButton from "../common/testpreview";
+import { getStyle } from "@/app/surveys/utils/theme";
 
 export default function Page({
     searchParams
@@ -159,9 +160,6 @@ export default function Page({
             const nextIndex = Math.min(prevIndex + 1, questions.length);
             return doAction(nextIndex, Navigate.Next); // Call doAction to skip question
         });
-
-        console.log(activeQuestionIndex);
-
     };
 
     const handlePrevious = () => {
@@ -179,6 +177,75 @@ export default function Page({
         resetAnswers();
         setActiveQuestionIndex(0);
     };
+
+    const style = {
+        templateName: "Default Template",
+        primaryColor: 'blue',
+        secondaryColor: 'green',
+        errorColor: 'red',
+        backgroundColor: 'white',
+        backgroundTransparent: 'transparent',
+        fontFamily: 'Arial, sans-serif',
+        BackgroundImage: {
+            src: 'url(https://images.unsplash.com/photo-1542282081-9e0a16bb7366)',
+            position: 'center', // top, bottom, center
+            size: 'cover', // contain, cover
+            repeat: 'no-repeat', // repeat, no-repeat
+        },
+        progress: {
+            type: 'bar', //ring, bar, semi-circle, capsule
+            color: 'blue',
+            position: 'top', // top-right, top-left
+            animated: true,
+            radius: 'sm',
+            size: 'sm',
+        },
+        logo: {
+            position: 'top-left', // top-middle, top-right, top-left
+            size: 'sm',
+            src: '',
+        },
+        buttons: {
+            default: {
+                size: 'sm',
+                variant: 'outline',
+                color: 'blue',
+                radius: 'sm',
+            },
+            next: {
+                text: 'Next',
+                size: 'sm',
+                variant: 'outline',
+                color: 'blue',
+                radius: 'sm',
+            },
+            previous: {
+                text: 'Previous',
+                size: 'sm',
+                variant: 'outline',
+                color: 'gray',
+                radius: 'sm',
+            }
+        },
+        radio: {
+            size: 'sm'
+        },
+        checkbox: {
+            size: 'sm',
+            radius: 'sm',
+        },
+        input: {
+            size: 'sm',
+            variant: 'default',
+            radius: 'sm',
+        },
+        error: {
+            size: 'sm',
+            variant: 'filled',
+            color: 'red',
+            radius: 'sm',
+        }
+    }
 
     return (
         <Container className={classes.container}>
@@ -209,67 +276,70 @@ export default function Page({
                     <Loader />
                 </div>
             ) : (
-                <Grid>
-                    {questionnaireId && paramId && questionnaireId === paramId && questions.length > 0 && (
-                        <>
-                            <GridCol>
-                                <Progress value={progressValue} size={'lg'} animated={progressValue === 100 ? false : true} />
-                                <Space h="lg" />
-                            </GridCol>
-                            <GridCol>
-                                {errorMessages.length > 0 && (
-                                    errorMessages.map((error, index) => (
-                                        <ErrorMessage key={index} message={error as ErrorKey} />
-                                    ))
-                                )}
-                            </GridCol>
-                            <GridCol>
-                                {currentQuestion && (
-                                    <>
-                                        <Badge
-                                            size="lg"
-                                            radius={0}
-                                            style={{
-                                                textTransform: 'none',
-                                                backgroundColor: 'var(--mantine-color-green-6)',
-                                                fontSize: 'var(--mantine-font-size-xs)',
-                                                padding: '0.8rem'
-                                            }}
-                                        >
-                                            {currentQuestion.shortcut}
-                                        </Badge>
-
-                                        <Space h="md" />
-                                        <Text size="sm"><RichText content={currentQuestion.introduction}></RichText></Text>
-                                        <Space h="md" />
-                                        {ControlComponent && <ControlComponent currentQuestion={currentQuestion as Question} />}
-                                        <Space h="md" />
-                                    </>
-                                )}
-
-                                <Group mt="md">
-                                    <Button variant="gradient" onClick={handlePrevious} disabled={activeQuestionIndex === 0}>
-                                        Previous
-                                    </Button>
-                                    {activeQuestionIndex === questions.length ? (
-                                        <Button variant='light' onClick={handleReset}>
-                                            <IconRefresh size={20} />
-                                        </Button>
-                                    ) : (
-                                        <Button variant="gradient" onClick={handleNext}>
-                                            Next
-                                        </Button>
+                <MantineProvider theme={getStyle('red')}>
+                    <Grid>
+                        {questionnaireId && paramId && questionnaireId === paramId && questions.length > 0 && (
+                            <>
+                                <GridCol>
+                                    <Progress value={progressValue} animated={progressValue === 100 ? false : true} />
+                                    <Space h="lg" />
+                                </GridCol>
+                                <GridCol>
+                                    {errorMessages.length > 0 && (
+                                        errorMessages.map((error, index) => (
+                                            <ErrorMessage key={index} message={error as ErrorKey} />
+                                        ))
                                     )}
-                                </Group>
+                                </GridCol>
+                                <GridCol>
+                                    {currentQuestion && (
+                                        <>
+                                            <Badge
+                                                size="lg"
+                                                radius={0}
+                                                style={{
+                                                    textTransform: 'none',
+                                                    backgroundColor: 'var(--mantine-color-green-6)',
+                                                    fontSize: 'var(--mantine-font-size-xs)',
+                                                    padding: '0.8rem'
+                                                }}
+                                            >
+                                                {currentQuestion.shortcut}
+                                            </Badge>
+
+                                            <Space h="md" />
+                                            <Text><RichText content={currentQuestion.introduction}></RichText></Text>
+                                            <Space h="md" />
+                                            {ControlComponent && <ControlComponent currentQuestion={currentQuestion as Question} />}
+                                            <Space h="md" />
+                                        </>
+                                    )}
+
+                                    <Group mt="md">
+                                        <Button onClick={handlePrevious} disabled={activeQuestionIndex === 0}>
+                                            Previous
+                                        </Button>
+                                        {activeQuestionIndex === questions.length ? (
+                                            <Button variant='light' onClick={handleReset}>
+                                                <IconRefresh size={20} />
+                                            </Button>
+                                        ) : (
+                                            <Button onClick={handleNext}>
+                                                Next
+                                            </Button>
+                                        )}
+                                    </Group>
+                                </GridCol>
+                            </>
+                        )}
+                        {questionnaireId && questions.length === 0 && (
+                            <GridCol>
+                                <Text>Empty Questionnaire</Text>
                             </GridCol>
-                        </>
-                    )}
-                    {questionnaireId && questions.length === 0 && (
-                        <GridCol>
-                            <Text>Empty Questionnaire</Text>
-                        </GridCol>
-                    )}
-                </Grid>
+                        )}
+                    </Grid>
+                </MantineProvider>
+
             )}
             <Grid className={classes.bottom_bar}>
                 <GridCol>

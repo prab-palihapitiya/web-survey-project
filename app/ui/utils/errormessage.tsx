@@ -4,10 +4,10 @@ import { Alert } from '@mantine/core';
 import { IconExclamationCircle } from '@tabler/icons-react';
 
 const ErrorMessage = ({ message }: { message: ErrorKey }) => {
-    const icon = <IconExclamationCircle size={16} />;
+    const icon = <IconExclamationCircle />;
     const translatedMessage = translations.survey.error[message] || message;
     return (
-        <Alert variant={'filled'} color="red" icon={icon} radius={0} p={'0.3rem'} style={{ fontSize: 'var(--mantine-font-size-xs)' }}>{translatedMessage}</Alert>
+        <Alert icon={icon}>{translatedMessage}</Alert>
     );
 }
 

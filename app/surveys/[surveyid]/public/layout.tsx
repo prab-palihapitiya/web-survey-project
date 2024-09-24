@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Dashboard | SurveyRanch",
+    title: "SurveyRanch",
     description: "Easy surveys, rich results."
 };
 
