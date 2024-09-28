@@ -46,7 +46,7 @@
 }
 .focused,
 .highlight {
-  background-color: var(--mantine-color-gray-2);
+  background-color: var(--mantine-color-gray-3);
   /* border: 1px solid var(--mantine-color-blue-outline); */
 
   /* transition: 0.3s; */

@@ -2,7 +2,7 @@ import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { Question } from "@/app/lib/types";
 import { Textarea, TextInput } from "@mantine/core";
 
-export default function TextInputControl({ currentQuestion }: { currentQuestion: Question }) {
+export default function TextInputControl({ currentQuestion, style }: { currentQuestion: Question, style?: any }) {
     const setAnswer = useQuestionnaireStore(state => state.setAnswer);
     const answers = useQuestionnaireStore(state => state.answers);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Text, Button, Container, Grid, GridCol, Group, Loader, MantineProvider, Progress, Space } from "@mantine/core";
+import { Text, Button, Container, Grid, GridCol, Group, Loader, MantineProvider, Progress, Space, Flex, Avatar, Center, SemiCircleProgress, RingProgress } from "@mantine/core";
 import { Inter } from "next/font/google";
 import { getStyle } from "@/app/surveys/utils/theme";
 import { useEffect, useState } from "react";
@@ -12,9 +12,10 @@ import classes from "@/app/surveys/survey.module.css";
 import ErrorMessage from "@/app/ui/utils/errormessage";
 import RichText from "@/app/ui/utils/richtext";
 import { Actions, Answer, ErrorKey, Logic, Navigate, Question } from "@/app/lib/types";
-import { IconRefresh } from "@tabler/icons-react";
+import { IconArrowBack, IconArrowLeft, IconArrowRight, IconRefresh } from "@tabler/icons-react";
 import ErrorService from "@/app/lib/utils/error";
 import LogicService from "@/app/lib/utils/logic";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -127,54 +128,156 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
         });
     };
 
+    const primaryColor = 'var(--mantine-color-blue-5)';
+    const secondaryColor = 'var(--mantine-color-green-5)';
+
+    const bColor1 = 'var(--mantine-color-blue-6)';
+    const bColor2 = 'var(--mantine-color-green-5)';
+    const bGradientDirection = 'to right';
+    const bLogoSrc = '/assets/sr-logo.png';
+    const bLogoUrl = '#';
+    const bLogoSize = 'lg';
+    const bLogoRadius = 'sm';
+
+    const progressStyle = 'bar'; // bar, ring, semi-circle
+    const progressColor = 'var(--mantine-color-blue-6)';
+    const progressLabelColor = 'dark';
+    const progressRadius = 'xl';
+    const progressSize = 'xl';
+
+    const progressBarLength = '12rem';
+    const progressBarAnimated = true;
+
+    const progressCircleSize = 75;
+    const progressCircleThickness = 5;
+    const progressEmptySegmentColor = 'white';
+
+    const navButtonPosition = 'flex-end'; // space-between, space-around, flex-start, flex-end, center
+    const navButtonArrows = false;
+    const navButtonBarFixed = false;
+
+    const nButtonText = 'Next';
+    const nButtonVariant = 'gradient';
+    const nButtonColor = 'var(--mantine-color-blue-6)';
+    const nButtonSize = 'sm';
+    const nButtonRadius = 'sm';
+
+    const pButtonShow = true;
+    const pButtonText = 'Previous';
+    const pButtonVariant = 'filled';
+    const pButtonColor = 'var(--mantine-color-dark-6)';
+    const pButtonSize = 'sm';
+    const pButtonRadius = 'sm';
+
+    const getProgress = (type: string) => {
+        switch (type) {
+            case 'bar':
+                return <Progress value={progressValue} w={progressBarLength}
+                    radius={progressRadius} size={progressSize}
+                    animated={progressValue < 100 ? progressBarAnimated : false}
+                    mt={0} mr={8} />;
+            case 'ring':
+                return <RingProgress
+                    sections={[{ value: progressValue, color: progressColor }]}
+                    label={
+                        <Text c={progressLabelColor} fw={500} ta="center" size="sm">
+                            {progressValue}%
+                        </Text>
+                    }
+                    thickness={progressCircleThickness}
+                    size={progressCircleSize} mt={0} mr={8} />;
+            case 'semi-circle':
+                return <SemiCircleProgress
+                    value={progressValue}
+                    label={
+                        <Text c={progressLabelColor} fw={500} ta="center" size="sm">
+                            {progressValue}%
+                        </Text>
+                    }
+                    labelPosition="center"
+                    size={progressCircleSize}
+                    thickness={progressCircleThickness}
+                    emptySegmentColor={progressEmptySegmentColor}
+                />;
+            default:
+                return <Progress value={progressValue} w={progressBarLength}
+                    radius={progressRadius} size={progressSize}
+                    mt={0} mr={8} />;
+        }
+    };
+
     return (
-        <MantineProvider theme={getStyle('red')}>
+        <MantineProvider theme={getStyle('blue')}>
             <Container className={classes.container}>
                 {isLoading ? (
                     <div className={classes.loading_wrapper}>
-                        <Loader />
+                        <Loader size="xl" />
                     </div>
                 ) : (
-                    <Grid>
-                        <GridCol>
-                            <Progress value={progressValue} />
-                            <Space h="lg" />
-                        </GridCol>
-                        <GridCol>
-                            {errorMessages.length > 0 && (
-                                errorMessages.map((error, index) => (
-                                    <ErrorMessage key={index} message={error as ErrorKey} />
-                                ))
-                            )}
-                        </GridCol>
-                        <GridCol>
-                            {currentQuestion && (
-                                <>
+                    <>
+                        <div className={classes.banner} style={{
+                            background: `linear-gradient(${bGradientDirection}, ${bColor1}, ${bColor2})`
+                        }}>
+                            <Flex justify="space-between">
+                                <Group justify="flext-start">
+                                    <Center><Link href={bLogoUrl}><Avatar src={bLogoSrc} alt="surveyranch logo" size={bLogoSize} radius={bLogoRadius} /></Link></Center>
+                                </Group>
+                                <Group justify="flex-end">
+                                    {getProgress(progressStyle)}
+                                </Group>
+                            </Flex>
+                        </div>
 
-                                    <Space h="md" />
-                                    <Text><RichText content={currentQuestion.introduction}></RichText></Text>
-                                    <Space h="md" />
-                                    {ControlComponent && <ControlComponent currentQuestion={currentQuestion as Question} />}
-                                    <Space h="md" />
-                                </>
-                            )}
-
-                            <Group mt="md">
-                                <Button onClick={handlePrevious} disabled={activeQuestionIndex === 0}>
-                                    Previous
-                                </Button>
-                                {activeQuestionIndex === questions.length ? (
-                                    <Button onClick={() => { }}>
-                                        <IconRefresh size={20} />
-                                    </Button>
-                                ) : (
-                                    <Button onClick={handleNext}>
-                                        Next
-                                    </Button>
+                        <Grid>
+                            <GridCol>
+                                {errorMessages.length > 0 && (
+                                    errorMessages.map((error, index) => (
+                                        <ErrorMessage key={index} message={error as ErrorKey} />
+                                    ))
                                 )}
-                            </Group>
-                        </GridCol>
-                    </Grid>
+                            </GridCol>
+                            <GridCol>
+                                {currentQuestion && (
+                                    <div>
+                                        <Space h="md" />
+                                        <Text><RichText content={currentQuestion.introduction}></RichText></Text>
+                                        <Space h="md" />
+                                        {ControlComponent && <ControlComponent currentQuestion={currentQuestion as Question} style={null} />}
+                                        <Space h="md" />
+                                    </div>
+                                )}
+
+                                <div className={navButtonBarFixed ? classes.bottom_bar : ''}>
+                                    <Group justify={navButtonPosition}>
+                                        {pButtonShow && ((activeQuestionIndex !== 0) && <Button
+                                            variant={pButtonVariant}
+                                            color={pButtonColor}
+                                            size={pButtonSize}
+                                            radius={pButtonRadius}
+                                            onClick={handlePrevious}
+                                        >
+                                            {navButtonArrows ? <IconArrowLeft size={16} /> : pButtonText}
+                                        </Button>)}
+                                        {activeQuestionIndex === questions.length ? (
+                                            <Button onClick={() => { }}>
+                                                <IconRefresh size={20} />
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant={nButtonVariant}
+                                                color={nButtonColor}
+                                                size={nButtonSize}
+                                                radius={nButtonRadius}
+                                                onClick={handleNext}
+                                            >
+                                                {navButtonArrows ? <IconArrowRight size={16} /> : nButtonText}
+                                            </Button>
+                                        )}
+                                    </Group>
+                                </div>
+                            </GridCol>
+                        </Grid>
+                    </>
                 )}
 
             </Container>

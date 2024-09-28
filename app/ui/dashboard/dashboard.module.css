@@ -34,11 +34,53 @@
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow above the grid */
 }
 
-.thead {
+.new_questionnaire,
+.questionnaire {
+  cursor: pointer;
+  transition: all 0.5s;
+  height: 6rem;
+  width: 13rem;
+}
+
+.questionnaire {
   background: linear-gradient(
-    to left,
-    var(--mantine-color-green-5),
-    var(--mantine-color-blue-6),
-    var(--mantine-color-blue-6)
+    45deg,
+    var(--mantine-color-dark-1) 0%,
+    var(--mantine-color-dark-0) 100%
   );
+}
+
+.new_questionnaire {
+  color: white;
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
+}
+
+/* .new_questionnaire:hover {
+  border: 1px solid var(--mantine-color-blue-6);
+  background-color: var(--mantine-color-blue-6);
+} */
+/* .new_questionnaire:hover p {
+  color: white;
+} */
+
+.hidden_buttons {
+  display: none;
+}
+
+.questionnaire:hover .hidden_buttons {
+  transition: all 0.5s;
+  display: flex;
+}
+
+.questionnaire_text {
+  color: var(--mantine-color-dark-5);
+}
+
+.questionnaire:hover .questionnaire_text {
+  transition: all 0.5s;
+  display: none;
 }

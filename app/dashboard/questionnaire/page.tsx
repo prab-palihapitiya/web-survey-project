@@ -278,7 +278,7 @@ export default function Page({
         <GridCol>
           <Group gap={"xs"}>
             <Button size='xs' variant="gradient" onClick={saveChanges}>Save Changes</Button>
-            <Button size='xs' color="dark" onClick={cancelChanges}>Cancel</Button>
+            <Button size='xs' color="dark" onClick={cancelChanges}>Close</Button>
           </Group>
         </GridCol>
       </Grid>

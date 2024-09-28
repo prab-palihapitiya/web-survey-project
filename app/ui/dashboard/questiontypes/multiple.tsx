@@ -148,8 +148,7 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
     <>
       <Divider
         my="xs"
-        size={2}
-        color="#228be6"
+        color="dark"
         label={
           <div className={classes.divider_label}>
             Options

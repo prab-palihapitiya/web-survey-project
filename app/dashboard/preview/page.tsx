@@ -180,6 +180,7 @@ export default function Page({
 
     const style = {
         templateName: "Default Template",
+        description: "Default Template",
         primaryColor: 'blue',
         secondaryColor: 'green',
         errorColor: 'red',

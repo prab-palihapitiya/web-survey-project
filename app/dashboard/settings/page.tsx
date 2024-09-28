@@ -5,6 +5,12 @@ import classes from "@/app/ui/dashboard/settings/settings.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import TemplateCard from "./design/templatecard";
 import TemplateForm from "./design/templateform";
+import { useMemo, useState } from "react";
+import BuiltTemplates from "./design/predefinedtemplates";
+import { createTemplate, deleteTemplate, fetchTemplatesByUser, saveTemplate } from "@/app/lib/services/template-service";
+import useTemplateStore from "@/app/lib/state/template-store";
+import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
+import { set } from "date-fns";
 
 export default function Page({
     searchParams
@@ -13,10 +19,44 @@ export default function Page({
         id?: string;
     };
 }) {
+    const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
     const [opened, { open, close }] = useDisclosure(false);
+    const [templates, setTemplates] = useState<any[]>([]);
+    const [isPredefined, setIsPredefined] = useState(false);
+    const template = useTemplateStore((state) => state.template);
 
     const iconStyle = { width: rem(12), height: rem(12) };
     const tabStyle = { fontSize: 'var(--mantine-font-size-xs)', fontWeight: 500, defautProps: { color: 'dark' } };
+
+    useEffectAfterMount(() => {
+        doFetchTemplates();
+    }, [opened]);
+
+    const doFetchTemplates = async () => {
+        try {
+            const response = await fetchTemplatesByUser();
+            if (response && response.data) {
+                console.log('response.data:', response.data);
+
+                setTemplates(response.data);
+            } else {
+                console.error("No data received from the API.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleDeleteTemplate = (id: string) => async () => {
+        try {
+            // TODO - Add a confirmation dialog before deleting the template
+            await deleteTemplate(id);
+            doFetchTemplates();
+        } catch (error) {
+            console.error("Error deleting template:", error);
+        }
+    }
+
     return (
         <Container className={classes.container}>
             <Tabs variant="pills" radius={0} defaultValue="design" style={{ fontSize: 'var(--mantine-font-size-xs)' }}>
@@ -29,20 +69,36 @@ export default function Page({
                     </Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="design">
-                    {opened ? <TemplateForm onClose={close} /> : (
+                    {opened ? <TemplateForm template={selectedTemplate} onClose={() => {
+                        close();
+                        setSelectedTemplate(null);
+                        setIsPredefined(false);
+                    }} /> : (
                         <>
                             <Group>
                                 <Card
                                     shadow="xl"
-                                    style={{
-                                        backgroundColor: 'var(--mantine-color-blue-6)'
-                                    }}
                                     className={classes.new_template}
-                                    onClick={open}>
+                                    onClick={() => {
+                                        setSelectedTemplate(null);
+                                        open();
+                                    }}>
                                     <Center h={'5rem'}>
-                                        <Text size="xs" fw={500} style={{ color: 'white' }}>+ New Template</Text>
+                                        <Text size="xs" fw={500}>+ New Template</Text>
                                     </Center>
                                 </Card>
+                                {templates.map((t: any) => (
+                                    <TemplateCard
+                                        key={t.id}
+                                        tempId={t.id}
+                                        template={t.obj}
+                                        onOpen={() => {
+                                            setSelectedTemplate({ id: t.id, obj: t.obj });
+                                            open();
+                                        }}
+                                        onDelete={handleDeleteTemplate(t.id)}
+                                    />
+                                ))}
                             </Group>
                             <Divider
                                 label="Built-in Templates"
@@ -52,8 +108,18 @@ export default function Page({
                                 }}
                             />
                             <Group>
-                                <TemplateCard templateName="Default Template" primaryColor="var(--mantine-color-green-7)" secondaryColor="var(--mantine-color-blue-6)" />
-                                <TemplateCard templateName="Template 1" primaryColor="var(--mantine-color-orange-3)" secondaryColor="var(--mantine-color-red-6)" />
+                                {BuiltTemplates.map((t: any, index) => (
+                                    <TemplateCard
+                                        key={index}
+                                        tempId={t.id}
+                                        template={t}
+                                        onOpen={() => {
+                                            setIsPredefined(true);
+                                            setSelectedTemplate({ id: index, obj: t });
+                                            open();
+                                        }}
+                                    />
+                                ))}
                             </Group>
                         </>
                     )}
@@ -72,12 +138,28 @@ export default function Page({
             <Grid className={classes.bottom_bar}>
                 <GridCol>
                     <Group gap={"xs"}>
-                        <Button size='xs' variant="gradient" >Save Changes</Button>
-                        <Button size='xs' variant="gradient" onClick={
-                            () => {
-                                if (opened) { close(); }
+                        {(opened) && <Button size='xs' variant="gradient" onClick={() => {
+                            if (selectedTemplate) {
+                                if (isPredefined) {
+                                    createTemplate(template);
+                                    setIsPredefined(false);
+                                    return;
+                                }
+                                saveTemplate(selectedTemplate.id, template);
+                            } else {
+                                createTemplate(template);
                             }
-                        }>{opened ? 'Close Design' : 'Close Settings'}</Button>
+                        }}>{isPredefined ? 'Save As New Template' : 'Save Changes'}</Button>}
+                        <Button size='xs' color="dark" onClick={
+                            () => {
+                                if (opened) {
+                                    setSelectedTemplate(null);
+                                    setIsPredefined(false);
+
+                                    close();
+                                }
+                            }
+                        }>{opened ? 'Close Style' : 'Close Settings'}</Button>
                     </Group>
                 </GridCol>
             </Grid>
