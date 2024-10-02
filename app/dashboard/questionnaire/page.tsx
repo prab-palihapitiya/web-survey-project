@@ -37,7 +37,7 @@ export default function Page({
     id?: string;
   };
 }) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [lastModified, setLastModified] = useState(new Date());
   const [isSaving, setIsSaving] = useState(false);
   const [firstLoaded, setFirstLoaded] = useState(true);
@@ -70,15 +70,15 @@ export default function Page({
     setNextQuestionId(highestId + 1);
   }, [questions]);
 
-  useEffectAfterMount(() => {
-    if (!paramId) {
-      createEmptyQuestionnaire().then((newQuestionnaireId) => {
-        setQuestionnaireId(newQuestionnaireId);
-        setQuestionnaire({ name: questionnaireName, questions: [] });
-        router.push(`/dashboard/questionnaire?id=${newQuestionnaireId}`);
-      });
-    }
-  }, []);
+  // useEffectAfterMount(() => {
+  //   if (!paramId) {
+  //     createEmptyQuestionnaire().then((newQuestionnaireId) => {
+  //       setQuestionnaireId(newQuestionnaireId);
+  //       setQuestionnaire({ name: questionnaireName, questions: [] });
+  //       router.push(`/dashboard/questionnaire?id=${newQuestionnaireId}`);
+  //     });
+  //   }
+  // }, []);
 
   useEffectAfterMount(() => {
     if (paramId) {
@@ -140,6 +140,7 @@ export default function Page({
   const cancelChanges = () => {
     //TODO: you have unsaved data, before quit, you wanna save them?
     //TODO: show cancel changes confirm dialog (yes/no)
+    router.push('/dashboard');
   };
 
   const handleDeleteQuestion = (questionId: string | number) => {
@@ -225,9 +226,11 @@ export default function Page({
                 </Group>
                 <Group justify="flex-end">
                   <Badge
-                    size="lg"
+                    size="md"
                     radius={0}
-                    style={{ backgroundColor: 'var(--mantine-color-green-6)', fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem' }}
+                    color="green"
+                    variant={'transparent'}
+                    style={{ fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem' }}
                   >
                     {getSavedStatus()}
                   </Badge>
@@ -276,10 +279,17 @@ export default function Page({
       )}
       <Grid className={classes.bottom_bar}>
         <GridCol>
-          <Group gap={"xs"}>
-            <Button size='xs' variant="gradient" onClick={saveChanges}>Save Changes</Button>
-            <Button size='xs' color="dark" onClick={cancelChanges}>Close</Button>
-          </Group>
+          <Flex justify="space-between">
+            <Group gap={"xs"}>
+              <Button size='xs' variant="gradient" onClick={saveChanges}>Save Questionnaire</Button>
+              <Button size='xs' variant="gradient" onClick={() => {
+                console.log('Save Question Template');
+              }}>Save Question Template</Button>
+            </Group>
+            <Group>
+              <Button size='xs' color="dark" onClick={cancelChanges}>Close</Button>
+            </Group>
+          </Flex>
         </GridCol>
       </Grid>
     </Container>

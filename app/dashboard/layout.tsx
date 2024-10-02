@@ -14,11 +14,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         style={{
           flex: 1,
           padding: "1rem",
-          overflowY:
-            "auto" /* Enable vertical scrolling for the main content */,
-          height: "100vh" /* Set the height to 100% of viewport height */
-        }}
-      >
+          overflowY: "auto",
+          height: "100vh"
+        }}>
         {children}
       </main>
     </div>

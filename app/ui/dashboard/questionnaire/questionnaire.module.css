@@ -28,7 +28,7 @@
   position: fixed;
   bottom: 0; /* Fixes the grid to the bottom of the viewport */
   left: 80px;
-  width: 100%; /* Ensures the grid spans the full width */
+  width: calc(100% - 80px); /* Ensures the grid spans the full width */
   z-index: 299; /* Adjust as needed to stay above other content */
   background-color: white; /* Optional: Prevents content from showing through */
   padding: 10px; /* Adjust padding as needed */
@@ -71,4 +71,12 @@
   color: var(--mantine-color-white);
   border-radius: 0;
   transition: 0.3s;
+}
+
+.question_header {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
 }

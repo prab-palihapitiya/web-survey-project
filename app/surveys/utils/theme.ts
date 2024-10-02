@@ -1,8 +1,8 @@
-import { Button, Checkbox, createTheme, NumberInput, Progress, Radio, TextInput } from "@mantine/core";
+import { Button, Checkbox, createTheme, NumberInput, Progress, Radio, Textarea, TextInput } from "@mantine/core";
 
-export const getStyle = (color: string) => {
+export const getStyle = () => {
     return createTheme({
-        primaryColor: color,
+        // primaryColor: color,
         fontFamily: 'Arial, sans-serif',
         components: {
             Button: Button.extend({
@@ -12,7 +12,7 @@ export const getStyle = (color: string) => {
                     },
                 }),
                 defaultProps: {
-                    color: color,
+                    // color: color,
                     variant: 'outline',
                     size: 'sm',
                 },
@@ -48,6 +48,17 @@ export const getStyle = (color: string) => {
                     variant: 'default',
                 },
             }),
+            Textarea: Textarea.extend({
+                styles: (theme) => ({
+                    input: {
+                        borderRadius: theme.radius.sm,
+                    },
+                }),
+                defaultProps: {
+                    size: 'sm',
+                    variant: 'default',
+                },
+            }),
             NumberInput: NumberInput.extend({
                 styles: (theme) => ({
                     input: {
@@ -61,7 +72,7 @@ export const getStyle = (color: string) => {
             }),
             Progress: Progress.extend({
                 defaultProps: {
-                    color: color,
+                    // color: color,
                     mt: 'md',
                     radius: 'xs',
                     size: 'lg',

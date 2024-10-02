@@ -118,10 +118,10 @@ export const theme = createTheme({
     Table: Table.extend({
       styles: {
         table: { borderCollapse: "collapse", fontSize: 'var(--mantine-font-size-xs)' },
-        // thead: { backgroundColor: "var(--mantine-color-blue-4)", color: "white" },
         th: { fontWeight: 500 },
-        td: { paddingBlock: 1 },
-        // tr: { borderColor: "var(--mantine-color-blue-4)" },
+        td: {
+          paddingBlock: 5
+        },
       }
     }),
     FileInput: {

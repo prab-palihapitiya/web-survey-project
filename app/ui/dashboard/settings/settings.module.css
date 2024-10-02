@@ -34,10 +34,6 @@
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow above the grid */
 }
 
-/* .template_container {
-  width: 15rem;
-} */
-
 .new_template,
 .template {
   cursor: pointer;
@@ -52,7 +48,11 @@
 }
 .new_template:hover {
   border: none;
-  background-color: var(--mantine-color-blue-6);
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
 }
 .new_template:hover p {
   color: white;

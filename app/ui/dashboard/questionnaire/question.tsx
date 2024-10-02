@@ -19,7 +19,7 @@ import {
   TextInput,
   Tooltip
 } from "@mantine/core";
-import { IconChevronDown, IconChevronRight, IconClipboard, IconCopy, IconQuestionMark, IconX } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronRight, IconClipboard, IconCopy, IconQuestionMark, IconTrash, IconX } from "@tabler/icons-react";
 import classes from "./questionnaire.module.css";
 import TextEditor from "./texteditor";
 
@@ -116,15 +116,17 @@ export default function Question({ questionData, highlight, onClose }: { questio
           <Flex
             justify={"space-between"}
             align={"center"}
-            style={{ backgroundColor: "var(--mantine-color-gray-7)" }}
+            className={classes.question_header}
           >
             <Group
               justify="flex-start"
-              gap={"xs"}
+              gap={0}
             >
               <ActionIcon
+                color="white"
                 variant="subtle"
                 onClick={handleCollapseToggle}
+
               >
                 {isCollapsed ? (
                   <IconChevronRight size={16} />
@@ -160,7 +162,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
             <Group justify="flex-end" gap={0}>
               <Button
                 size="xs"
-                color="blue"
+                color="white"
                 variant="subtle"
                 onClick={() => {
                   copyToClipboard(questionData);
@@ -170,6 +172,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
               </Button>
               <Button
                 size="xs"
+                color="white"
                 variant="subtle"
                 onClick={() => {
                   navigator.clipboard.readText().then(
@@ -189,11 +192,11 @@ export default function Question({ questionData, highlight, onClose }: { questio
               </Button>
               <Button
                 size="xs"
-                color="red"
+                color="white"
                 variant="subtle"
                 onClick={handleClose}
               >
-                <IconX size={16} />
+                <IconTrash size={16} />
               </Button>
             </Group>
           </Flex>

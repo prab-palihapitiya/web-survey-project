@@ -10,7 +10,8 @@ import BuiltTemplates from "./design/predefinedtemplates";
 import { createTemplate, deleteTemplate, fetchTemplatesByUser, saveTemplate } from "@/app/lib/services/template-service";
 import useTemplateStore from "@/app/lib/state/template-store";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { set } from "date-fns";
+import { useRouter } from "next/navigation";
+import { DefaultTemplate, Template } from "@/app/lib/config/template-config";
 
 export default function Page({
     searchParams
@@ -19,11 +20,13 @@ export default function Page({
         id?: string;
     };
 }) {
-    const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+    const [selectedTemplate, setSelectedTemplate] = useState<DefaultTemplate | null>();
     const [opened, { open, close }] = useDisclosure(false);
-    const [templates, setTemplates] = useState<any[]>([]);
+    const [templates, setTemplates] = useState([]);
     const [isPredefined, setIsPredefined] = useState(false);
     const template = useTemplateStore((state) => state.template);
+
+    const router = useRouter();
 
     const iconStyle = { width: rem(12), height: rem(12) };
     const tabStyle = { fontSize: 'var(--mantine-font-size-xs)', fontWeight: 500, defautProps: { color: 'dark' } };
@@ -36,8 +39,6 @@ export default function Page({
         try {
             const response = await fetchTemplatesByUser();
             if (response && response.data) {
-                console.log('response.data:', response.data);
-
                 setTemplates(response.data);
             } else {
                 console.error("No data received from the API.");
@@ -69,7 +70,7 @@ export default function Page({
                     </Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="design">
-                    {opened ? <TemplateForm template={selectedTemplate} onClose={() => {
+                    {opened ? <TemplateForm template={selectedTemplate as DefaultTemplate} onClose={() => {
                         close();
                         setSelectedTemplate(null);
                         setIsPredefined(false);
@@ -84,16 +85,16 @@ export default function Page({
                                         open();
                                     }}>
                                     <Center h={'5rem'}>
-                                        <Text size="xs" fw={500}>+ New Template</Text>
+                                        <Text size="xs" fw={500}>+ New Design Template</Text>
                                     </Center>
                                 </Card>
                                 {templates.map((t: any) => (
                                     <TemplateCard
                                         key={t.id}
-                                        tempId={t.id}
+                                        // tempId={t.id}
                                         template={t.obj}
                                         onOpen={() => {
-                                            setSelectedTemplate({ id: t.id, obj: t.obj });
+                                            setSelectedTemplate({ ...t.obj, id: t.id });
                                             open();
                                         }}
                                         onDelete={handleDeleteTemplate(t.id)}
@@ -111,11 +112,11 @@ export default function Page({
                                 {BuiltTemplates.map((t: any, index) => (
                                     <TemplateCard
                                         key={index}
-                                        tempId={t.id}
+                                        // tempId={t.templateId}
                                         template={t}
                                         onOpen={() => {
                                             setIsPredefined(true);
-                                            setSelectedTemplate({ id: index, obj: t });
+                                            setSelectedTemplate(t);
                                             open();
                                         }}
                                     />
@@ -145,11 +146,13 @@ export default function Page({
                                     setIsPredefined(false);
                                     return;
                                 }
+                                console.log('selectedTemplate:', template, 'id:', selectedTemplate.id);
+
                                 saveTemplate(selectedTemplate.id, template);
                             } else {
                                 createTemplate(template);
                             }
-                        }}>{isPredefined ? 'Save As New Template' : 'Save Changes'}</Button>}
+                        }}>{isPredefined ? 'Save As New Template' : 'Save Design Template'}</Button>}
                         <Button size='xs' color="dark" onClick={
                             () => {
                                 if (opened) {
@@ -157,6 +160,8 @@ export default function Page({
                                     setIsPredefined(false);
 
                                     close();
+                                } else {
+                                    router.push('/dashboard');
                                 }
                             }
                         }>{opened ? 'Close Style' : 'Close Settings'}</Button>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Text, Button, Container, Grid, GridCol, Group, Loader, MantineProvider, Progress, Space, Flex, Avatar, Center, SemiCircleProgress, RingProgress } from "@mantine/core";
+import { Text, Button, Container, Grid, GridCol, Group, Loader, MantineProvider, Progress, Space, Flex, Avatar, Center, SemiCircleProgress, RingProgress, DefaultMantineColor } from "@mantine/core";
 import { Inter } from "next/font/google";
 import { getStyle } from "@/app/surveys/utils/theme";
 import { useEffect, useState } from "react";
@@ -12,10 +12,13 @@ import classes from "@/app/surveys/survey.module.css";
 import ErrorMessage from "@/app/ui/utils/errormessage";
 import RichText from "@/app/ui/utils/richtext";
 import { Actions, Answer, ErrorKey, Logic, Navigate, Question } from "@/app/lib/types";
-import { IconArrowBack, IconArrowLeft, IconArrowRight, IconRefresh } from "@tabler/icons-react";
+import { IconArrowLeft, IconArrowRight, IconRefresh } from "@tabler/icons-react";
 import ErrorService from "@/app/lib/utils/error";
 import LogicService from "@/app/lib/utils/logic";
 import Link from "next/link";
+import { ProgressProps } from "@/app/lib/config/template-config";
+import { ProgressType } from "../../utils/types";
+import BuiltTemplates from "@/app/dashboard/settings/design/predefinedtemplates";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -128,86 +131,71 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
         });
     };
 
-    const primaryColor = 'var(--mantine-color-blue-5)';
-    const secondaryColor = 'var(--mantine-color-green-5)';
+    const style = BuiltTemplates[0].obj;
 
-    const bColor1 = 'var(--mantine-color-blue-6)';
-    const bColor2 = 'var(--mantine-color-green-5)';
-    const bGradientDirection = 'to right';
-    const bLogoSrc = '/assets/sr-logo.png';
-    const bLogoUrl = '#';
-    const bLogoSize = 'lg';
-    const bLogoRadius = 'sm';
+    const progressProps: ProgressProps = {
+        type: style.progressStyle as ProgressType,
+        color: style.progressColor,
+        labelColor: style.progressLabelColor,
+        radius: style.progressRadius,
+        size: style.progressSize,
+        barLength: style.progressBarLength,
+        animated: style.progressAnimated,
+        circleSize: style.progressCircleSize,
+        circleThickness: style.progressCircleThickness,
+        emptySegmentColor: style.progressEmptySegmentColor,
+    }
 
-    const progressStyle = 'bar'; // bar, ring, semi-circle
-    const progressColor = 'var(--mantine-color-blue-6)';
-    const progressLabelColor = 'dark';
-    const progressRadius = 'xl';
-    const progressSize = 'xl';
+    const errorProps = {
+        color: style.errorColor,
+        variant: style.errorVariant,
+    }
 
-    const progressBarLength = '12rem';
-    const progressBarAnimated = true;
-
-    const progressCircleSize = 75;
-    const progressCircleThickness = 5;
-    const progressEmptySegmentColor = 'white';
-
-    const navButtonPosition = 'flex-end'; // space-between, space-around, flex-start, flex-end, center
-    const navButtonArrows = false;
-    const navButtonBarFixed = false;
-
-    const nButtonText = 'Next';
-    const nButtonVariant = 'gradient';
-    const nButtonColor = 'var(--mantine-color-blue-6)';
-    const nButtonSize = 'sm';
-    const nButtonRadius = 'sm';
-
-    const pButtonShow = true;
-    const pButtonText = 'Previous';
-    const pButtonVariant = 'filled';
-    const pButtonColor = 'var(--mantine-color-dark-6)';
-    const pButtonSize = 'sm';
-    const pButtonRadius = 'sm';
-
-    const getProgress = (type: string) => {
-        switch (type) {
+    const getProgress = (props: ProgressProps, value: number) => {
+        switch (props?.type || 'bar') {
             case 'bar':
-                return <Progress value={progressValue} w={progressBarLength}
-                    radius={progressRadius} size={progressSize}
-                    animated={progressValue < 100 ? progressBarAnimated : false}
+                return <Progress
+                    color={props.color as DefaultMantineColor}
+                    value={value}
+                    w={props.barLength}
+                    radius={props.radius} size={props.size}
+                    animated={value < 100 ? props.animated : false}
                     mt={0} mr={8} />;
+
             case 'ring':
                 return <RingProgress
-                    sections={[{ value: progressValue, color: progressColor }]}
+                    sections={[{ value: value, color: props.color as DefaultMantineColor }]}
                     label={
-                        <Text c={progressLabelColor} fw={500} ta="center" size="sm">
-                            {progressValue}%
+                        <Text c={props.labelColor} fw={500} ta="center" size="sm">
+                            {value}%
                         </Text>
                     }
-                    thickness={progressCircleThickness}
-                    size={progressCircleSize} mt={0} mr={8} />;
+                    thickness={props.circleThickness}
+                    size={props.circleSize} mt={0} mr={8} />;
+
             case 'semi-circle':
                 return <SemiCircleProgress
-                    value={progressValue}
+                    value={value}
                     label={
-                        <Text c={progressLabelColor} fw={500} ta="center" size="sm">
-                            {progressValue}%
+                        <Text c={props.labelColor} fw={500} ta="center" size="sm">
+                            {value}%
                         </Text>
                     }
                     labelPosition="center"
-                    size={progressCircleSize}
-                    thickness={progressCircleThickness}
-                    emptySegmentColor={progressEmptySegmentColor}
+                    size={props.circleSize}
+                    thickness={props.circleThickness}
+                    emptySegmentColor={props.emptySegmentColor}
                 />;
+
             default:
-                return <Progress value={progressValue} w={progressBarLength}
-                    radius={progressRadius} size={progressSize}
+                return <Progress value={value} w={props.barLength}
+                    radius={props.radius} size={props.size}
                     mt={0} mr={8} />;
         }
     };
 
     return (
-        <MantineProvider theme={getStyle('blue')}>
+        <MantineProvider theme={getStyle()}>
             <Container className={classes.container}>
                 {isLoading ? (
                     <div className={classes.loading_wrapper}>
@@ -215,15 +203,24 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                     </div>
                 ) : (
                     <>
-                        <div className={classes.banner} style={{
-                            background: `linear-gradient(${bGradientDirection}, ${bColor1}, ${bColor2})`
-                        }}>
+                        <div className={classes.banner}
+                            style={{
+                                background: style.bannerShowGradient ?
+                                    `linear-gradient(${style.bannerGradientDirection}, ${style.bannerPrimaryColor}, ${style.bannerSecondaryColor})` : style.bannerPrimaryColor
+                            }}>
                             <Flex justify="space-between">
                                 <Group justify="flext-start">
-                                    <Center><Link href={bLogoUrl}><Avatar src={bLogoSrc} alt="surveyranch logo" size={bLogoSize} radius={bLogoRadius} /></Link></Center>
+                                    <Center>
+                                        <Link href={style.logoUrl}>
+                                            <Avatar
+                                                src={style.logoSrc}
+                                                size={style.logoSize}
+                                                radius={style.logoRadius} />
+                                        </Link>
+                                    </Center>
                                 </Group>
                                 <Group justify="flex-end">
-                                    {getProgress(progressStyle)}
+                                    {getProgress(progressProps, progressValue)}
                                 </Group>
                             </Flex>
                         </div>
@@ -232,7 +229,10 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                             <GridCol>
                                 {errorMessages.length > 0 && (
                                     errorMessages.map((error, index) => (
-                                        <ErrorMessage key={index} message={error as ErrorKey} />
+                                        <ErrorMessage
+                                            key={index}
+                                            message={error as ErrorKey}
+                                            style={{ color: style.errorColor, variant: style.errorVariant }} />
                                     ))
                                 )}
                             </GridCol>
@@ -247,16 +247,16 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                                     </div>
                                 )}
 
-                                <div className={navButtonBarFixed ? classes.bottom_bar : ''}>
-                                    <Group justify={navButtonPosition}>
-                                        {pButtonShow && ((activeQuestionIndex !== 0) && <Button
-                                            variant={pButtonVariant}
-                                            color={pButtonColor}
-                                            size={pButtonSize}
-                                            radius={pButtonRadius}
+                                <div className={style.navBottomFixed ? classes.bottom_bar : ''}>
+                                    <Group justify={style.navFlexDirection}>
+                                        {style.prevButtonShow && ((activeQuestionIndex !== 0) && <Button
+                                            variant={style.prevButtonVariant}
+                                            color={style.prevButtonColor}
+                                            size={style.prevButtonSize}
+                                            radius={style.prevButtonRadius}
                                             onClick={handlePrevious}
                                         >
-                                            {navButtonArrows ? <IconArrowLeft size={16} /> : pButtonText}
+                                            {style.navArrows ? <IconArrowLeft size={16} /> : style.prevButtonText}
                                         </Button>)}
                                         {activeQuestionIndex === questions.length ? (
                                             <Button onClick={() => { }}>
@@ -264,13 +264,13 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                                             </Button>
                                         ) : (
                                             <Button
-                                                variant={nButtonVariant}
-                                                color={nButtonColor}
-                                                size={nButtonSize}
-                                                radius={nButtonRadius}
+                                                variant={style.nextButtonVariant}
+                                                color={style.nextButtonColor}
+                                                size={style.nextButtonSize}
+                                                radius={style.nextButtonRadius}
                                                 onClick={handleNext}
                                             >
-                                                {navButtonArrows ? <IconArrowRight size={16} /> : nButtonText}
+                                                {style.navArrows ? <IconArrowRight size={16} /> : style.nextButtonText}
                                             </Button>
                                         )}
                                     </Group>
@@ -279,7 +279,6 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                         </Grid>
                     </>
                 )}
-
             </Container>
         </MantineProvider>
     );

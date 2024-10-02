@@ -1,13 +1,12 @@
 import { useRef, useState } from "react";
 import { Button, Fieldset, Flex, Group, MultiSelect, NumberInput, Paper, Select, TextInput } from "@mantine/core";
-import { IconArrowBadgeRight, IconArrowBadgeRightFilled, IconArrowNarrowRight, IconArrowRightCircle, IconCopyPlus, IconSquareArrowRightFilled, IconX } from "@tabler/icons-react";
+import { IconArrowRightCircle, IconCopyPlus, IconTrash } from "@tabler/icons-react";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { LogicConditions, LogicActions, LogicOptions } from "@/app/lib/config/logic-config";
 import { MultipleChoiceQuestionTypes, NumericQuestionTypes, QuestionTypesWithOptions, SingleChoiceQuestionTypes, TextQuestionTypes } from "@/app/lib/config/question-config";
 import { Option, Question } from "@/app/lib/types";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import classes from "./logic.module.css";
-import { log } from "console";
 
 export default function Logic({ logicData, onClose }: { logicData: any, onClose?: () => void }) {
     const selectedQuestionIdRef = useRef<HTMLInputElement>(null);
@@ -144,17 +143,18 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                     <Group justify="flex-end" gap={0}>
                         <Button
                             size="xs"
+                            color="white"
                             variant="subtle"
                         >
                             <IconCopyPlus size={16} />
                         </Button>
                         <Button
                             size="xs"
-                            color="red"
+                            color="white"
                             variant="subtle"
                             onClick={handleClose}
                         >
-                            <IconX size={16} />
+                            <IconTrash size={16} />
                         </Button>
                     </Group>
                 </Flex>

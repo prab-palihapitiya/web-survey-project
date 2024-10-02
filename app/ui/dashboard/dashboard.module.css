@@ -59,13 +59,12 @@
   );
 }
 
-/* .new_questionnaire:hover {
-  border: 1px solid var(--mantine-color-blue-6);
-  background-color: var(--mantine-color-blue-6);
-} */
-/* .new_questionnaire:hover p {
-  color: white;
-} */
+.new_questionnaire:hover {
+  border: 1px solid var(--mantine-color-blue-filled);
+  color: var(--mantine-color-blue-filled);
+  background-color: white;
+  background: white;
+}
 
 .hidden_buttons {
   display: none;
@@ -83,4 +82,44 @@
 .questionnaire:hover .questionnaire_text {
   transition: all 0.5s;
   display: none;
+}
+
+.link {
+  color: var(--mantine-color-blue-7);
+  text-decoration: none;
+}
+
+.table_row:hover {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-6) 0%,
+    var(--mantine-color-cyan-6) 100%
+  );
+}
+
+.table_row:hover .table_cell,
+.table_row:hover .link {
+  color: white;
+}
+
+.th {
+  padding: 0;
+}
+
+.control {
+  width: 100%;
+  padding: var(--mantine-spacing-xs);
+
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+  }
+}
+
+.icon {
+  width: rem(21px);
+  height: rem(21px);
+  border-radius: rem(21px);
 }

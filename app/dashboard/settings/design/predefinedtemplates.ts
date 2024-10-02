@@ -1,25 +1,59 @@
 const BuiltTemplates = [
     {
-        // tempId: 'b_temp1',
+        id: '1',
         templateName: 'Default Template',
-        // description: '',
-        primaryColor: '#37b24d',
-        secondaryColor: '#228be6'
+        obj: {
+            fontFamily: 'Arial',
+            fontSize: 'sm',
+            fontWeight: '400',
+            defaultRadius: 'sm',
+            defaultVariant: 'default',
+            defaultSize: 'sm',
+            primaryColor: '#228be6',
+            secondaryColor: '#15aabf',
+
+            errorColor: '#fa5252',
+            errorVariant: 'filled',
+
+            bannerPrimaryColor: '#228be6',
+            bannerSecondaryColor: '#15aabf',
+            bannerShowGradient: true,
+            bannerGradientDirection: '45deg',
+
+            logoSrc: '/assets/sr-logo.png',
+            logoAltText: 'SurveyRanch Logo',
+            logoTitle: 'SurveyRanch Logo',
+            logoUrl: '#',
+            logoSize: 'lg',
+            logoRadius: 'sm',
+
+            progressStyle: 'bar',
+            progressColor: '#15aabf',
+            progressLabelColor: '#2e2e2e',
+            progressRadius: 'xs',
+            progressSize: 'xl',
+            progressBarLength: 250,
+            progressAnimated: true,
+            progressCircleSize: 75,
+            progressCircleThickness: 5,
+            progressEmptySegmentColor: '#ffffff',
+
+            navFlexDirection: 'flex-end',
+            navArrows: false,
+            navBottomFixed: false,
+            prevButtonShow: true,
+            prevButtonText: 'Previous',
+            prevButtonVariant: 'filled',
+            prevButtonColor: '#2e2e2e',
+            prevButtonSize: 'sm',
+            prevButtonRadius: 'sm',
+            nextButtonText: 'Next',
+            nextButtonVariant: 'gradient',
+            nextButtonColor: '#228be6',
+            nextButtonSize: 'sm',
+            nextButtonRadius: 'sm',
+        }
     },
-    {
-        // tempId: 'b_temp2',
-        templateName: 'Template 01',
-        // description: '',
-        primaryColor: '#ffc078',
-        secondaryColor: '#fa5252'
-    },
-    {
-        // tempId: 'b_temp3',
-        templateName: 'Template 02',
-        // description: '',
-        primaryColor: '#be4bdb',
-        secondaryColor: '#141414'
-    }
 ]
 
 export default BuiltTemplates;

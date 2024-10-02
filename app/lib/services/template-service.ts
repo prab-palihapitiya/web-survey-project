@@ -1,5 +1,4 @@
 import axios from "axios";
-import { DefaultTemplate } from "../config/template-config";
 
 const apiUrl = process.env.API_URL || "http://localhost:4000/api";
 const userId = "clzyfzfg300002y2l8a7du5lf"; //TODO: Get the user ID from the auth context
