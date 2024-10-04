@@ -1,5 +1,5 @@
-import { Accordion, CloseButton, ColorInput, Container, Divider, FileInput, Flex, Grid, GridCol, Group, NumberInput, Select, Space, Switch, Text, TextInput } from "@mantine/core";
-import classes from "@/app/ui/dashboard/settings/settings.module.css";
+import { Accordion, ColorInput, Container, FileInput, Grid, GridCol, NumberInput, Select, Space, Switch, Text, TextInput } from "@mantine/core";
+import classes from "@/app/ui/dashboard/design/design.module.css";
 import { DefaultTemplate, DefaultTemplateData } from "@/app/lib/config/template-config";
 import { useState } from "react";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
@@ -9,16 +9,13 @@ import TemplatePreview from "./templatepreview";
 
 const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClose?: () => void }) => {
     const [templateData, setTemplateData] = useState(template || DefaultTemplateData);
-
-    console.log('templateData:', templateData);
-
     const setTemplate = useTemplateStore((state) => state.setTemplate);
 
-    const handleClose = () => {
-        if (onClose) {
-            onClose();
-        }
-    }
+    // const handleClose = () => {
+    //     if (onClose) {
+    //         onClose();
+    //     }
+    // }
 
     useEffectAfterMount(() => {
         setTemplate(templateData);
@@ -27,36 +24,24 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
     return (
         <Container className={classes.container}>
             <Grid>
-                <GridCol>
-                    <Flex justify={'space-between'}>
-                        <Group justify="flex-start">
-                            <TextInput
-                                placeholder="Enter a name"
-                                label="Template Name"
-                                defaultValue={templateData?.templateName || 'Untitled Template'}
-                                required
-                                miw={'15rem'}
-                                onChange={
-                                    (event) => {
-                                        setTemplateData({ ...templateData, templateName: event.currentTarget.value });
-                                    }
-                                }
-                            />
-                        </Group>
-                        <Group justify="flex-end">
-                            <CloseButton onClick={handleClose} style={{
-                                position: 'relative',
-                                top: -15,
-                                right: -6
-                            }} />
-                        </Group>
-                    </Flex>
-                </GridCol>
-                <GridCol span={4}>
+                <GridCol span={4} style={{ overflowY: 'auto', height: '84vh' }}>
+                    <TextInput
+                        placeholder="Enter a name"
+                        label="Template Name"
+                        variant='filled'
+                        defaultValue={templateData?.templateName || 'Untitled Template'}
+                        required
+                        onChange={
+                            (event) => {
+                                setTemplateData({ ...templateData, templateName: event.currentTarget.value });
+                            }
+                        }
+                    />
+                    <Space h="md" />
                     <Accordion variant="separated" radius={0}>
                         <Accordion.Item value="default">
                             <Accordion.Control style={{
-                                fontSize: '12px'
+                                fontSize: '12px',
                             }}>
                                 Default Styles
                             </Accordion.Control>
@@ -612,7 +597,12 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
                         </Accordion.Item>
                     </Accordion>
                 </GridCol>
-                <GridCol span={8}>
+                <GridCol span={8} style={{
+                    position: 'fixed',
+                    right: 10,
+                    width: '100%',
+                    paddingInlineStart: '5rem'
+                }}>
                     <TemplatePreview template={templateData?.obj} />
                 </GridCol>
             </Grid>

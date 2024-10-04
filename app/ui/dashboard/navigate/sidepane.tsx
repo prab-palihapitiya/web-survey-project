@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import classes from "@/app/ui/dashboard/navigate/sidepane.module.css";
-import { Avatar, Center, Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
+import { Avatar, Center, Stack, Tooltip, UnstyledButton, rem, Text } from "@mantine/core";
 import {
   IconLogout,
   IconUser
@@ -22,9 +22,11 @@ function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLink
 
   return (
     <Tooltip
-      label={label}
+      color="blue"
+      label={<Text size="xs">{label}</Text>}
       position="right"
       transitionProps={{ duration: 0 }}
+      withArrow
     >
       <Link href={`${navigate}`}>
         <UnstyledButton

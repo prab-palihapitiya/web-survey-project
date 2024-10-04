@@ -1,7 +1,7 @@
 import { Group, Radio, Stack, TextInput } from "@mantine/core";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { Option, Question, SubQuestionAnswer } from "@/app/lib/types";
-import RichText from "@/app/ui/utils/richtext";
+import RichText from "@/app/ui/common/richtext";
 
 export default function SingleList({ currentQuestion }: { currentQuestion: Question }) {
     const setAnswer = useQuestionnaireStore(state => state.setAnswer);

@@ -4,7 +4,7 @@ import { ActionIcon, Badge, Button, Card, Center, Container, Flex, Grid, GridCol
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { createEmptyQuestionnaire, deleteQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/services/questionnaire-service";
-import DateTime from "@/app/ui/utils/datetime";
+import DateTime from "@/app/ui/common/datetime";
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import { Questionnaire, Status } from "@/app/lib/types";

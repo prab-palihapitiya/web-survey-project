@@ -1,0 +1,86 @@
+.desktop_container {
+  border: 20px solid #424242;
+  border-left-width: 10px;
+  border-right-width: 10px;
+  border-top-width: 0;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 100%;
+  height: 80vh;
+  box-shadow:
+    rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+.desktop_header {
+  background-color: #424242;
+  padding: 10px;
+  border-top-left-radius: 11px;
+  border-top-right-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.webcam {
+  width: 20px;
+  height: 20px;
+  background-color: #222; /* Dark grey for the webcam body */
+  border: 2px solid #797979; /* Slightly lighter grey for the border */
+  border-radius: 50%;
+  position: relative; /* To position the lens */
+  margin-left: 16.75px;
+}
+
+.webcam_lens {
+  width: 8px;
+  height: 8px;
+  background-color: #444444; /* Slightly lighter grey for the lens */
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the lens */
+}
+
+.webcam_light {
+  color: #797979;
+  margin-left: 10px;
+}
+
+.desktop_screen {
+  height: calc(100% - 40px);
+  padding: 4rem;
+  padding-top: 6rem;
+  outline: 2px solid #444;
+  border-radius: 3px;
+}
+
+.container {
+  max-width: 100%;
+  padding: 0;
+}
+
+.banner {
+  position: absolute;
+  top: 53px;
+  left: 90px;
+  width: calc(100% - 107px);
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  padding: 5px 10px 5px 10px; /* Optional: Adjust padding or margins as needed */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
+}
+
+.footer {
+  position: absolute;
+  bottom: 28px;
+  left: 90px;
+  width: calc(100% - 108px);
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  z-index: 299; /* Adjust as needed to stay above other content */
+  background-color: white; /* Optional: Prevents content from showing through */
+  padding: 10px; /* Adjust padding as needed */
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow above the grid */
+}

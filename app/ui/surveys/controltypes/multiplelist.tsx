@@ -1,7 +1,7 @@
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { Question, SubQuestionAnswer } from "@/app/lib/types";
 import { Checkbox, Stack, CheckboxGroup, Radio, TextInput, Group } from "@mantine/core";
-import RichText from "@/app/ui/utils/richtext";
+import RichText from "@/app/ui/common/richtext";
 
 export default function MultipleList({ currentQuestion }: { currentQuestion: Question }) {
     const setAnswer = useQuestionnaireStore(state => state.setAnswer);

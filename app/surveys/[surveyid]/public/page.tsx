@@ -2,23 +2,25 @@
 
 import { Text, Button, Container, Grid, GridCol, Group, Loader, MantineProvider, Progress, Space, Flex, Avatar, Center, SemiCircleProgress, RingProgress, DefaultMantineColor } from "@mantine/core";
 import { Inter } from "next/font/google";
-import { getStyle } from "@/app/surveys/utils/theme";
+import { getErrorStyle, getProgressProps, getStyle } from "@/app/surveys/utils/theme";
 import { useEffect, useState } from "react";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { fetchQuestionnaire } from "@/app/lib/services/questionnaire-service";
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
 import classes from "@/app/surveys/survey.module.css";
-import ErrorMessage from "@/app/ui/utils/errormessage";
-import RichText from "@/app/ui/utils/richtext";
+import ErrorMessage from "@/app/ui/common/errormessage";
+import RichText from "@/app/ui/common/richtext";
 import { Actions, Answer, ErrorKey, Logic, Navigate, Question } from "@/app/lib/types";
 import { IconArrowLeft, IconArrowRight, IconRefresh } from "@tabler/icons-react";
 import ErrorService from "@/app/lib/utils/error";
 import LogicService from "@/app/lib/utils/logic";
 import Link from "next/link";
-import { ProgressProps } from "@/app/lib/config/template-config";
+import { ProgressProps, TemplateObject } from "@/app/lib/config/template-config";
 import { ProgressType } from "../../utils/types";
 import BuiltTemplates from "@/app/dashboard/settings/design/predefinedtemplates";
+import ProgressBar from "@/app/ui/common/progressbar";
+import { get } from "http";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,7 +57,7 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
             const progress = ((activeQuestionIndex) / questions.length) * 100;
             setProgressValue(progress);
         }
-    }, [activeQuestionIndex]);
+    }, [activeQuestionIndex, questions.length]);
 
     const currentQuestion = questions[activeQuestionIndex];
     const { Control: ControlComponent } = currentQuestion && QuestionTypeMappings[currentQuestion.questionType] || {};
@@ -131,68 +133,11 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
         });
     };
 
-    const style = BuiltTemplates[0].obj;
+    const style: TemplateObject = BuiltTemplates[0].obj;
 
-    const progressProps: ProgressProps = {
-        type: style.progressStyle as ProgressType,
-        color: style.progressColor,
-        labelColor: style.progressLabelColor,
-        radius: style.progressRadius,
-        size: style.progressSize,
-        barLength: style.progressBarLength,
-        animated: style.progressAnimated,
-        circleSize: style.progressCircleSize,
-        circleThickness: style.progressCircleThickness,
-        emptySegmentColor: style.progressEmptySegmentColor,
-    }
+    const progressProps: ProgressProps = getProgressProps(style);
 
-    const errorProps = {
-        color: style.errorColor,
-        variant: style.errorVariant,
-    }
-
-    const getProgress = (props: ProgressProps, value: number) => {
-        switch (props?.type || 'bar') {
-            case 'bar':
-                return <Progress
-                    color={props.color as DefaultMantineColor}
-                    value={value}
-                    w={props.barLength}
-                    radius={props.radius} size={props.size}
-                    animated={value < 100 ? props.animated : false}
-                    mt={0} mr={8} />;
-
-            case 'ring':
-                return <RingProgress
-                    sections={[{ value: value, color: props.color as DefaultMantineColor }]}
-                    label={
-                        <Text c={props.labelColor} fw={500} ta="center" size="sm">
-                            {value}%
-                        </Text>
-                    }
-                    thickness={props.circleThickness}
-                    size={props.circleSize} mt={0} mr={8} />;
-
-            case 'semi-circle':
-                return <SemiCircleProgress
-                    value={value}
-                    label={
-                        <Text c={props.labelColor} fw={500} ta="center" size="sm">
-                            {value}%
-                        </Text>
-                    }
-                    labelPosition="center"
-                    size={props.circleSize}
-                    thickness={props.circleThickness}
-                    emptySegmentColor={props.emptySegmentColor}
-                />;
-
-            default:
-                return <Progress value={value} w={props.barLength}
-                    radius={props.radius} size={props.size}
-                    mt={0} mr={8} />;
-        }
-    };
+    const errorProps = getErrorStyle(style);
 
     return (
         <MantineProvider theme={getStyle()}>
@@ -202,7 +147,7 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                         <Loader size="xl" />
                     </div>
                 ) : (
-                    <>
+                    <div>
                         <div className={classes.banner}
                             style={{
                                 background: style.bannerShowGradient ?
@@ -220,7 +165,7 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                                     </Center>
                                 </Group>
                                 <Group justify="flex-end">
-                                    {getProgress(progressProps, progressValue)}
+                                    <ProgressBar props={progressProps} value={progressValue} />
                                 </Group>
                             </Flex>
                         </div>
@@ -232,7 +177,7 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                                         <ErrorMessage
                                             key={index}
                                             message={error as ErrorKey}
-                                            style={{ color: style.errorColor, variant: style.errorVariant }} />
+                                            style={errorProps} />
                                     ))
                                 )}
                             </GridCol>
@@ -277,7 +222,7 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
                                 </div>
                             </GridCol>
                         </Grid>
-                    </>
+                    </div>
                 )}
             </Container>
         </MantineProvider>

@@ -9,7 +9,7 @@ import Logic from "@/app/ui/dashboard/logic/logic";
 import { IconPlus } from "@tabler/icons-react";
 import classes from "@/app/ui/dashboard/logic/logic.module.css";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import DateTime from "@/app/ui/utils/datetime";
+import DateTime from "@/app/ui/common/datetime";
 
 export default function Page() {
     const { name, questions, logic } = useQuestionnaireStore();

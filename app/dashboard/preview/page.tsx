@@ -9,8 +9,8 @@ import { fetchQuestionnaire, fetchQuestionnairesByUser } from "@/app/lib/service
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
 import { Actions, Answer, ErrorKey, Logic, Navigate, Question } from "@/app/lib/types";
 import LogicService from "@/app/lib/utils/logic";
-import RichText from "@/app/ui/utils/richtext";
-import ErrorMessage from "@/app/ui/utils/errormessage";
+import RichText from "@/app/ui/common/richtext";
+import ErrorMessage from "@/app/ui/common/errormessage";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import { IconRefresh } from "@tabler/icons-react";
 import ErrorService from "@/app/lib/utils/error";
@@ -277,10 +277,10 @@ export default function Page({
                     <Loader />
                 </div>
             ) : (
-                <MantineProvider theme={getStyle('red')}>
+                <MantineProvider theme={getStyle()}>
                     <Grid>
                         {questionnaireId && paramId && questionnaireId === paramId && questions.length > 0 && (
-                            <>
+                            <div>
                                 <GridCol>
                                     <Progress value={progressValue} animated={progressValue === 100 ? false : true} />
                                     <Space h="lg" />
@@ -294,7 +294,7 @@ export default function Page({
                                 </GridCol>
                                 <GridCol>
                                     {currentQuestion && (
-                                        <>
+                                        <div>
                                             <Badge
                                                 size="lg"
                                                 radius={0}
@@ -313,7 +313,7 @@ export default function Page({
                                             <Space h="md" />
                                             {ControlComponent && <ControlComponent currentQuestion={currentQuestion as Question} />}
                                             <Space h="md" />
-                                        </>
+                                        </div>
                                     )}
 
                                     <Group mt="md">
@@ -331,7 +331,7 @@ export default function Page({
                                         )}
                                     </Group>
                                 </GridCol>
-                            </>
+                            </div>
                         )}
                         {questionnaireId && questions.length === 0 && (
                             <GridCol>

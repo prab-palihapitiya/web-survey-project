@@ -33,3 +33,44 @@
   padding: 10px; /* Adjust padding as needed */
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow above the grid */
 }
+
+.new_template,
+.template {
+  cursor: pointer;
+  transition: all 0.5s;
+  height: 6rem;
+  width: 13rem;
+}
+
+.new_template {
+  color: var(--mantine-color-blue-6);
+  border: 1px solid var(--mantine-color-blue-6);
+}
+.new_template:hover {
+  border: none;
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
+}
+.new_template:hover p {
+  color: white;
+}
+
+.hidden_buttons {
+  display: none;
+}
+
+.template:hover .hidden_buttons {
+  transition: all 0.5s;
+  display: flex;
+}
+
+.template_text {
+  color: white;
+}
+.template:hover .template_text {
+  transition: all 0.5s;
+  display: none;
+}

@@ -23,7 +23,7 @@ import {
 } from "@mantine/core";
 import { createEmptyQuestionnaire, fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/questionnaire-service";
 import { useRouter } from "next/navigation";
-import DateTime from "@/app/ui/utils/datetime";
+import DateTime from "@/app/ui/common/datetime";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import { IconCopyPlus, IconHomeDown, IconPlus, IconQuestionMark } from "@tabler/icons-react";
 import { useDisclosure } from '@mantine/hooks';
@@ -174,7 +174,7 @@ export default function Page({
           <Loader />
         </div>
       ) : (
-        <>
+        <div>
           <Modal
             opened={opened}
             onClose={close}
@@ -275,7 +275,7 @@ export default function Page({
               </Flex>
             </GridCol>
           </Grid>
-        </>
+        </div>
       )}
       <Grid className={classes.bottom_bar}>
         <GridCol>

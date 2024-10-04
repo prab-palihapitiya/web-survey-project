@@ -1,4 +1,6 @@
+import { ProgressProps, TemplateObject } from "@/app/lib/config/template-config";
 import { Button, Checkbox, createTheme, NumberInput, Progress, Radio, Textarea, TextInput } from "@mantine/core";
+import { ProgressType } from "./types";
 
 export const getStyle = () => {
     return createTheme({
@@ -81,4 +83,26 @@ export const getStyle = () => {
             })
         }
     });
+}
+
+export const getProgressProps = (style: TemplateObject): ProgressProps => {
+    return {
+        type: style.progressStyle as ProgressType,
+        color: style.progressColor,
+        labelColor: style.progressLabelColor,
+        radius: style.progressRadius,
+        size: style.progressSize,
+        barLength: style.progressBarLength,
+        animated: style.progressAnimated,
+        circleSize: style.progressCircleSize,
+        circleThickness: style.progressCircleThickness,
+        emptySegmentColor: style.progressEmptySegmentColor,
+    };
+}
+
+export const getErrorStyle = (style: TemplateObject) => {
+    return {
+        color: style.errorColor,
+        variant: style.errorVariant,
+    };
 }

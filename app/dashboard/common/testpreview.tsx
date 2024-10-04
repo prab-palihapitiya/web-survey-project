@@ -22,7 +22,7 @@ const TestButton = ({ id }: { id: string }) => {
     };
 
     return (
-        <>
+        <div>
             <Dialog
                 opened={opened}
                 withCloseButton={true}
@@ -47,7 +47,7 @@ const TestButton = ({ id }: { id: string }) => {
             <Button size='xs' color={'black'} onClick={open}>
                 Test Preview<IconExternalLink size={16} style={{ marginInlineStart: '0.5rem' }} />
             </Button>
-        </>
+        </div>
     );
 }
 
