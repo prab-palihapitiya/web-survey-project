@@ -1,7 +1,7 @@
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
 import { ProgressProps, TemplateObject } from "@/app/lib/config/template-config";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { Avatar, Button, Center, Container, Flex, Grid, GridCol, Group, MantineProvider, Space, Text } from "@mantine/core";
+import { Avatar, Box, Button, Center, Container, Flex, Grid, GridCol, Group, MantineProvider, Space, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import DefaultQuestionnaire from "@/app/lib/defaultquestionnaire";
 import { getErrorStyle, getProgressProps, getStyle } from "@/app/surveys/utils/theme";
@@ -17,20 +17,17 @@ import ProgressBar from "@/app/ui/common/progressbar";
 
 const TemplatePreview = ({ template }: { template: TemplateObject }) => {
     const style = template;
-
-    // const [isLoading, setIsLoading] = useState(false);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-    const [progressValue, setProgressValue] = useState(0); // To store the progress percentage
+    const [progressValue, setProgressValue] = useState(0);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-
     const setQuestionnaire = useQuestionnaireStore((state) => state.setQuestionnaire);
-
-    useEffect(() => {
-        setQuestionnaire(DefaultQuestionnaire);
-    }, []);
 
     const { answers } = useQuestionnaireStore();
     const { questions } = DefaultQuestionnaire;
+
+    useEffect(() => {
+        setQuestionnaire(DefaultQuestionnaire);
+    }, [setQuestionnaire]);
 
     useEffectAfterMount(() => {
         setErrorMessages([]); // Clear error message
@@ -47,7 +44,6 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
     const { Control: ControlComponent } = currentQuestion && QuestionTypeMappings[currentQuestion.questionType] || {};
 
     const progressProps: ProgressProps = getProgressProps(style);
-
     const errorProps = getErrorStyle(style);
 
     const handleNext = () => {
@@ -57,13 +53,13 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
             return;
         }
 
-        setErrorMessages([]); // Clear any previous errors
+        setErrorMessages([]);
         setActiveQuestionIndex(activeQuestionIndex + 1);
     };
 
     const handlePrevious = () => {
         setActiveQuestionIndex(activeQuestionIndex - 1);
-        setErrorMessages([]); // Clear any previous errors
+        setErrorMessages([]);
     };
 
     return (
@@ -71,12 +67,13 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
             <div className={classes.desktop_header}>
                 <div className={classes.webcam}>
                     <div className={classes.webcam_lens}></div>
-                </div><span className={classes.webcam_light}>•</span>
+                </div>
+                <div className={classes.webcam_light}></div>
             </div>
             <div className={classes.desktop_screen}>
                 <MantineProvider theme={getStyle()}>
-                    <Container className={classes.container}>
-                        <div className={classes.banner}
+                    <Container className={classes.scr_container}>
+                        <div className={classes.scr_banner}
                             style={{
                                 background: style.bannerShowGradient ?
                                     `linear-gradient(${style.bannerGradientDirection}, ${style.bannerPrimaryColor}, ${style.bannerSecondaryColor})` : style.bannerPrimaryColor
@@ -84,12 +81,16 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
                             <Flex justify="space-between">
                                 <Group justify="flext-start">
                                     <Center>
-                                        {style.logoSrc ? <Link href={style.logoUrl || ''} style={{ zIndex: '301' }}>
-                                            <Avatar
-                                                src={style.logoSrc}
-                                                size={style.logoSize}
-                                                radius={style.logoRadius}
-                                            /></Link> : <Avatar radius={'sm'}><Text size="xs" c={'black'}>LOGO</Text></Avatar>}
+                                        {(style.logoSrc || style.logoFilePath) ?
+                                            <Link href={style.logoUrl || ''}>
+                                                <Avatar
+                                                    src={style.logoSrc || style.logoFilePath}
+                                                    size={style.logoSize}
+                                                    radius={style.logoRadius}
+                                                />
+                                            </Link> : <div className={classes.empty_logo}>
+                                                <Text size={'12px'} c={'dark'}>LOGO</Text>
+                                            </div>}
                                     </Center>
                                 </Group>
                                 <Group justify="flex-end">
@@ -97,7 +98,6 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
                                 </Group>
                             </Flex>
                         </div>
-
                         <Grid>
                             <GridCol>
                                 {errorMessages.length > 0 && (
@@ -113,14 +113,14 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
                                 {currentQuestion && (
                                     <div>
                                         <Space h="md" />
-                                        <Text><RichText content={currentQuestion.introduction}></RichText></Text>
+                                        <Text><RichText content={currentQuestion.introduction} /></Text>
                                         <Space h="md" />
                                         {ControlComponent && <ControlComponent currentQuestion={currentQuestion as Question} style={null} />}
                                         <Space h="md" />
                                     </div>
                                 )}
 
-                                <div className={style.navBottomFixed ? classes.footer : ''}>
+                                <div className={style.navBottomFixed ? classes.scr_footer : ''}>
                                     <Group justify={style.navFlexDirection}>
                                         {style.prevButtonShow && ((activeQuestionIndex !== 0) && <Button
                                             variant={style.prevButtonVariant}
@@ -129,7 +129,7 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
                                             radius={style.prevButtonRadius}
                                             onClick={handlePrevious}
                                         >
-                                            {style.navArrows ? <IconArrowLeft size={16} /> : style.prevButtonText}
+                                            {style.navArrows ? <IconArrowLeft size={16} /> : (style.prevButtonText || 'Previous')}
                                         </Button>)}
                                         {activeQuestionIndex === questions.length ? (
                                             <Button onClick={() => { }}>

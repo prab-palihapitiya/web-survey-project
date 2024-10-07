@@ -8,11 +8,11 @@ import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import '@mantine/tiptap/styles.css';
 import useQuestionnaireStore from '@/app/lib/state/questionnaire-store';
-import { IconBraces, IconColorPicker, IconSettings } from '@tabler/icons-react';
+import { IconBraces, IconColorPicker } from '@tabler/icons-react';
 import { Color } from '@tiptap/extension-color';
 import TextStyle from '@tiptap/extension-text-style';
 import Placeholder from '@tiptap/extension-placeholder';
-import { Menu, rem } from '@mantine/core';
+import { Menu } from '@mantine/core';
 
 export default function TextEditor({ qid, intro, placeholderText }: { qid: number, intro: string, placeholderText: string }) {
     const updateQuestionData = useQuestionnaireStore((state) => state.updateQuestionData);
@@ -45,7 +45,6 @@ export default function TextEditor({ qid, intro, placeholderText }: { qid: numbe
                     </Menu.Dropdown>
                 </Menu>
             </RichTextEditor.Control>
-
         );
     }
 

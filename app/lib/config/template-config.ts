@@ -18,6 +18,8 @@ export interface TemplateObject {
     bannerShowGradient: boolean;
     bannerGradientDirection: string;
 
+    logoFilePath: string;
+    logoFileName: string;
     logoSrc: string;
     logoAltText: string;
     logoTitle: string;
@@ -72,10 +74,19 @@ export type Template = {
 export type DefaultTemplate = {
     id: string,
     templateName: string,
-    obj: TemplateObject
+    obj: TemplateObject,
 };
 
 export const DefaultTemplateData = {
     templateName: 'Untitled Template',
-    obj: {} as TemplateObject
+    obj: {
+        fontFamily: 'Arial',
+        fontSize: 'sm',
+        fontWeight: 'normal',
+        primaryColor: '#000000',
+        secondaryColor: '#FFFFFF',
+        prevButtonText: 'Previous',
+        nextButtonText: 'Next',
+        prevButtonShow: true,
+    } as TemplateObject
 };

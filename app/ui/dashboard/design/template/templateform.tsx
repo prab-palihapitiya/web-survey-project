@@ -6,20 +6,56 @@ import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import useTemplateStore from "@/app/lib/state/template-store";
 import { ButtonVariants, ErrorVariants, FlexPositions, FontFamily, FontSizes, FontWeight, GradientDirections, ProgressStyles, Radius, Sizes } from "@/app/surveys/utils/types";
 import TemplatePreview from "./templatepreview";
+import axios from "axios";
 
-const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClose?: () => void }) => {
+const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () => void }) => {
     const [templateData, setTemplateData] = useState(template || DefaultTemplateData);
     const setTemplate = useTemplateStore((state) => state.setTemplate);
-
-    // const handleClose = () => {
-    //     if (onClose) {
-    //         onClose();
-    //     }
-    // }
+    const [logo, setLogo] = useState<File | null>(null);
+    const [bannerLogoFilePath, setBannerLogoFilePath] = useState<string>();
 
     useEffectAfterMount(() => {
         setTemplate(templateData);
     }, [templateData]);
+
+    useEffectAfterMount(() => {
+        if (logo) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64Image = e.target?.result as string;
+                setTemplateData({ ...templateData, obj: { ...templateData.obj, logoSrc: base64Image } });
+            }
+            reader.readAsDataURL(logo);
+        }
+    }, [bannerLogoFilePath]);
+
+    const handleLogoChange = async (file: File | null) => {
+        if (file) {
+            setLogo(file);
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('customname', `tmp_b_lg_${template?.id}`);
+
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+            try {
+                const response = await axios.post(`${apiUrl}/upload`, formData);
+                setBannerLogoFilePath(response.data.path);
+
+                setTemplateData({
+                    ...templateData,
+                    obj: {
+                        ...templateData.obj,
+                        logoFilePath: response.data.path
+                    }
+                });
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                // Handle error (e.g., display an error message to the user)
+            }
+        }
+    };
 
     return (
         <Container className={classes.container}>
@@ -204,16 +240,8 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
                                     label="Upload Logo"
                                     placeholder="Select file"
                                     accept="image/*"
-                                    onChange={
-                                        (event) => {
-                                            const file = event?.currentTarget?.files[0];
-                                            const reader = new FileReader();
-                                            reader.onload = (e) => {
-                                                setTemplateData({ ...templateData, obj: { ...templateData.obj, logoSrc: e.target?.result as string } });
-                                            }
-                                            reader.readAsDataURL(file);
-                                        }
-                                    }
+                                    value={logo}
+                                    onChange={handleLogoChange}
                                 />
 
                                 <Space h="xs" />
@@ -351,11 +379,11 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
                                 <NumberInput
                                     label="Bar Length"
                                     placeholder="Enter value"
-                                    rightSection="px"
+                                    rightSection={<Text size="xs" pr={3}>px</Text>}
                                     defaultValue={templateData?.obj?.progressBarLength || 0}
                                     onChange={
                                         (value) => {
-                                            setTemplateData({ ...templateData, obj: { ...templateData.obj, progressBarLength: value } });
+                                            setTemplateData({ ...templateData, obj: { ...templateData.obj, progressBarLength: value as number } });
                                         }
                                     }
                                 />
@@ -376,11 +404,11 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
                                 <NumberInput
                                     label="Circle Size"
                                     placeholder="Enter value"
-                                    rightSection="px"
+                                    rightSection={<Text size="xs" pr={3}>px</Text>}
                                     defaultValue={templateData?.obj?.progressCircleSize || 0}
                                     onChange={
                                         (value) => {
-                                            setTemplateData({ ...templateData, obj: { ...templateData.obj, progressCircleSize: value } });
+                                            setTemplateData({ ...templateData, obj: { ...templateData.obj, progressCircleSize: value as number } });
                                         }
                                     }
                                 />
@@ -389,11 +417,11 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
                                 <NumberInput
                                     label="Circle Thickness"
                                     placeholder="Enter value"
-                                    rightSection="px"
+                                    rightSection={<Text size="xs" pr={3}>px</Text>}
                                     defaultValue={templateData?.obj?.progressCircleThickness || 0}
                                     onChange={
                                         (value) => {
-                                            setTemplateData({ ...templateData, obj: { ...templateData.obj, progressCircleThickness: value } });
+                                            setTemplateData({ ...templateData, obj: { ...templateData.obj, progressCircleThickness: value as number } });
                                         }
                                     }
                                 />
@@ -423,7 +451,7 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
                                     label="Navigation Style"
                                     placeholder="Pick value"
                                     data={FlexPositions}
-                                    defaultValue={templateData?.obj?.navFlexDirection || ''}
+                                    defaultValue={templateData?.obj?.navFlexDirection || 'center'}
                                     onChange={
                                         (value) => {
                                             setTemplateData({ ...templateData, obj: { ...templateData.obj, navFlexDirection: value as string } });
@@ -457,7 +485,7 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
 
                                 <Space h="xs" />
                                 <Switch
-                                    defaultChecked={templateData?.obj?.prevButtonShow || false}
+                                    defaultChecked={templateData?.obj?.prevButtonShow || true}
                                     size="xs"
                                     label="Show Previous Button"
                                     onChange={
@@ -471,7 +499,7 @@ const TemplateForm = ({ template, onClose }: { template?: DefaultTemplate, onClo
                                 <TextInput
                                     label="Previous Button Text"
                                     placeholder="Enter text"
-                                    defaultValue={'Previous'}
+                                    defaultValue={templateData?.obj?.prevButtonText || 'Previous'}
                                     onChange={
                                         (event) => {
                                             setTemplateData({ ...templateData, obj: { ...templateData.obj, prevButtonText: event.currentTarget.value } });

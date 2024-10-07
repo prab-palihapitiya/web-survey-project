@@ -280,7 +280,7 @@ export default function Page({
                 <MantineProvider theme={getStyle()}>
                     <Grid>
                         {questionnaireId && paramId && questionnaireId === paramId && questions.length > 0 && (
-                            <div>
+                            <>
                                 <GridCol>
                                     <Progress value={progressValue} animated={progressValue === 100 ? false : true} />
                                     <Space h="lg" />
@@ -331,7 +331,7 @@ export default function Page({
                                         )}
                                     </Group>
                                 </GridCol>
-                            </div>
+                            </>
                         )}
                         {questionnaireId && questions.length === 0 && (
                             <GridCol>

@@ -27,6 +27,7 @@ function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLink
       position="right"
       transitionProps={{ duration: 0 }}
       withArrow
+      style={{ boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.1)' }}
     >
       <Link href={`${navigate}`}>
         <UnstyledButton

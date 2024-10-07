@@ -4,8 +4,6 @@ const apiUrl = process.env.API_URL || "http://localhost:4000/api";
 const userId = "clzyfzfg300002y2l8a7du5lf"; //TODO: Get the user ID from the auth context
 
 export const createTemplate = async (templateData: any) => {
-    console.log('Template data:', templateData);
-
     const templateDataWithUserId = {
         name: templateData.templateName,
         obj: templateData,
