@@ -123,3 +123,12 @@
   height: rem(21px);
   border-radius: rem(21px);
 }
+
+.segmented_control {
+  border: 1px solid var(--mantine-color-blue-filled);
+  background-color: transparent;
+}
+
+.segmented_control_inner {
+  color: blue;
+}

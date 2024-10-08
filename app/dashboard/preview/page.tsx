@@ -16,6 +16,7 @@ import { IconRefresh } from "@tabler/icons-react";
 import ErrorService from "@/app/lib/utils/error";
 import TestButton from "../common/testpreview";
 import { getStyle } from "@/app/surveys/utils/theme";
+import useDashboardStore from "@/app/lib/state/dashboard-store";
 
 export default function Page({
     searchParams
@@ -24,6 +25,9 @@ export default function Page({
         id?: string;
     };
 }) {
+    const setNavLinkIndex = useDashboardStore((state) => state.setNavLinkIndex);
+    setNavLinkIndex(4);
+
     const { questions, logic, answers } = useQuestionnaireStore();
     const [isLoading, setIsLoading] = useState(false);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
@@ -65,7 +69,7 @@ export default function Page({
             const progress = ((activeQuestionIndex) / questions.length) * 100;
             setProgressValue(progress);
         }
-    }, [activeQuestionIndex]);
+    }, [activeQuestionIndex, questions.length]);
 
     // TODO: Implement keyboard navigation
     // useEffect(() => {
@@ -148,7 +152,6 @@ export default function Page({
             setAnswer(targetLogic?.targetQuestionId as string, targetLogic?.setValue as string, []);
         }
     };
-
 
     const handleNext = () => {
         const err = ErrorService.validateAnswer(currentQuestion as Question, answers as Answer[]);

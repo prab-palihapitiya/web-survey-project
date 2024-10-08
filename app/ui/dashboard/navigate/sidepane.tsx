@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import classes from "@/app/ui/dashboard/navigate/sidepane.module.css";
 import { Avatar, Center, Stack, Tooltip, UnstyledButton, rem, Text } from "@mantine/core";
 import {
@@ -9,6 +8,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
+import useDashboardStore from "@/app/lib/state/dashboard-store";
 import { NavigationLinks } from "@/app/lib/config/navigation-config";
 import { NavbarLinkProps } from "@/app/lib/types";
 
@@ -46,17 +46,18 @@ function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLink
 }
 
 export default function SidePane() {
-  const [active, setActive] = useState<number>(0);
+  const setNavLinkIndex = useDashboardStore((state) => state.setNavLinkIndex);
+  const navLinkIndex = useDashboardStore((state) => state.navLinkIndex);
 
   const handleClick = (index: number) => {
-    setActive(index);
+    setNavLinkIndex(index);
   }
 
   const links = NavigationLinks.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
-      active={index === active}
+      active={index === navLinkIndex}
       navigate={link.href}
       onClick={() => handleClick(link.index)}
     />

@@ -8,13 +8,16 @@ import { ButtonVariants, ErrorVariants, FlexPositions, FontFamily, FontSizes, Fo
 import TemplatePreview from "./templatepreview";
 import axios from "axios";
 
-const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () => void }) => {
+const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onChange: () => void }) => {
     const [templateData, setTemplateData] = useState(template || DefaultTemplateData);
     const setTemplate = useTemplateStore((state) => state.setTemplate);
     const [logo, setLogo] = useState<File | null>(null);
     const [bannerLogoFilePath, setBannerLogoFilePath] = useState<string>();
 
     useEffectAfterMount(() => {
+        if (JSON.stringify(templateData) !== JSON.stringify(template || DefaultTemplateData)) {
+            onChange();
+        }
         setTemplate(templateData);
     }, [templateData]);
 
@@ -36,10 +39,8 @@ const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () =
             formData.append('file', file);
             formData.append('customname', `tmp_b_lg_${template?.id}`);
 
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
             try {
-                const response = await axios.post(`${apiUrl}/upload`, formData);
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload`, formData);
                 setBannerLogoFilePath(response.data.path);
 
                 setTemplateData({
@@ -76,9 +77,11 @@ const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () =
                     <Space h="md" />
                     <Accordion variant="separated" radius={0}>
                         <Accordion.Item value="default">
-                            <Accordion.Control style={{
-                                fontSize: '12px',
-                            }}>
+                            <Accordion.Control
+                                classNames={{
+                                    control: classes.accordion_control,
+                                    label: classes.accordion_label
+                                }}>
                                 Default Styles
                             </Accordion.Control>
                             <Accordion.Panel>
@@ -143,9 +146,11 @@ const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () =
                         </Accordion.Item>
 
                         <Accordion.Item value="error">
-                            <Accordion.Control style={{
-                                fontSize: '12px'
-                            }}>
+                            <Accordion.Control
+                                classNames={{
+                                    control: classes.accordion_control,
+                                    label: classes.accordion_label
+                                }}>
                                 Error Message
                             </Accordion.Control>
                             <Accordion.Panel>
@@ -176,9 +181,11 @@ const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () =
                         </Accordion.Item>
 
                         <Accordion.Item value="banner">
-                            <Accordion.Control style={{
-                                fontSize: '12px'
-                            }}>
+                            <Accordion.Control
+                                classNames={{
+                                    control: classes.accordion_control,
+                                    label: classes.accordion_label
+                                }}>
                                 Top Banner
                             </Accordion.Control>
                             <Accordion.Panel>
@@ -230,9 +237,11 @@ const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () =
                         </Accordion.Item>
 
                         <Accordion.Item value="logo">
-                            <Accordion.Control style={{
-                                fontSize: '12px'
-                            }}>
+                            <Accordion.Control
+                                classNames={{
+                                    control: classes.accordion_control,
+                                    label: classes.accordion_label
+                                }}>
                                 Branding
                             </Accordion.Control>
                             <Accordion.Panel>
@@ -307,9 +316,11 @@ const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () =
                         </Accordion.Item>
 
                         <Accordion.Item value="progress">
-                            <Accordion.Control style={{
-                                fontSize: '12px'
-                            }}>
+                            <Accordion.Control
+                                classNames={{
+                                    control: classes.accordion_control,
+                                    label: classes.accordion_label
+                                }}>
                                 Progress Bar
                             </Accordion.Control>
                             <Accordion.Panel>
@@ -441,9 +452,11 @@ const TemplateForm = ({ template }: { template?: DefaultTemplate, onClose?: () =
                         </Accordion.Item>
 
                         <Accordion.Item value="navigation">
-                            <Accordion.Control style={{
-                                fontSize: '12px'
-                            }}>
+                            <Accordion.Control
+                                classNames={{
+                                    control: classes.accordion_control,
+                                    label: classes.accordion_label
+                                }}>
                                 Navigation Buttons
                             </Accordion.Control>
                             <Accordion.Panel>

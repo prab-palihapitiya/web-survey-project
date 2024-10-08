@@ -1,7 +1,7 @@
 import { QuestionTypeMappings } from "@/app/lib/config/question-config";
 import { ProgressProps, TemplateObject } from "@/app/lib/config/template-config";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { Avatar, Box, Button, Center, Container, Flex, Grid, GridCol, Group, MantineProvider, Space, Text } from "@mantine/core";
+import { Avatar, Button, Center, Container, Flex, Grid, GridCol, Group, MantineProvider, Space, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import DefaultQuestionnaire from "@/app/lib/defaultquestionnaire";
 import { getErrorStyle, getProgressProps, getStyle } from "@/app/surveys/utils/theme";
@@ -20,14 +20,9 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
     const [progressValue, setProgressValue] = useState(0);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-    const setQuestionnaire = useQuestionnaireStore((state) => state.setQuestionnaire);
 
     const { answers } = useQuestionnaireStore();
     const { questions } = DefaultQuestionnaire;
-
-    useEffect(() => {
-        setQuestionnaire(DefaultQuestionnaire);
-    }, [setQuestionnaire]);
 
     useEffectAfterMount(() => {
         setErrorMessages([]); // Clear error message
@@ -122,15 +117,16 @@ const TemplatePreview = ({ template }: { template: TemplateObject }) => {
 
                                 <div className={style.navBottomFixed ? classes.scr_footer : ''}>
                                     <Group justify={style.navFlexDirection}>
-                                        {style.prevButtonShow && ((activeQuestionIndex !== 0) && <Button
-                                            variant={style.prevButtonVariant}
-                                            color={style.prevButtonColor}
-                                            size={style.prevButtonSize}
-                                            radius={style.prevButtonRadius}
-                                            onClick={handlePrevious}
-                                        >
-                                            {style.navArrows ? <IconArrowLeft size={16} /> : (style.prevButtonText || 'Previous')}
-                                        </Button>)}
+                                        {style.prevButtonShow && ((activeQuestionIndex !== 0) &&
+                                            <Button
+                                                variant={style.prevButtonVariant}
+                                                color={style.prevButtonColor}
+                                                size={style.prevButtonSize}
+                                                radius={style.prevButtonRadius}
+                                                onClick={handlePrevious}
+                                            >
+                                                {style.navArrows ? <IconArrowLeft size={16} /> : (style.prevButtonText || 'Previous')}
+                                            </Button>)}
                                         {activeQuestionIndex === questions.length ? (
                                             <Button onClick={() => { }}>
                                                 <IconRefresh size={20} />

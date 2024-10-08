@@ -21,7 +21,7 @@ import {
   Modal,
   Text
 } from "@mantine/core";
-import { createEmptyQuestionnaire, fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/questionnaire-service";
+import { fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/questionnaire-service";
 import { useRouter } from "next/navigation";
 import DateTime from "@/app/ui/common/datetime";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
@@ -29,6 +29,7 @@ import { IconCopyPlus, IconHomeDown, IconPlus, IconQuestionMark } from "@tabler/
 import { useDisclosure } from '@mantine/hooks';
 import PublishButton from "../common/publish";
 import { Status } from "@/app/lib/types";
+import useDashboardStore from "@/app/lib/state/dashboard-store";
 
 export default function Page({
   searchParams
@@ -37,14 +38,15 @@ export default function Page({
     id?: string;
   };
 }) {
+  const setNavLinkIndex = useDashboardStore((state) => state.setNavLinkIndex);
+  setNavLinkIndex(1);
+
   const [isLoading, setIsLoading] = useState(false);
   const [lastModified, setLastModified] = useState(new Date());
   const [isSaving, setIsSaving] = useState(false);
   const [firstLoaded, setFirstLoaded] = useState(true);
   const [nextQuestionId, setNextQuestionId] = useState(1);
-  const [newlyAddedQuestionId, setNewlyAddedQuestionId] = useState<
-    number | null
-  >(null);
+  const [newlyAddedQuestionId, setNewlyAddedQuestionId] = useState<number | null>(null);
   const [published, setPublished] = useState(false);
   const [publicUrl, setPublicUrl] = useState('');
 
@@ -227,10 +229,10 @@ export default function Page({
                 <Group justify="flex-end">
                   <Badge
                     size="md"
-                    radius={0}
                     color="green"
-                    variant={'transparent'}
-                    style={{ fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem' }}
+                    radius={0}
+                    variant={'dot'}
+                    style={{ fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem', border: '1px solid var(--mantine-color-green-6)' }}
                   >
                     {getSavedStatus()}
                   </Badge>

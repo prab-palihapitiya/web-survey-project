@@ -20,6 +20,7 @@ const BuiltTemplates = [
             bannerShowGradient: true,
             bannerGradientDirection: '45deg',
 
+            logoFilePath: '/assets/sr-logo.png',
             logoSrc: '/assets/sr-logo.png',
             logoAltText: 'SurveyRanch Logo',
             logoTitle: 'SurveyRanch Logo',

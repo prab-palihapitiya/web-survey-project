@@ -30,7 +30,7 @@ export default function TextEditor({ qid, intro, placeholderText }: { qid: numbe
                 title="Insert placeholder data">
                 <Menu shadow="md" trigger="hover" openDelay={100} closeDelay={400}>
                     <Menu.Target>
-                        <IconBraces stroke={1.5} size="1rem" color='blue' />
+                        <IconBraces stroke={2} size="1rem" style={{ color: 'var(--mantine-color-blue-filled)' }} />
                     </Menu.Target>
 
                     <Menu.Dropdown>

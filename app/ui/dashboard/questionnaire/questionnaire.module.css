@@ -1,8 +1,9 @@
 .container {
   margin-inline: 0;
   max-width: 100%;
-  margin-top: 40px;
+  margin-top: 30px;
   padding-bottom: 70px;
+  padding-inline: 0.3rem;
 }
 
 .scrollable_container {

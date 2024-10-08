@@ -11,8 +11,12 @@ import { Questionnaire, Status } from "@/app/lib/types";
 import { IconChevronDown, IconCopyPlus, IconDots, IconExternalLink, IconEye, IconLayoutGrid, IconList, IconPencil, IconSearch, IconSelector, IconSettings, IconShare3, IconTrash, IconUser, IconUsersGroup, IconX } from "@tabler/icons-react";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { useRouter } from "next/navigation";
+import useDashboardStore from "@/app/lib/state/dashboard-store";
 
 export default function Page() {
+  const setNavLinkIndex = useDashboardStore((state) => state.setNavLinkIndex);
+  setNavLinkIndex(0);
+
   const [isLoading, setIsLoading] = useState(true);
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
   const [filteredQuestionnaires, setFilteredQuestionnaires] = useState<Questionnaire[]>([]);
@@ -217,7 +221,7 @@ export default function Page() {
         </Table.Td>
       </Table.Tr>
     ));
-  }, [handleDelete, currentQuestionnaires]); // Use currentQuestionnaires here
+  }, [currentQuestionnaires]);
 
   const memoizedGridItems = useMemo(() => {
     return currentQuestionnaires.map(({ id, name, status, createdAt, modifiedAt }) => (
@@ -306,21 +310,6 @@ export default function Page() {
           ) : (
             <TableScrollContainer minWidth={rem(300)}>
               <Group gap={8} mb={20}>
-                <SegmentedControl size={'xs'} data={[{
-                  value: 'list',
-                  label: (<Center><IconList size={18} /></Center>),
-                },
-                {
-                  value: 'grid',
-                  label: (<Center><IconLayoutGrid size={18} /></Center>),
-                }
-                ]}
-                  value={viewMode}
-                  onChange={handleViewModeChange}
-                  radius={0}
-                />
-                <SegmentedControl size={'xs'} data={['All', 'New', 'Draft', 'Published']} radius={0} />
-                <SegmentedControl size={'xs'} data={['All', 'Created', 'Assigned']} radius={0} />
                 <TextInput
                   placeholder="Search Questionnaire"
                   leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} />}
@@ -328,6 +317,26 @@ export default function Page() {
                   onChange={handleSearchChange}
                   miw={rem(250)}
                 />
+                <SegmentedControl
+                  size={'xs'}
+                  data={[{
+                    value: 'list',
+                    label: (<Center><IconList size={18} /></Center>),
+                  },
+                  {
+                    value: 'grid',
+                    label: (<Center><IconLayoutGrid size={18} /></Center>),
+                  }
+                  ]}
+                  value={viewMode}
+                  onChange={handleViewModeChange}
+                  radius={0}
+                  classNames={{
+                    // root: classes.segmented_control,
+                  }}
+                />
+                <SegmentedControl size={'xs'} data={['All', 'New', 'Draft', 'Published']} radius={0} />
+                <SegmentedControl size={'xs'} data={['All', 'Created', 'Assigned']} radius={0} />
               </Group>
 
               {viewMode === 'grid' ? (

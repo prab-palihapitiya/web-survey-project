@@ -73,3 +73,21 @@
   transition: all 0.5s;
   display: none;
 }
+
+.button {
+  &:disabled,
+  &[data-disabled] {
+    background-color: var(--mantine-color-blue-0);
+    color: var(--mantine-color-blue-filled);
+  }
+}
+
+.accordion_label {
+  padding-block: 0.4rem;
+  font-size: var(--mantine-font-size-xs);
+}
+
+.accordion_control {
+  color: white;
+  background-color: var(--mantine-color-blue-filled);
+}

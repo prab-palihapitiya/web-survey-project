@@ -10,8 +10,12 @@ import { IconPlus } from "@tabler/icons-react";
 import classes from "@/app/ui/dashboard/logic/logic.module.css";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import DateTime from "@/app/ui/common/datetime";
+import useDashboardStore from "@/app/lib/state/dashboard-store";
 
 export default function Page() {
+    const setNavLinkIndex = useDashboardStore((state) => state.setNavLinkIndex);
+    setNavLinkIndex(2);
+
     const { name, questions, logic } = useQuestionnaireStore();
     const [isLoading, setIsLoading] = useState(false);
     const [questionnaires, setQuestionnaires] = useState([]); // To store the list of questionnaires
@@ -136,15 +140,18 @@ export default function Page() {
                         <Group justify="flex-end">
                             {paramId &&
                                 <Badge
-                                    size="lg"
+                                    size="md"
+                                    color="green"
                                     radius={0}
+                                    variant={'dot'}
                                     style={{
-                                        backgroundColor: 'var(--mantine-color-green-6)',
                                         fontSize: 'var(--mantine-font-size-xs)',
-                                        padding: '0.8rem'
+                                        padding: '0.8rem',
+                                        border: '1px solid var(--mantine-color-green-6)'
                                     }}>
                                     {getSavedStatus()}
-                                </Badge>}
+                                </Badge>
+                            }
                         </Group>
                     </Flex>
                 </GridCol>
