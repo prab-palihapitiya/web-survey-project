@@ -1,8 +1,8 @@
 .container {
   margin-inline: 0;
   max-width: 100%;
-  margin-top: 40px;
-  padding-bottom: 70px;
+  margin-top: 3.3rem;
+  padding: 0;
 }
 
 .loading_wrapper {
@@ -35,11 +35,18 @@
 }
 
 .new_questionnaire,
-.questionnaire {
+.questionnaire,
+.import_questionnaire {
   cursor: pointer;
   transition: all 0.5s;
   height: 6rem;
   width: 13rem;
+}
+
+.new_questionnaire,
+.import_questionnaire {
+  height: 6.5rem;
+  width: 14rem;
 }
 
 .questionnaire {
@@ -50,7 +57,8 @@
   );
 }
 
-.new_questionnaire {
+.new_questionnaire,
+.import_questionnaire {
   color: white;
   background: linear-gradient(
     45deg,
@@ -59,20 +67,24 @@
   );
 }
 
-.new_questionnaire:hover {
-  border: 1px solid var(--mantine-color-blue-filled);
-  color: var(--mantine-color-blue-filled);
-  background-color: white;
-  background: white;
+.new_questionnaire:hover,
+.import_questionnaire:hover {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-8) 0%,
+    var(--mantine-color-cyan-8) 100%
+  );
 }
 
 .hidden_buttons {
   display: none;
 }
 
-.questionnaire:hover .hidden_buttons {
+.questionnaire:hover .hidden_buttons,
+.new_questionnaire:hover .hidden_buttons,
+.import_questionnaire:hover .hidden_buttons {
   transition: all 0.5s;
-  display: flex;
+  display: inline-flex;
 }
 
 .questionnaire_text {
@@ -97,8 +109,22 @@
   );
 }
 
+.menu_icon {
+  color: var(--mantine-color-blue-7);
+}
+
 .table_row:hover .table_cell,
-.table_row:hover .link {
+.table_row:hover .link,
+.table_row:hover .menu_icon {
+  color: white;
+}
+
+.thead {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
   color: white;
 }
 
@@ -109,26 +135,63 @@
 .control {
   width: 100%;
   padding: var(--mantine-spacing-xs);
-
-  @mixin hover {
-    background-color: light-dark(
-      var(--mantine-color-gray-0),
-      var(--mantine-color-dark-6)
-    );
-  }
 }
 
 .icon {
   width: rem(21px);
   height: rem(21px);
-  border-radius: rem(21px);
 }
 
 .segmented_control {
-  border: 1px solid var(--mantine-color-blue-filled);
   background-color: transparent;
 }
 
-.segmented_control_inner {
-  color: blue;
+.segmented_control_label {
+  color: var(--mantine-color-blue-filled);
+  font-size: var(--mantine-font-size-xs);
+}
+
+.modal_header {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
+  color: white;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  min-height: max-content;
+}
+
+.modal_header h2 {
+  font-size: 14px;
+}
+
+.modal_inner {
+  left: calc(80px);
+  width: -moz-available;
+  width: -webkit-fill-available;
+  /* min-width: calc(100% - 80px); */
+  /* z-index: 301; */
+}
+
+.select_dropdown {
+  z-index: 310;
+}
+
+.select_group_label {
+  font-size: 12px;
+}
+
+.pagination_control {
+  color: var(--mantine-color-blue-filled);
+  border: none;
+}
+
+.pagination_control:focus,
+.pagination_control:active {
+  color: var(--mantine-color-blue-filled);
+  color: white;
 }

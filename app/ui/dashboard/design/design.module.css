@@ -49,8 +49,8 @@
   border: none;
   background: linear-gradient(
     45deg,
-    var(--mantine-color-blue-filled) 0%,
-    var(--mantine-color-cyan-filled) 100%
+    var(--mantine-color-blue-6) 0%,
+    var(--mantine-color-cyan-6) 100%
   );
 }
 .new_template:hover p {
@@ -78,7 +78,7 @@
   &:disabled,
   &[data-disabled] {
     background-color: var(--mantine-color-blue-0);
-    color: var(--mantine-color-blue-filled);
+    color: var(--mantine-color-blue-6);
   }
 }
 
@@ -89,5 +89,14 @@
 
 .accordion_control {
   color: white;
-  background-color: var(--mantine-color-blue-filled);
+  background-color: var(--mantine-color-blue-6);
+}
+
+.accordion_item {
+  border-color: var(--mantine-color-blue-6);
+  border-width: 2px;
+  border: 2px solid var(--mantine-color-blue-6);
+}
+.accordion_item[data-active] {
+  border-color: var(--mantine-color-blue-6);
 }

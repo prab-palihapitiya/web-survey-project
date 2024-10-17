@@ -7,7 +7,7 @@ export const theme = createTheme({
     Paper: Paper.extend({
       styles: {
         root: {
-          borderRadius: 0,
+          // borderRadius: 0,
         }
       }
     }),
@@ -18,7 +18,7 @@ export const theme = createTheme({
           fontWeight: 500,
         },
         root: {
-          borderRadius: 0,
+          // borderRadius: 0,
         }
       }
     }),
@@ -28,7 +28,7 @@ export const theme = createTheme({
       },
       styles: {
         root: {
-          borderRadius: 0,
+          // borderRadius: 0,
           fontWeight: 500
         },
         inner: { fontWeight: 500 }
@@ -37,7 +37,7 @@ export const theme = createTheme({
     ActionIcon: ActionIcon.extend({
       styles: {
         root: {
-          borderRadius: 0,
+          // borderRadius: 0,
         }
       }
     }),
@@ -48,7 +48,7 @@ export const theme = createTheme({
       styles: {
         input: {
           cursor: "pointer",
-          borderRadius: 0
+          // borderRadius: 0
         },
         label: { cursor: "pointer" }
       }
@@ -64,7 +64,7 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          borderRadius: 0
+          // borderRadius: 0
         },
       },
     }),
@@ -74,7 +74,7 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          borderRadius: 0
+          // borderRadius: 0
         },
       },
     }),
@@ -84,7 +84,7 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          borderRadius: 0
+          // borderRadius: 0
         },
       },
     }),
@@ -95,7 +95,7 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          borderRadius: 0
+          // borderRadius: 0
         },
       },
     }),
@@ -105,13 +105,13 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          borderRadius: 0
+          // borderRadius: 0
         },
         dropdown: {
-          borderRadius: 0
+          // borderRadius: 0
         },
         option: {
-          borderRadius: 0
+          // borderRadius: 0
         }
       },
     }),
@@ -121,7 +121,7 @@ export const theme = createTheme({
         th: { fontWeight: 500 },
         td: {
           paddingBlock: 5
-        },
+        }
       }
     }),
     FileInput: {
@@ -130,7 +130,7 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          borderRadius: 0,
+          // borderRadius: 0,
         }
       }
     },
@@ -140,7 +140,7 @@ export const theme = createTheme({
       },
       styles: {
         input: {
-          borderRadius: 0,
+          // borderRadius: 0,
         }
       }
 

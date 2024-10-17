@@ -21,6 +21,7 @@
 }
 
 .link {
+  border-radius: var(--mantine-radius-default);
   width: rem(50px);
   height: rem(50px);
   display: flex;

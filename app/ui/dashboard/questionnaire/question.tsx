@@ -23,7 +23,7 @@ import { IconChevronDown, IconChevronRight, IconClipboard, IconCopy, IconQuestio
 import classes from "./questionnaire.module.css";
 import TextEditor from "./texteditor";
 
-export default function Question({ questionData, highlight, onClose }: { questionData: any; highlight: boolean; onClose?: () => void }) {
+export default function Question({ questionData, highlight, onClose, onSelect }: { questionData: any; highlight: boolean; onClose?: () => void; onSelect?: () => void }) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedQType, setSelectedQType] = useState<string | null>();
@@ -61,6 +61,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
         behavior: "smooth",
         block: "center"
       });
+
       questionRef.current.focus();
     }
   }, [highlight, questionData.id, updateQuestionData]);
@@ -108,6 +109,7 @@ export default function Question({ questionData, highlight, onClose }: { questio
           )}
           onFocus={() => {
             setFocused(true);
+            onSelect && onSelect();
           }}
           onBlur={() => {
             setFocused(false);

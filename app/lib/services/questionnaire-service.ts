@@ -103,3 +103,28 @@ export const deleteQuestionnaire = async (questionnaireId: string) => {
         throw error; // Re-throw the error for handling in the component
     }
 };
+
+export const generateQuestionnaire = async (text: string, flag: string) => {
+    try {
+        let response;
+        if (flag === "topic") {
+            response = await axios.post(`${apiUrl}/prompt`, { survey_topic: text });
+        } else if (flag === "text") {
+            response = await axios.post(`${apiUrl}/prompt/generate`, { survey_prompt: text });
+        }
+        return response;
+    } catch (error) {
+        console.error("Error generating questionnaire:", error);
+        throw error; // Re-throw the error for handling in the component
+    }
+};
+
+export const findQuestionsByFilter = async (content: string[]) => {
+    try {
+        const response = await axios.post(`${apiUrl}/prompt/filter`, { content });
+        return response;
+    } catch (error) {
+        console.error("Error filtering questionnaires:", error);
+        throw error; // Re-throw the error for handling in the component
+    }
+};

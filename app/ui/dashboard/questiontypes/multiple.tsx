@@ -147,14 +147,12 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
   return (
     <>
       <Divider
-        my="xs"
-        color="dark"
-        label={
-          <div className={classes.divider_label}>
-            Options
-          </div>
-        }
-        labelPosition="left"
+        my="sm"
+        size={1}
+        color="gray"
+        label="Add options"
+        variant="dashed"
+        labelPosition="center"
       />
       <DragDropContext
         onDragEnd={onDragEnd}

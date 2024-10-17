@@ -133,7 +133,11 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                 <Flex
                     justify={"space-between"}
                     align={"center"}
-                    style={{ backgroundColor: "var(--mantine-color-gray-7)" }}
+                    style={{
+                        backgroundColor: "var(--mantine-color-gray-7)",
+                        borderTopLeftRadius: 4,
+                        borderTopRightRadius: 4
+                    }}
                 >
                     <Group
                         justify="flex-start"

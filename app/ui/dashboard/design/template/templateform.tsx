@@ -75,8 +75,8 @@ const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onCh
                         }
                     />
                     <Space h="md" />
-                    <Accordion variant="separated" radius={0}>
-                        <Accordion.Item value="default">
+                    <Accordion variant="separated">
+                        <Accordion.Item value="default" className={classes.accordion_item}>
                             <Accordion.Control
                                 classNames={{
                                     control: classes.accordion_control,
@@ -145,7 +145,7 @@ const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onCh
                             </Accordion.Panel>
                         </Accordion.Item>
 
-                        <Accordion.Item value="error">
+                        <Accordion.Item value="error" className={classes.accordion_item}>
                             <Accordion.Control
                                 classNames={{
                                     control: classes.accordion_control,
@@ -180,7 +180,7 @@ const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onCh
                             </Accordion.Panel>
                         </Accordion.Item>
 
-                        <Accordion.Item value="banner">
+                        <Accordion.Item value="banner" className={classes.accordion_item}>
                             <Accordion.Control
                                 classNames={{
                                     control: classes.accordion_control,
@@ -189,6 +189,7 @@ const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onCh
                                 Top Banner
                             </Accordion.Control>
                             <Accordion.Panel>
+                                <Space h="sm" />
                                 <Switch
                                     size="xs"
                                     label="Banner Gradient"
@@ -199,7 +200,7 @@ const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onCh
                                         }
                                     }
                                 />
-                                <Space h="lg" />
+                                <Space h="xs" />
                                 <ColorInput
                                     label="Banner Background Color (Primary)"
                                     placeholder="Select"
@@ -236,7 +237,7 @@ const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onCh
                             </Accordion.Panel>
                         </Accordion.Item>
 
-                        <Accordion.Item value="logo">
+                        <Accordion.Item value="logo" className={classes.accordion_item}>
                             <Accordion.Control
                                 classNames={{
                                     control: classes.accordion_control,
@@ -315,7 +316,7 @@ const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onCh
                             </Accordion.Panel>
                         </Accordion.Item>
 
-                        <Accordion.Item value="progress">
+                        <Accordion.Item value="progress" className={classes.accordion_item}>
                             <Accordion.Control
                                 classNames={{
                                     control: classes.accordion_control,
@@ -451,7 +452,7 @@ const TemplateForm = ({ template, onChange }: { template?: DefaultTemplate, onCh
                             </Accordion.Panel>
                         </Accordion.Item>
 
-                        <Accordion.Item value="navigation">
+                        <Accordion.Item value="navigation" className={classes.accordion_item}>
                             <Accordion.Control
                                 classNames={{
                                     control: classes.accordion_control,
