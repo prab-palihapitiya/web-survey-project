@@ -17,7 +17,8 @@ import {
   Select,
   Space,
   TextInput,
-  Tooltip
+  Tooltip,
+  UnstyledButton
 } from "@mantine/core";
 import { IconChevronDown, IconChevronRight, IconClipboard, IconCopy, IconQuestionMark, IconTrash, IconX } from "@tabler/icons-react";
 import classes from "./questionnaire.module.css";
@@ -28,6 +29,7 @@ export default function Question({ questionData, highlight, onClose, onSelect }:
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedQType, setSelectedQType] = useState<string | null>();
   const [isFocused, setFocused] = useState<boolean>(false);
+  const [questionConfigCollapsed, setQuestionConfigCollapsed] = useState<boolean>(true);
 
   const questionRef = useRef<HTMLDivElement>(null);
   const questionTypeRef = useRef<HTMLInputElement>(null);
@@ -203,9 +205,8 @@ export default function Question({ questionData, highlight, onClose, onSelect }:
             </Group>
           </Flex>
           <Collapse in={!isCollapsed}>
-            <Space h="xs"></Space>
             <Grid p={'xs'}>
-              <GridCol span={3}>
+              <GridCol span={4}>
                 <Select
                   label="Question Type"
                   placeholder="Select"
@@ -242,12 +243,8 @@ export default function Question({ questionData, highlight, onClose, onSelect }:
                   }
                 />
               </GridCol>
-              <GridCol span={3}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}>
+              <GridCol span={3}>
+                <Space h="xl" />
                 <Checkbox
                   label="Respondent can skip the question"
                   checked={formControlValues.skippable}
@@ -257,7 +254,6 @@ export default function Question({ questionData, highlight, onClose, onSelect }:
                     });
                   }}
                   ref={skippableRef}
-                  style={{ marginBlockEnd: '-25px' }}
                 />
               </GridCol>
               <GridCol>
@@ -267,8 +263,19 @@ export default function Question({ questionData, highlight, onClose, onSelect }:
                   placeholderText="Your question intro here"
                 />
               </GridCol>
-              <GridCol>
-                {selectedQType && <QuestionComponent {...questionData} />}
+              <GridCol pt={0}>
+                <Flex justify={'end'}>
+                  <Button variant="transparent" onClick={() => setQuestionConfigCollapsed(!questionConfigCollapsed)} p={0}>
+                    Question Configuration{questionConfigCollapsed ? (
+                      <IconChevronRight size={14} />
+                    ) : (
+                      <IconChevronDown size={14} />
+                    )}
+                  </Button>
+                </Flex>
+                <Collapse in={selectedQType !== null && !questionConfigCollapsed}>
+                  {selectedQType && <QuestionComponent {...questionData} />}
+                </Collapse>
               </GridCol>
             </Grid>
           </Collapse>

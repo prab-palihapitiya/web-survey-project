@@ -31,7 +31,7 @@ import { fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/qu
 import { useRouter } from "next/navigation";
 import DateTime from "@/app/ui/common/datetime";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { IconChevronDown, IconChevronRight, IconCopyPlus, IconDots, IconDotsVertical, IconHomeDown, IconLayoutGrid, IconList, IconListCheck, IconPageBreak, IconPlus, IconQuestionMark, IconRowInsertBottom, IconRowInsertTop, IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconArrowBarDown, IconArrowBarUp, IconCopyPlus, IconDotsVertical, IconHomeDown, IconListCheck, IconPageBreak, IconQuestionMark, IconRowInsertBottom, IconRowInsertTop, IconTrash } from "@tabler/icons-react";
 import { useDisclosure } from '@mantine/hooks';
 import PublishButton from "../common/publish";
 import { Status } from "@/app/lib/types";
@@ -57,7 +57,9 @@ export default function Page({
   const [published, setPublished] = useState(false);
   const [publicUrl, setPublicUrl] = useState('');
   const [selectedQuestion, setSelectedQuestion] = useState<number>();
-  const [listView, setListView] = useState(false);
+  const [groupStartIndex, setGroupStartIndex] = useState<number>();
+  const [groupEndIndex, setGroupEndIndex] = useState<number>();
+  const [groups, setGroups] = useState<any[]>([]);
 
   const questionnaireId = useQuestionnaireStore((state) => state.id);
   const questionnaireName = useQuestionnaireStore((state) => state.name);
@@ -74,6 +76,17 @@ export default function Page({
   const paramId = searchParams?.id;
 
   const questionnaireNameRef = useRef<HTMLInputElement>(null);
+
+  const handleMoveQuestion = (index: number, direction: 'up' | 'down') => {
+    if (direction === 'up' && index === 0) return; // Prevent moving up the first question
+    if (direction === 'down' && index === questions.length - 1) return; // Prevent moving down the last question
+
+    const items = Array.from(questions);
+    const [movedItem] = items.splice(index, 1);
+    items.splice(index + (direction === 'up' ? -1 : 1), 0, movedItem);
+
+    setQuestionnaire({ name: questionnaireName, questions: items, logic: logic });
+  };
 
   const QuestionMenu = ({ index }: { index: number }) => {
     return (
@@ -103,14 +116,26 @@ export default function Page({
             Add Question After
           </Menu.Item>
           <Menu.Item
-            leftSection={<IconPageBreak style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Add Page Break After
-          </Menu.Item>
-          <Menu.Item
             leftSection={<IconListCheck style={{ width: rem(14), height: rem(14) }} />}
           >
             Add Question Block
+          </Menu.Item>
+          {/* <Menu.Item
+            leftSection={<IconPageBreak style={{ width: rem(14), height: rem(14) }} />}
+          >
+            Start Group By
+          </Menu.Item> */}
+          <Menu.Item
+            leftSection={<IconArrowBarUp style={{ width: rem(14), height: rem(14) }} />}
+            onClick={() => handleMoveQuestion(index, 'up')}
+          >
+            Move Up
+          </Menu.Item>
+          <Menu.Item
+            leftSection={<IconArrowBarDown style={{ width: rem(14), height: rem(14) }} />}
+            onClick={() => handleMoveQuestion(index, 'down')}
+          >
+            Move Down
           </Menu.Item>
 
           <Menu.Divider />
@@ -295,10 +320,16 @@ export default function Page({
                 </Group>
                 <Group justify="flex-end">
                   <Badge
-                    color="green"
-                    radius={0}
+                    color={published ? 'green' : 'red'}
                     variant={'dot'}
-                    style={{ fontSize: 'var(--mantine-font-size-xs)', padding: '0.8rem', border: 'none' }}
+                    style={{ border: 'none', paddingInlineEnd: '0.3rem' }}
+                    styles={{
+                      label: {
+                        color: 'var(--mantine-color-gray-6)',
+                        fontSize: 'var(--mantine-font-size-xs)',
+                        fontWeight: 600
+                      }
+                    }}
                   >
                     {getSavedStatus()}
                   </Badge>
@@ -311,62 +342,19 @@ export default function Page({
                   <Stack gap={'xs'}>
                     {questions.map((question: any, index: number) => (
                       <div key={index}>
-                        {/* <Flex justify="space-between" gap={'xs'}> */}
-                        {/* {(!listView) &&
-                            <ActionIcon
-                              title="Add Question Here"
-                              color="green"
-                              className={classes.plus_icon}
-                              variant="light"
-                              onClick={() => handleCreateQuestion(index)}>
-                              <IconPlus size={16} />
-                            </ActionIcon>
-                          }
-                          {(listView && index === 0) &&
-                            <ActionIcon
-                              title="Add Question Here"
-                              color="green"
-                              className={classes.plus_icon}
-                              variant="light"
-                              onClick={() => handleCreateQuestion(index)}>
-                              <IconPlus size={16} />
-                            </ActionIcon>
-                          } */}
-                        {/* {index === 0 && (
-                            <ActionIcon
-                              title="Toggle All"
-                              color="blue"
-                              variant="light"
-                              onClick={() => setListView(!listView)}>
-                              {listView ? <IconLayoutGrid size={16} /> : <IconList size={16} />}
-                            </ActionIcon>
-                          )} */}
-                        {/* </Flex> */}
-                        {/* {listView && ( */}
                         <Flex justify="space-between" gap={'xs'}>
                           <UnstyledButton
                             className={clsx(classes.question_list_item, selectedQuestion === question.id && classes.selected)}
-                            onClick={() => setSelectedQuestion(question.id as number)}>
+                            onClick={() => setSelectedQuestion(question.id as number)}
+                          >
                             <Center h={'100%'}>
                               <Text size="xs" fw={500}>{question.shortcut} : {question.questionType}</Text>
                             </Center>
                           </UnstyledButton>
                           <QuestionMenu index={index} />
                         </Flex>
-                        {/* )} */}
                       </div>
                     ))}
-                    {/* <Flex justify="center">
-                      <ActionIcon
-                        title="Add Question Here"
-                        color="green"
-                        className={classes.plus_icon}
-                        variant="light"
-                        onClick={() => handleCreateQuestion(questions.length)}
-                      >
-                        <IconPlus size={16} />
-                      </ActionIcon>
-                    </Flex> */}
                   </Stack>
                 </div>
               </div>

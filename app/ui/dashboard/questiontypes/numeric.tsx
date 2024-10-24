@@ -1,27 +1,31 @@
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { NumericConfig } from "@/app/lib/types";
-import { Fieldset, Group, NumberInput } from "@mantine/core";
+import { Fieldset, Grid, GridCol, Group, NumberInput } from "@mantine/core";
 
 export default function Numeric(questionData: { id: string; config?: NumericConfig }) {
   const updateQuestionData = useQuestionnaireStore((state) => state.updateQuestionData);
 
   return (
-    <Fieldset legend="Numeric Input Configuration" p={10}>
-      <Group>
+    <Grid>
+      <GridCol span={3}>
         <NumberInput
-          label="Min"
+          label="Min Value"
           value={questionData.config?.min}
           onChange={(value) =>
             updateQuestionData(questionData.id, { config: { ...questionData.config, min: value } })
           }
         />
+      </GridCol>
+      <GridCol span={3}>
         <NumberInput
-          label="Max"
+          label="Max Value"
           value={questionData.config?.max}
           onChange={(value) =>
             updateQuestionData(questionData.id, { config: { ...questionData.config, max: value } })
           }
         />
+      </GridCol>
+      <GridCol span={3}>
         <NumberInput
           label="Step"
           value={questionData.config?.step}
@@ -29,6 +33,8 @@ export default function Numeric(questionData: { id: string; config?: NumericConf
             updateQuestionData(questionData.id, { config: { ...questionData.config, step: value } })
           }
         />
+      </GridCol>
+      <GridCol span={3}>
         <NumberInput
           label="Decimal Places"
           value={questionData.config?.decimalPlaces}
@@ -36,7 +42,7 @@ export default function Numeric(questionData: { id: string; config?: NumericConf
             updateQuestionData(questionData.id, { config: { ...questionData.config, decimalPlaces: value } })
           }
         />
-      </Group>
-    </Fieldset>
+      </GridCol>
+    </Grid>
   );
 }

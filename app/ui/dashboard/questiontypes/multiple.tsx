@@ -7,6 +7,7 @@ import {
   FileInput,
   rem,
   Select,
+  Space,
   Table,
   TextInput
 } from "@mantine/core";
@@ -146,14 +147,7 @@ export default function Multiple(questionData: { id: string; options: any[] }) {
 
   return (
     <>
-      <Divider
-        my="sm"
-        size={1}
-        color="gray"
-        label="Add options"
-        variant="dashed"
-        labelPosition="center"
-      />
+      <Space h={'xs'} />
       <DragDropContext
         onDragEnd={onDragEnd}
       >

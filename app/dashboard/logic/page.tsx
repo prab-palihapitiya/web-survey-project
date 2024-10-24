@@ -11,6 +11,7 @@ import classes from "@/app/ui/dashboard/logic/logic.module.css";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
 import DateTime from "@/app/ui/common/datetime";
 import useDashboardStore from "@/app/lib/state/dashboard-store";
+import { Status } from "@/app/lib/types";
 
 export default function Page() {
     const setNavLinkIndex = useDashboardStore((state) => state.setNavLinkIndex);
@@ -24,6 +25,7 @@ export default function Page() {
     const [isSaving, setIsSaving] = useState(false);
     const [lastModified, setLastModified] = useState(new Date());
     const [nextLogicIndex, setNextLogicIndex] = useState(0);
+    const [published, setPublished] = useState(false);
 
     const questionnaireId = useQuestionnaireStore((state) => state.id);
     const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
@@ -62,6 +64,7 @@ export default function Page() {
                     setQuestionnaireId(response.data.id);
                     setQuestionnaire(response.data.obj);
                     setSelectedQuestionnaireId(response.data.id);
+                    setPublished(response.data.status === Status.PUBLISHED);
                 })
                 .finally(() => {
                     setIsLoading(false);
@@ -140,15 +143,17 @@ export default function Page() {
                         <Group justify="flex-end">
                             {paramId &&
                                 <Badge
-                                    size="md"
-                                    color="green"
-                                    radius={0}
+                                    color={published ? 'green' : 'red'}
                                     variant={'dot'}
-                                    style={{
-                                        fontSize: 'var(--mantine-font-size-xs)',
-                                        padding: '0.8rem',
-                                        border: '1px solid var(--mantine-color-green-6)'
-                                    }}>
+                                    style={{ border: 'none', paddingInlineEnd: '0.3rem' }}
+                                    styles={{
+                                        label: {
+                                            color: 'var(--mantine-color-gray-6)',
+                                            fontSize: 'var(--mantine-font-size-xs)',
+                                            fontWeight: 600
+                                        }
+                                    }}
+                                >
                                     {getSavedStatus()}
                                 </Badge>
                             }

@@ -15,7 +15,7 @@ export default function Page({
     const [opened, { open, close }] = useDisclosure(false);
 
     const iconStyle = { width: rem(12), height: rem(12) };
-    const tabStyle = { fontSize: 'var(--mantine-font-size-xs)', fontWeight: 500, defautProps: { color: 'dark' } };
+    const tabStyle = { fontSize: 'var(--mantine-font-size-xs)', fontWeight: 500, defaultProps: { color: 'dark' } };
 
     useEffectAfterMount(() => {
     }, [opened]);
