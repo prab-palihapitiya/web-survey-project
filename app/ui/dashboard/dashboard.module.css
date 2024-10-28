@@ -1,4 +1,197 @@
 .container {
-  margin-inline: 1rem;
+  margin-inline: 0;
   max-width: 100%;
+  margin-top: 3.3rem;
+  padding: 0;
+}
+
+.loading_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.top_bar {
+  position: fixed;
+  top: 0; /* Adjust based on how far down from the top you want the grid to appear */
+  left: 80px; /* Set to center it horizontally if needed */
+  right: 0; /* To ensure it spans the full width */
+  z-index: 299; /* Ensure it stays above other content */
+  background-color: white; /* Optional: Set a background to prevent overlap of content */
+  padding: 10px; /* Optional: Adjust padding or margins as needed */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
+}
+
+.bottom_bar {
+  position: fixed;
+  bottom: 0; /* Fixes the grid to the bottom of the viewport */
+  left: 80px;
+  width: 100%; /* Ensures the grid spans the full width */
+  z-index: 299; /* Adjust as needed to stay above other content */
+  background-color: white; /* Optional: Prevents content from showing through */
+  padding: 10px; /* Adjust padding as needed */
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow above the grid */
+}
+
+.new_questionnaire,
+.questionnaire,
+.import_questionnaire {
+  cursor: pointer;
+  transition: all 0.5s;
+  height: 6rem;
+  width: 13rem;
+}
+
+.new_questionnaire,
+.import_questionnaire {
+  height: 6.5rem;
+  width: 14rem;
+}
+
+.questionnaire {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-dark-1) 0%,
+    var(--mantine-color-dark-0) 100%
+  );
+}
+
+.new_questionnaire,
+.import_questionnaire {
+  color: white;
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
+}
+
+.new_questionnaire:hover,
+.import_questionnaire:hover {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-8) 0%,
+    var(--mantine-color-cyan-8) 100%
+  );
+}
+
+.hidden_buttons {
+  display: none;
+}
+
+.questionnaire:hover .hidden_buttons,
+.new_questionnaire:hover .hidden_buttons,
+.import_questionnaire:hover .hidden_buttons {
+  transition: all 0.5s;
+  display: inline-flex;
+}
+
+.questionnaire_text {
+  color: var(--mantine-color-dark-5);
+}
+
+.questionnaire:hover .questionnaire_text {
+  transition: all 0.5s;
+  display: none;
+}
+
+.link {
+  color: var(--mantine-color-blue-7);
+  text-decoration: none;
+}
+
+.table_row:hover {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-6) 0%,
+    var(--mantine-color-cyan-6) 100%
+  );
+}
+
+.menu_icon {
+  color: var(--mantine-color-blue-7);
+}
+
+.table_row:hover .table_cell,
+.table_row:hover .link,
+.table_row:hover .menu_icon {
+  color: white;
+}
+
+.thead {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
+  color: white;
+}
+
+.th {
+  padding: 0;
+}
+
+.control {
+  width: 100%;
+  padding: var(--mantine-spacing-xs);
+}
+
+.icon {
+  width: rem(21px);
+  height: rem(21px);
+}
+
+.segmented_control {
+  background-color: transparent;
+}
+
+.segmented_control_label {
+  color: var(--mantine-color-blue-filled);
+  font-size: var(--mantine-font-size-xs);
+}
+
+.modal_header {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-blue-filled) 0%,
+    var(--mantine-color-cyan-filled) 100%
+  );
+  color: white;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  min-height: max-content;
+}
+
+.modal_header h2 {
+  font-size: 14px;
+}
+
+.modal_inner {
+  left: calc(80px);
+  width: -moz-available;
+  width: -webkit-fill-available;
+  /* min-width: calc(100% - 80px); */
+  /* z-index: 301; */
+}
+
+.select_dropdown {
+  z-index: 310;
+}
+
+.select_group_label {
+  font-size: 12px;
+}
+
+.pagination_control {
+  color: var(--mantine-color-blue-filled);
+  border: none;
+}
+
+.pagination_control:focus,
+.pagination_control:active {
+  color: var(--mantine-color-blue-filled);
+  color: white;
 }

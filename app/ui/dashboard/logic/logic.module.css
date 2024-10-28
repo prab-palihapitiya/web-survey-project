@@ -1,0 +1,54 @@
+.container {
+  margin-inline: 0;
+  max-width: 100%;
+  margin-top: 30px;
+  padding-bottom: 70px;
+  padding-inline: 0.3rem;
+}
+.logic_container {
+  /* background-color: var(--mantine-color-gray-4); */
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+}
+.top_bar {
+  position: fixed;
+  top: 0; /* Adjust based on how far down from the top you want the grid to appear */
+  left: 80px; /* Set to center it horizontally if needed */
+  right: 0; /* To ensure it spans the full width */
+  z-index: 299; /* Ensure it stays above other content */
+  background-color: white; /* Optional: Set a background to prevent overlap of content */
+  padding: 10px; /* Optional: Adjust padding or margins as needed */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
+}
+.bottom_bar {
+  position: fixed;
+  bottom: 0; /* Fixes the grid to the bottom of the viewport */
+  left: 80px;
+  width: 100%; /* Ensures the grid spans the full width */
+  z-index: 299; /* Adjust as needed to stay above other content */
+  background-color: white; /* Optional: Prevents content from showing through */
+  padding: 10px; /* Adjust padding as needed */
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow above the grid */
+}
+.plus_icon {
+  width: 100%;
+  color: var(--mantine-color-green-6);
+}
+.plus_icon:hover {
+  cursor: pointer;
+  background-color: var(--mantine-color-green-6);
+  color: var(--mantine-color-white);
+  border-radius: 0;
+  transition: 0.3s;
+}
+.loading_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 95vh;
+}
+.right_arrow {
+  color: var(--mantine-color-blue-6);
+  margin-top: 25px;
+  margin-left: -5.5px;
+  z-index: 1;
+}

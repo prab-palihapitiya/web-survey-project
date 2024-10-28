@@ -1,29 +1,16 @@
 "use client";
 
 import classes from "@/app/ui/dashboard/navigate/sidepane.module.css";
-import { useState } from "react";
-
-import { Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
+import { Avatar, Center, Stack, Tooltip, UnstyledButton, rem, Text } from "@mantine/core";
 import {
-  IconBinaryTree,
-  IconDeviceDesktopAnalytics,
-  IconEye,
-  IconFilePencil,
-  IconGauge,
   IconLogout,
-  IconSettings,
   IconUser
 } from "@tabler/icons-react";
 import Link from "next/link";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-
-interface NavbarLinkProps {
-  icon: typeof IconUser;
-  label: string;
-  active?: boolean;
-  navigate?: string;
-  onClick?(): void;
-}
+import useDashboardStore from "@/app/lib/state/dashboard-store";
+import { NavigationLinks } from "@/app/lib/config/navigation-config";
+import { NavbarLinkProps } from "@/app/lib/types";
 
 function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLinkProps) {
   const questionnaireId = useQuestionnaireStore((state) => state.id);
@@ -35,9 +22,12 @@ function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLink
 
   return (
     <Tooltip
-      label={label}
+      color="blue"
+      label={<Text size="xs">{label}</Text>}
       position="right"
       transitionProps={{ duration: 0 }}
+      withArrow
+      style={{ boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.1)' }}
     >
       <Link href={`${navigate}`}>
         <UnstyledButton
@@ -55,31 +45,27 @@ function NavbarLink({ icon: Icon, label, active, navigate, onClick }: NavbarLink
   );
 }
 
-const mockdata = [
-  { icon: IconGauge, label: "Dashboard", href: "/dashboard" },
-  { icon: IconFilePencil, label: "Questionnaire", href: "/dashboard/questionnaire" },
-  { icon: IconBinaryTree, label: "Logic", href: "/dashboard/logic" },
-  { icon: IconEye, label: "Preview", href: "/dashboard/preview" },
-  { icon: IconDeviceDesktopAnalytics, label: "Analytics", href: "/dashboard/analytics" },
-  { icon: IconSettings, label: "Settings", href: "/dashboard/settings" }
-];
-
 export default function SidePane() {
-  const [active, setActive] = useState(0);
+  const setNavLinkIndex = useDashboardStore((state) => state.setNavLinkIndex);
+  const navLinkIndex = useDashboardStore((state) => state.navLinkIndex);
 
-  const links = mockdata.map((link, index) => (
+  const handleClick = (index: number) => {
+    setNavLinkIndex(index);
+  }
+
+  const links = NavigationLinks.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
-      active={index === active}
+      active={index === navLinkIndex}
       navigate={link.href}
-      onClick={() => setActive(index)}
+      onClick={() => handleClick(link.index)}
     />
   ));
 
   return (
     <nav className={classes.navbar}>
-      {/* <Center>{<MantineLogo type="mark" inverted size={30} />}</Center> */}
+      <Center><Link href={'/'}><Avatar src="/sr2.png" alt="surveyranch home" size={'lg'} /></Link></Center>
 
       <div className={classes.navbarMain}>
         <Stack

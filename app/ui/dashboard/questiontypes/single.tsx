@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import {
   ActionIcon,
   Divider,
   FileInput,
   rem,
   Select,
+  Space,
   Table,
   TextInput
 } from "@mantine/core";
@@ -82,6 +82,7 @@ export default function Single(questionData: { id: string; options: any[] }) {
           </Table.Td>
           <Table.Td>
             <FileInput
+              variant="unstyled"
               clearable
               placeholder="Upload"
               value={row.resource}
@@ -92,10 +93,16 @@ export default function Single(questionData: { id: string; options: any[] }) {
                   )
                 )
               }
+              styles={{
+                input: {
+                  textAlign: "center"
+                },
+              }}
             />
           </Table.Td>
           <Table.Td>
             <Select
+              variant="unstyled"
               data={["None", "Enabled"]}
               value={row.subQuestion}
               onChange={(value) =>
@@ -110,7 +117,7 @@ export default function Single(questionData: { id: string; options: any[] }) {
           <Table.Td>
             <ActionIcon
               color="red"
-              variant="subtle"
+              size='xs'
               onClick={() => handleDeleteRow(row.index)}
             >
               <IconX size={16} />
@@ -123,11 +130,7 @@ export default function Single(questionData: { id: string; options: any[] }) {
 
   return (
     <>
-      <Divider
-        my="xs"
-        label="Put your choices here"
-        labelPosition="left"
-      />
+      <Space h={'xs'} />
       <DragDropContext
         onDragEnd={onDragEnd}
       >
@@ -151,18 +154,23 @@ export default function Single(questionData: { id: string; options: any[] }) {
               <Table.Tbody {...provided.droppableProps} ref={provided.innerRef}>
                 {items}
                 {provided.placeholder}
+                <Table.Tr>
+                  <Table.Td
+                    colSpan={7}
+                    p={0}
+                  >
+                    <ActionIcon
+                      onClick={handleAddRow}
+                      variant="light"
+                      className={classes.plus_item}
+                    >
+                      <IconPlus size={16} />
+                    </ActionIcon>
+                  </Table.Td>
+                </Table.Tr>
               </Table.Tbody>
             )}
           </Droppable>
-          <Table.Tfoot className={classes.table_foot}>
-            <ActionIcon
-              onClick={handleAddRow}
-              m={4}
-              variant="subtle"
-            >
-              <IconPlus size={16} />
-            </ActionIcon>
-          </Table.Tfoot>
         </Table>
       </DragDropContext>
     </>
