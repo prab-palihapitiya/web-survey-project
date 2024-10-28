@@ -1,11 +1,6 @@
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { Rating, rem } from "@mantine/core";
 import {
-    IconMoodSad,
-    IconMoodEmpty,
-    IconMoodNeutral,
-    IconMoodSmile,
-    IconMoodHappy,
     IconMoodSadFilled,
     IconMoodEmptyFilled,
     IconMoodNeutralFilled,
@@ -14,9 +9,9 @@ import {
 } from '@tabler/icons-react';
 
 const getIconStyle = (color?: string) => ({
-    width: rem(36),
-    height: rem(36),
-    color: color ? `var(--mantine-color-${color}-7)` : undefined,
+    width: rem(40),
+    height: rem(40),
+    color: color ? `var(--mantine-color-${color}-7)` : 'var(--mantine-color-gray-4)',
 });
 
 const getEmptyIcon = (value: number) => {
@@ -24,15 +19,15 @@ const getEmptyIcon = (value: number) => {
 
     switch (value) {
         case 1:
-            return <IconMoodSad style={iconStyle} stroke={1} />;
+            return <IconMoodSadFilled style={iconStyle} />;
         case 2:
-            return <IconMoodEmpty style={iconStyle} stroke={1} />;
+            return <IconMoodEmptyFilled style={iconStyle} />;
         case 3:
-            return <IconMoodNeutral style={iconStyle} stroke={1} />;
+            return <IconMoodNeutralFilled style={iconStyle} />;
         case 4:
-            return <IconMoodSmile style={iconStyle} stroke={1} />;
+            return <IconMoodSmileFilled style={iconStyle} />;
         case 5:
-            return <IconMoodHappy style={iconStyle} stroke={1} />;
+            return <IconMoodHappyFilled style={iconStyle} />;
         default:
             return null;
     }
@@ -54,7 +49,6 @@ const getFullIcon = (value: number) => {
             return null;
     }
 };
-
 
 export default function MoodRatingControl({ currentQuestion }: { currentQuestion: any }) {
     const setAnswer = useQuestionnaireStore(state => state.setAnswer);

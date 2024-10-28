@@ -1,7 +1,7 @@
 'use client';
 
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
-import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader, Progress, MantineProvider } from "@mantine/core";
+import { Container, Text, Button, Group, Badge, Select, Space, Grid, GridCol, Flex, Loader, Progress, MantineProvider, rem } from "@mantine/core";
 import { useEffect, useState } from 'react';
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import { useRouter } from "next/navigation";
@@ -252,7 +252,7 @@ export default function Page({
     }
 
     return (
-        <Container className={classes.container}>
+        <Container mt={10}>
             <Grid className={classes.top_bar}>
                 <GridCol>
                     <Flex justify={"space-between"}>

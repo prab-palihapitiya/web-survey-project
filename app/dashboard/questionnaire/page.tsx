@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import Question from "@/app/ui/dashboard/questionnaire/question";
 import classes from "@/app/ui/dashboard/questionnaire/questionnaire.module.css";
-
 import {
   Button,
   Container,
@@ -20,7 +19,6 @@ import {
   Tooltip,
   Modal,
   Text,
-  Card,
   Stack,
   Center,
   UnstyledButton,
@@ -31,7 +29,7 @@ import { fetchQuestionnaire, saveQuestionnaireData } from "@/app/lib/services/qu
 import { useRouter } from "next/navigation";
 import DateTime from "@/app/ui/common/datetime";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { IconArrowBarDown, IconArrowBarUp, IconCopyPlus, IconDotsVertical, IconHomeDown, IconListCheck, IconPageBreak, IconQuestionMark, IconRowInsertBottom, IconRowInsertTop, IconTrash } from "@tabler/icons-react";
+import { IconArrowBarDown, IconArrowBarUp, IconCopyPlus, IconDotsVertical, IconHomeDown, IconListCheck, IconQuestionMark, IconRowInsertBottom, IconRowInsertTop, IconTrash } from "@tabler/icons-react";
 import { useDisclosure } from '@mantine/hooks';
 import PublishButton from "../common/publish";
 import { Status } from "@/app/lib/types";
@@ -53,13 +51,10 @@ export default function Page({
   const [isSaving, setIsSaving] = useState(false);
   const [firstLoaded, setFirstLoaded] = useState(true);
   const [nextQuestionId, setNextQuestionId] = useState(1);
-  const [newlyAddedQuestionId, setNewlyAddedQuestionId] = useState<number | null>(null);
   const [published, setPublished] = useState(false);
   const [publicUrl, setPublicUrl] = useState('');
   const [selectedQuestion, setSelectedQuestion] = useState<number>();
-  const [groupStartIndex, setGroupStartIndex] = useState<number>();
-  const [groupEndIndex, setGroupEndIndex] = useState<number>();
-  const [groups, setGroups] = useState<any[]>([]);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const questionnaireId = useQuestionnaireStore((state) => state.id);
   const questionnaireName = useQuestionnaireStore((state) => state.name);
@@ -69,8 +64,6 @@ export default function Page({
   const addQuestion = useQuestionnaireStore((state) => state.addQuestion);
   const setQuestionnaire = useQuestionnaireStore((state) => state.setQuestionnaire);
   const removeQuestion = useQuestionnaireStore((state) => state.removeQuestion);
-
-  const [opened, { open, close }] = useDisclosure(false);
 
   const router = useRouter();
   const paramId = searchParams?.id;
@@ -89,6 +82,7 @@ export default function Page({
   };
 
   const QuestionMenu = ({ index }: { index: number }) => {
+    const iconStyle = { width: rem(14), height: rem(14) };
     return (
       <Menu withArrow arrowPosition="side" position="right" arrowSize={10}
         styles={{
@@ -104,19 +98,19 @@ export default function Page({
 
         <Menu.Dropdown>
           <Menu.Item
-            leftSection={<IconRowInsertTop style={{ width: rem(14), height: rem(14) }} />}
+            leftSection={<IconRowInsertTop style={iconStyle} />}
             onClick={() => handleCreateQuestion(index)}
           >
             Add Question Before
           </Menu.Item>
           <Menu.Item
-            leftSection={<IconRowInsertBottom style={{ width: rem(14), height: rem(14) }} />}
+            leftSection={<IconRowInsertBottom style={iconStyle} />}
             onClick={() => handleCreateQuestion(index + 1)}
           >
             Add Question After
           </Menu.Item>
           <Menu.Item
-            leftSection={<IconListCheck style={{ width: rem(14), height: rem(14) }} />}
+            leftSection={<IconListCheck style={iconStyle} />}
           >
             Add Question Block
           </Menu.Item>
@@ -126,23 +120,21 @@ export default function Page({
             Start Group By
           </Menu.Item> */}
           <Menu.Item
-            leftSection={<IconArrowBarUp style={{ width: rem(14), height: rem(14) }} />}
+            leftSection={<IconArrowBarUp style={iconStyle} />}
             onClick={() => handleMoveQuestion(index, 'up')}
           >
             Move Up
           </Menu.Item>
           <Menu.Item
-            leftSection={<IconArrowBarDown style={{ width: rem(14), height: rem(14) }} />}
+            leftSection={<IconArrowBarDown style={iconStyle} />}
             onClick={() => handleMoveQuestion(index, 'down')}
           >
             Move Down
           </Menu.Item>
-
           <Menu.Divider />
-
           <Menu.Item
             color="red"
-            leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
+            leftSection={<IconTrash style={iconStyle} />}
             onClick={() => {
               removeQuestion(questions[index].id);
             }}>
@@ -159,16 +151,6 @@ export default function Page({
     );
     setNextQuestionId(highestId + 1);
   }, [questions]);
-
-  // useEffectAfterMount(() => {
-  //   if (!paramId) {
-  //     createEmptyQuestionnaire().then((newQuestionnaireId) => {
-  //       setQuestionnaireId(newQuestionnaireId);
-  //       setQuestionnaire({ name: questionnaireName, questions: [] });
-  //       router.push(`/dashboard/questionnaire?id=${newQuestionnaireId}`);
-  //     });
-  //   }
-  // }, []);
 
   useEffectAfterMount(() => {
     if (paramId) {
@@ -194,19 +176,14 @@ export default function Page({
     };
 
     addQuestion(newQuestion, questionIndex);
-    setNewlyAddedQuestionId(nextQuestionId);
     setNextQuestionId(nextQuestionId + 1);
     setSelectedQuestion(newQuestion.id as number);
-
-    setTimeout(() => {
-      setNewlyAddedQuestionId(null);
-    }, 5000);
   };
 
   const saveChanges = () => {
     if (published) {
-      open(); // Open the dialog if published
-      return; // Prevent further execution until confirmed
+      open();
+      return;
     }
     saveQuestionnaire();
   };
@@ -329,8 +306,7 @@ export default function Page({
                         fontSize: 'var(--mantine-font-size-xs)',
                         fontWeight: 600
                       }
-                    }}
-                  >
+                    }}>
                     {getSavedStatus()}
                   </Badge>
                 </Group>
