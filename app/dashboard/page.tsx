@@ -176,10 +176,15 @@ export default function Page() {
         key={id}
         position="top-left"
         size={'xs'}
-        label={<Badge size="xs" color={setColorStatus(status)}>{status}</Badge>}
+        label={
+          <Badge
+            size="xs"
+            color={setColorStatus(status)}
+            px={rem(0)}
+          >{status}</Badge>
+        }
         radius={0}
-        color={setColorStatus(status)}
-      >
+        color={setColorStatus(status)}>
         <Card shadow="sm" style={{
           position: 'relative'
         }} className={classes.questionnaire}>
@@ -211,7 +216,7 @@ export default function Page() {
         </Card>
       </Indicator>
     ));
-  }, [currentQuestionnaires]); // Use currentQuestionnaires here
+  }, [currentQuestionnaires]);
 
   // Sorting function
   const handleSort = (field: keyof Questionnaire) => {
@@ -302,8 +307,8 @@ export default function Page() {
                   style={{
                     textAlign: 'center'
                   }}>
-                  <Text size="xs" fw={500}>NEW QUESTIONNAIRE</Text>
-                  <Text className={classes.hidden_buttons} size="xs" fw={500}>Create a questionnaire from the scratch.</Text>
+                  <Text className={classes.hidden_text} size="xs" fw={500}>NEW QUESTIONNAIRE</Text>
+                  <Text className={classes.hidden_buttons} size="xs" fw={500}>Click to create a questionnaire from the scratch.</Text>
                 </Stack>
               </Center>
             </Card>
@@ -323,7 +328,7 @@ export default function Page() {
                     textAlign: 'center'
                   }}
                 >
-                  <Text size="xs" fw={500}>IMPORT QUESTIONNAIRE</Text>
+                  <Text className={classes.hidden_text} size="xs" fw={500}>IMPORT QUESTIONNAIRE</Text>
                   <Text className={classes.hidden_buttons} size="xs" fw={500}>Upload a PDF or DOCX to extract questions.</Text>
                 </Stack>
               </Center>
@@ -340,8 +345,8 @@ export default function Page() {
                     textAlign: 'center'
                   }}
                 >
-                  <Text size="xs" fw={500}>AI GENERATE</Text>
-                  <Text className={classes.hidden_buttons} size="xs" fw={500}>Create a questionnaire using AI.</Text>
+                  <Text className={classes.hidden_text} size="xs" fw={500}>AI GENERATE</Text>
+                  <Text className={classes.hidden_buttons} size="xs" fw={500}>Click to create a questionnaire using AI.</Text>
                 </Stack>
               </Center>
             </Card>
@@ -411,7 +416,8 @@ export default function Page() {
                   verticalSpacing="xs"
                   style={{
                     boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-                    borderRadius: rem(4),
+                    borderRadius: '0.25rem',
+                    overflow: 'hidden',
                     width: '99.6%',
                     leftMargin: 'auto',
                   }}>

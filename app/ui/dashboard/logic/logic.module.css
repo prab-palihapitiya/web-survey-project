@@ -37,7 +37,6 @@
   cursor: pointer;
   background-color: var(--mantine-color-green-6);
   color: var(--mantine-color-white);
-  border-radius: 0;
   transition: 0.3s;
 }
 .loading_wrapper {
@@ -48,7 +47,16 @@
 }
 .right_arrow {
   color: var(--mantine-color-blue-6);
-  margin-top: 25px;
+  /* margin-top: 25px; */
   margin-left: -5.5px;
   z-index: 1;
+}
+
+.connector {
+  color: var(--mantine-color-blue-6);
+  /* margin-top: 25px; */
+  margin-left: -4px;
+  margin-right: -4px;
+  z-index: 1;
+  rotate: 45deg;
 }
