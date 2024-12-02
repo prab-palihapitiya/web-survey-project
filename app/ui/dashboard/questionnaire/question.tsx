@@ -17,17 +17,16 @@ import {
   Select,
   Space,
   TextInput,
-  Tooltip,
-  UnstyledButton
+  Tooltip
 } from "@mantine/core";
-import { IconChevronDown, IconChevronRight, IconClipboard, IconCopy, IconQuestionMark, IconTrash, IconX } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronRight, IconClipboard, IconCopy, IconQuestionMark, IconTrash } from "@tabler/icons-react";
 import classes from "./questionnaire.module.css";
 import TextEditor from "./texteditor";
 
 export default function Question({ questionData, highlight, onClose, onSelect }: { questionData: any; highlight: boolean; onClose?: () => void; onSelect?: () => void }) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selectedQType, setSelectedQType] = useState<string | null>();
+  const [selectedQType, setSelectedQType] = useState<string | null>('Text Page');
   const [isFocused, setFocused] = useState<boolean>(false);
   const [questionConfigCollapsed, setQuestionConfigCollapsed] = useState<boolean>(true);
 
@@ -46,7 +45,7 @@ export default function Question({ questionData, highlight, onClose, onSelect }:
   }), [questionData]);
 
   useEffect(() => {
-    setSelectedQType(formControlValues.questionType);
+    setSelectedQType(formControlValues.questionType || '');
   }, [formControlValues.questionType]);
 
   useEffect(() => {
@@ -263,7 +262,7 @@ export default function Question({ questionData, highlight, onClose, onSelect }:
                   placeholderText="Your question intro here"
                 />
               </GridCol>
-              <GridCol pt={0}>
+              {selectedQType && selectedQType !== 'Text Page' && <GridCol pt={0}>
                 <Flex justify={'end'}>
                   <Button variant="transparent" onClick={() => setQuestionConfigCollapsed(!questionConfigCollapsed)} p={0}>
                     Question Configuration{questionConfigCollapsed ? (
@@ -273,10 +272,10 @@ export default function Question({ questionData, highlight, onClose, onSelect }:
                     )}
                   </Button>
                 </Flex>
-                <Collapse in={selectedQType !== null && !questionConfigCollapsed}>
-                  {selectedQType && <QuestionComponent {...questionData} />}
+                <Collapse in={!questionConfigCollapsed}>
+                  <QuestionComponent {...questionData} />
                 </Collapse>
-              </GridCol>
+              </GridCol>}
             </Grid>
           </Collapse>
         </Paper>

@@ -10,6 +10,7 @@ export const LogicOperators = [
 
 export const LogicConditions = [
     { value: "Has", label: "Has" },
+    { value: "Has not", label: "Has Not" },
     { value: "Equals", label: "Equals" },
     { value: "Not equals", label: "Not Equals" },
     { value: "Contains", label: "Contains" },

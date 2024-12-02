@@ -27,7 +27,9 @@ export const AIGenerateModal = ({ show, onClose }: { show: boolean, onClose: () 
                 <Space h={'md'} />
                 <Stack gap="xs">
                     <Center>
-                        <IconCircleCheck size={rem(72)} color="green" />
+                        <IconCircleCheck size={72} style={{
+                            color: 'var(--mantine-color-green-6)',
+                        }} />
                     </Center>
                     <Text align="center" size="xs" fw={500}>AI Generated Successfully</Text>
                     <Group justify="center">

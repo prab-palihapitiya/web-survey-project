@@ -1,6 +1,6 @@
 'use client';
 
-import { Text, Button, Container, Grid, GridCol, Group, Loader, MantineProvider, Progress, Space, Flex, Avatar, Center, SemiCircleProgress, RingProgress, DefaultMantineColor } from "@mantine/core";
+import { Text, Button, Container, Grid, GridCol, Group, Loader, MantineProvider, Space, Flex, Avatar, Center } from "@mantine/core";
 import { Inter } from "next/font/google";
 import { getErrorStyle, getProgressProps, getStyle } from "@/app/surveys/utils/theme";
 import { useEffect, useState } from "react";
@@ -17,10 +17,8 @@ import ErrorService from "@/app/lib/utils/error";
 import LogicService from "@/app/lib/utils/logic";
 import Link from "next/link";
 import { ProgressProps, TemplateObject } from "@/app/lib/config/template-config";
-import { ProgressType } from "../../utils/types";
-import BuiltTemplates from "@/app/dashboard/settings/design/predefinedtemplates";
+import BuiltTemplates from "@/app/lib/predefinedtemplates";
 import ProgressBar from "@/app/ui/common/progressbar";
-import { get } from "http";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,6 +47,8 @@ const Page = ({ params }: { params: { surveyid: string } }) => {
     }, []);
 
     useEffectAfterMount(() => {
+        console.log(answers);
+
         setErrorMessages([]); // Clear error message
     }, [answers]);
 

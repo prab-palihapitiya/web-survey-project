@@ -21,13 +21,15 @@ import StarRatingControl from "@/app/ui/surveys/controltypes/starrating";
 import MoodRatingControl from "@/app/ui/surveys/controltypes/moodrating";
 import NetPromoterScoreControl from "@/app/ui/surveys/controltypes/netpromoter";
 import RankingControl from "@/app/ui/surveys/controltypes/ranking";
+import IntroPageControl from "@/app/ui/surveys/controltypes/intropage";
 
 export const QuestionControls = [
     {
         group: 'Text', items: [
+            { value: "Text Page", disabled: false },
             { value: "Text Input", disabled: false },
-            { value: "Text Area", disabled: false },
-            { value: "Text Page", disabled: true }]
+            { value: "Text Area", disabled: false }
+        ]
     },
     {
         group: 'Numeric', items: [
@@ -65,6 +67,10 @@ export const QuestionControls = [
 ];
 
 export const QuestionTypeMappings: Record<string, { Component: React.ComponentType, Control: React.ComponentType }> = {
+    "Text Page": {
+        Component: null,
+        Control: IntroPageControl,
+    },
     "Text Input": {
         Component: Text,
         Control: TextInputControl
@@ -127,4 +133,4 @@ export const MultipleChoiceQuestionTypes = ["Multiple Choice List", "Multiple Ch
 
 export const NumericQuestionTypes = ["Numeric Input", "Numeric Slider", "Star Rating", "Mood Rating", "Net Promoter Score"];
 
-export const TextQuestionTypes = ["Text Input", "Text Area"];
+export const TextQuestionTypes = ["Text Page", "Text Input", "Text Area"];
