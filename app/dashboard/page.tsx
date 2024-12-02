@@ -1,22 +1,22 @@
 'use client';
 
-import { ActionIcon, Badge, Button, Card, Center, Container, Flex, Grid, GridCol, Group, Loader, rem, SegmentedControl, Table, TableScrollContainer, TextInput, Text, Space, Indicator, Stack, Pagination, UnstyledButton, Menu, FileButton, Modal, Collapse, Textarea, Select, Divider, LoadingOverlay } from "@mantine/core";
+import { ActionIcon, Badge, Button, Card, Center, Container, Flex, Grid, GridCol, Group, Loader, rem, SegmentedControl, Table, TableScrollContainer, TextInput, Text, Indicator, Stack, Pagination, UnstyledButton } from "@mantine/core";
 import Link from "next/link";
-import { useCallback, useMemo, useRef, useState } from "react";
-import { createEmptyQuestionnaire, deleteQuestionnaire, fetchQuestionnairesByUser, findQuestionsByFilter, generateQuestionnaire } from "@/app/lib/services/questionnaire-service";
+import { useCallback, useMemo, useState } from "react";
+import { createEmptyQuestionnaire, deleteQuestionnaire, fetchQuestionnairesByUser, findQuestionsByFilter } from "@/app/lib/services/questionnaire-service";
 import DateTime from "@/app/ui/common/datetime";
 import classes from "@/app/ui/dashboard/dashboard.module.css";
 import useEffectAfterMount from "@/app/lib/hooks/useEffectAfterMount";
-import { Question, Questionnaire, Status } from "@/app/lib/types";
-import { IconChevronDown, IconChevronLeft, IconChevronRight, IconCopyPlus, IconDots, IconExternalLink, IconEye, IconLayoutGrid, IconList, IconPencil, IconSearch, IconSelector, IconSettings, IconShare3, IconTrash, IconUser, IconUsersGroup, IconX } from "@tabler/icons-react";
+import { Questionnaire, Status } from "@/app/lib/types";
+import { IconChevronDown, IconExternalLink, IconLayoutGrid, IconList, IconSearch, IconSelector, IconX } from "@tabler/icons-react";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { useRouter } from "next/navigation";
 import useDashboardStore from "@/app/lib/state/dashboard-store";
 import mammoth from "mammoth";
-import { Dropzone, DropzoneProps } from '@mantine/dropzone';
-import { useDisclosure } from "@mantine/hooks";
+import { Dropzone } from '@mantine/dropzone';
 import QuestionnaireService from "@/app/lib/utils/questionnaire";
-import { PromptTopics } from "@/app/lib/config/prompt-config";
+import { ContextMenu } from "@/app/ui/dashboard/questionnaire/components/contextmenu";
+import { AIGenerateModal } from "@/app/ui/dashboard/questionnaire/components/aigeneratemodal";
 
 export default function Page() {
   const setNavLinkIndex = useDashboardStore((state) => state.setNavLinkIndex);
@@ -25,15 +25,13 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
   const [filteredQuestionnaires, setFilteredQuestionnaires] = useState<Questionnaire[]>([]);
-  const [search, setSearch] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('list');
   const [activePage, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10); // Adjust as needed
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [sortBy, setSortBy] = useState<keyof Questionnaire | null>('modifiedAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [showGenModal, setShowGenModal] = useState(false);
-  const [showRevModal, setShowRevModal] = useState(false);
-  const [genQuestionnaire, setGenQuestionnaire] = useState<any[]>([]);
   const [importing, setImporting] = useState(false);
 
   const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
@@ -70,117 +68,6 @@ export default function Page() {
     });
   };
 
-  const AIGenerateModel = () => {
-    const [opened, { toggle }] = useDisclosure(false);
-    const [generating, setGenerating] = useState(false);
-
-    const topicInputRef = useRef<HTMLInputElement>(null);
-    const promptInputRef = useRef<HTMLTextAreaElement>(null);
-
-    const handleGenerate = (prompt: string) => {
-      setGenerating(true);
-      generateQuestionnaire(prompt, 'topic').then((response) => {
-        const generatedData = JSON.parse(response?.data);
-        const questionnaire = QuestionnaireService.ConvertToQuestionnaire(generatedData);
-        setQuestionnaire(questionnaire);
-        setGenQuestionnaire(questionnaire);
-      }).catch((error: Error) => {
-        console.error("Error generating questionnaire:", error);
-      }).finally(() => {
-        router.push(`/dashboard/questionnaire`);
-        setGenerating(false);
-        setShowGenModal(false);
-      });
-    }
-
-    const handlePromptGenerate = (prompt: string) => {
-      setGenerating(true);
-      generateQuestionnaire(prompt, 'text').then((response) => {
-        const generatedData = JSON.parse(response?.data);
-        const questionnaire = QuestionnaireService.ConvertToQuestionnaire(generatedData);
-        setQuestionnaire(questionnaire);
-        setGenQuestionnaire(questionnaire);
-      }).catch((error: Error) => {
-        console.error("Error generating questionnaire:", error);
-      }).finally(() => {
-        router.push(`/dashboard/questionnaire`);
-        setGenerating(false);
-        setShowGenModal(false);
-      });
-    }
-
-    return (
-      <Modal opened={showGenModal}
-        onClose={() => setShowGenModal(false)}
-        title="Generate with AI"
-        centered
-        closeOnClickOutside={false}
-        size={'xl'}
-        transitionProps={{ transition: 'fade', duration: 200 }}
-        classNames={{
-          header: classes.modal_header
-        }}
-      >
-        <Grid>
-          {!opened && (
-            <>
-              <GridCol>
-                <Space h={'sm'} />
-                <TextInput placeholder="e.g., Climate change" label="Topic" ref={topicInputRef} data-autofocus />
-              </GridCol>
-              <GridCol pb={0}>
-                <Divider variant="dashed" label="OR" labelPosition="center" />
-              </GridCol>
-              <GridCol>
-                <Select
-                  data={PromptTopics}
-                  placeholder="Select a topic"
-                  label="Topic"
-                  ref={topicInputRef}
-                  classNames={{
-                    dropdown: classes.select_dropdown,
-                    groupLabel: classes.select_group_label,
-                  }}
-                  clearable
-                />
-              </GridCol>
-              <GridCol>
-                <Group justify="space-between">
-                  <Button loading={generating} loaderProps={{ type: 'dots' }} onClick={() => handleGenerate(topicInputRef.current?.value || '')} variant={'gradient'}>Generate</Button>
-                  <Button color="dark" onClick={toggle} pr={6}>
-                    Advanced Options <IconChevronRight size={14} />
-                  </Button>
-                </Group>
-              </GridCol>
-            </>)}
-          <Collapse in={opened}>
-            <GridCol>
-              <Space h={'sm'} />
-              <Textarea
-                label="Advanced Prompt"
-                description={
-                  <Text size="xs">
-                    {"Provide specific instructions for AI. For example:"} <Text c={'blue'}>{"Write 10 survey questions about usage of web survey tools, including multiple-choice, single-choice, open-ended, numerical, ranking and grid question types."}</Text>
-                  </Text>
-                }
-                placeholder="Enter your detailed instructions here"
-                rows={5}
-                ref={promptInputRef}
-                data-autofocus
-              />
-            </GridCol>
-            <GridCol>
-              <Group justify="space-between">
-                <Button color="dark" onClick={toggle} pl={6}><IconChevronLeft size={14} />Back</Button>
-                <Button loading={generating} loaderProps={{ type: 'dots' }} onClick={() => handlePromptGenerate(promptInputRef.current?.value || '')} variant={'gradient'}>Generate</Button>
-              </Group>
-            </GridCol>
-          </Collapse>
-        </Grid>
-      </Modal>
-    )
-  }
-
   const handleDelete = useCallback((questionnaireId: string) => {
     //TODO: Delete confirmation
     deleteQuestionnaire(questionnaireId)
@@ -211,14 +98,14 @@ export default function Page() {
   }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = event.target.value.toLowerCase();
-    setSearch(searchTerm);
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
 
     const filtered = questionnaires.filter((questionnaire) =>
-      questionnaire.name.toLowerCase().includes(searchTerm)
+      questionnaire.name.toLowerCase().includes(term)
     );
     setFilteredQuestionnaires(filtered);
-    setPage(1); // Reset to the first page when searching
+    setPage(1);
   };
 
   const handleViewModeChange = (value: string) => {
@@ -230,71 +117,9 @@ export default function Page() {
     setViewMode(value);
   };
 
-  const QuestionnaireMenu = ({ id }: { id: string }) => {
-    return (
-      <Menu withArrow arrowPosition="side">
-        <Menu.Target>
-          <UnstyledButton>
-            <IconDots size={16} className={classes.menu_icon} />
-          </UnstyledButton>
-        </Menu.Target>
-
-        <Menu.Dropdown>
-          <Menu.Item
-            leftSection={<IconPencil style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Open
-          </Menu.Item>
-
-          <Menu.Item
-            leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Preview
-          </Menu.Item>
-
-          <Menu.Item
-            leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Open test link
-          </Menu.Item>
-          <Menu.Item
-            leftSection={<IconShare3 style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Share link
-          </Menu.Item>
-          <Menu.Item
-            leftSection={<IconCopyPlus style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Duplicate
-          </Menu.Item>
-          <Menu.Item
-            leftSection={<IconUser style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Assign
-          </Menu.Item>
-          <Menu.Item
-            leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Settings
-          </Menu.Item>
-
-          <Menu.Divider />
-
-          <Menu.Item
-            color="red"
-            leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
-          >
-            Delete
-          </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
-    )
-  }
-
   // Memoized sorted questionnaires
   const sortedQuestionnaires = useMemo(() => {
     const sorted = [...filteredQuestionnaires];
-
     if (sortBy) {
       sorted.sort((a, b) => {
         const aValue = a[sortBy];
@@ -312,7 +137,6 @@ export default function Page() {
           }
       });
     }
-
     return sorted;
   }, [filteredQuestionnaires, sortBy, sortOrder]);
 
@@ -339,7 +163,7 @@ export default function Page() {
         <Table.Td className={classes.table_cell}>You</Table.Td>
         <Table.Td className={classes.table_cell}>{status === Status.NEW ? '-' : 0}</Table.Td>
         <Table.Td align="center">
-          <QuestionnaireMenu id={id} />
+          <ContextMenu id={id} />
           {/* <Button size="xs" color="red" variant="subtle" onClick={() => handleDelete(id)}><IconTrash size={16} /></Button> */}
         </Table.Td>
       </Table.Tr>
@@ -352,10 +176,15 @@ export default function Page() {
         key={id}
         position="top-left"
         size={'xs'}
-        label={<Badge size="xs" color={setColorStatus(status)}>{status}</Badge>}
+        label={
+          <Badge
+            size="xs"
+            color={setColorStatus(status)}
+            px={rem(0)}
+          >{status}</Badge>
+        }
         radius={0}
-        color={setColorStatus(status)}
-      >
+        color={setColorStatus(status)}>
         <Card shadow="sm" style={{
           position: 'relative'
         }} className={classes.questionnaire}>
@@ -387,7 +216,7 @@ export default function Page() {
         </Card>
       </Indicator>
     ));
-  }, [currentQuestionnaires]); // Use currentQuestionnaires here
+  }, [currentQuestionnaires]);
 
   // Sorting function
   const handleSort = (field: keyof Questionnaire) => {
@@ -425,7 +254,6 @@ export default function Page() {
               const generatedData = JSON.parse(response?.data);
               const questionnaire = QuestionnaireService.ConvertToQuestionnaire(generatedData);
               setQuestionnaire(questionnaire);
-              setGenQuestionnaire(questionnaire);
             }).catch((error: Error) => {
               console.error("Error finding questions by filter:", error);
             }).finally(() => {
@@ -457,13 +285,13 @@ export default function Page() {
 
   return (
     <Container className={classes.container}>
-      <AIGenerateModel />
+      {showGenModal && <AIGenerateModal show={showGenModal} onClose={() => setShowGenModal(false)} />}
       <div className={classes.top_bar}>
         <Button
           variant="gradient"
-          onClick={() => setShowRevModal(true)}
+          onClick={() => { }}
         >
-          Review
+          Test
         </Button>
       </div>
       <Grid>
@@ -479,8 +307,8 @@ export default function Page() {
                   style={{
                     textAlign: 'center'
                   }}>
-                  <Text size="xs" fw={500}>NEW QUESTIONNAIRE</Text>
-                  <Text className={classes.hidden_buttons} size="xs" fw={500}>Create a questionnaire from the scratch.</Text>
+                  <Text className={classes.hidden_text} size="xs" fw={500}>NEW QUESTIONNAIRE</Text>
+                  <Text className={classes.hidden_buttons} size="xs" fw={500}>Click to create a questionnaire from the scratch.</Text>
                 </Stack>
               </Center>
             </Card>
@@ -500,7 +328,7 @@ export default function Page() {
                     textAlign: 'center'
                   }}
                 >
-                  <Text size="xs" fw={500}>IMPORT QUESTIONNAIRE</Text>
+                  <Text className={classes.hidden_text} size="xs" fw={500}>IMPORT QUESTIONNAIRE</Text>
                   <Text className={classes.hidden_buttons} size="xs" fw={500}>Upload a PDF or DOCX to extract questions.</Text>
                 </Stack>
               </Center>
@@ -517,8 +345,8 @@ export default function Page() {
                     textAlign: 'center'
                   }}
                 >
-                  <Text size="xs" fw={500}>AI GENERATE</Text>
-                  <Text className={classes.hidden_buttons} size="xs" fw={500}>Create a questionnaire using AI.</Text>
+                  <Text className={classes.hidden_text} size="xs" fw={500}>AI GENERATE</Text>
+                  <Text className={classes.hidden_buttons} size="xs" fw={500}>Click to create a questionnaire using AI.</Text>
                 </Stack>
               </Center>
             </Card>
@@ -537,7 +365,7 @@ export default function Page() {
                     variant="unstyled"
                     placeholder="Search Questionnaire"
                     leftSection={<IconSearch style={{ width: rem(16), height: rem(16), color: 'var(--mantine-color-blue-filled)' }} />}
-                    value={search}
+                    value={searchTerm}
                     onChange={handleSearchChange}
                     miw={rem(250)}
                   />
@@ -588,7 +416,8 @@ export default function Page() {
                   verticalSpacing="xs"
                   style={{
                     boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-                    borderRadius: rem(4),
+                    borderRadius: '0.25rem',
+                    overflow: 'hidden',
                     width: '99.6%',
                     leftMargin: 'auto',
                   }}>

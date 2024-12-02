@@ -65,10 +65,15 @@ export default function SidePane() {
 
   return (
     <nav className={classes.navbar}>
-      <Center><Link href={'/'}><Avatar src="/sr2.png" alt="surveyranch home" size={'lg'} /></Link></Center>
+      <Center>
+        <Link href={'/'}>
+          <Avatar src="/sr2.png" alt="surveyranch home" size={rem(51)} bg={'var(--mantine-color-gray-8)'} radius={'sm'} />
+        </Link>
+      </Center>
 
       <div className={classes.navbarMain}>
         <Stack
+          align="center"
           justify="center"
           gap={0}
         >

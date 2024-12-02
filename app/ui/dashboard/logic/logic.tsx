@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Button, Fieldset, Flex, Group, MultiSelect, NumberInput, Paper, Select, TextInput } from "@mantine/core";
-import { IconArrowRightCircle, IconCopyPlus, IconTrash } from "@tabler/icons-react";
+import { IconArrowRightCircle, IconCopyPlus, IconLine, IconTrash } from "@tabler/icons-react";
 import useQuestionnaireStore from "@/app/lib/state/questionnaire-store";
 import { LogicConditions, LogicActions, LogicOptions } from "@/app/lib/config/logic-config";
 import { MultipleChoiceQuestionTypes, NumericQuestionTypes, QuestionTypesWithOptions, SingleChoiceQuestionTypes, TextQuestionTypes } from "@/app/lib/config/question-config";
@@ -35,8 +35,6 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
     const removeLogic = useQuestionnaireStore((state) => state.removeLogic);
 
     const exclusiveOptions = LogicOptions.map((option) => option.value);
-
-
 
     useEffectAfterMount(() => {
         if (logicData.ifQuestionId) {
@@ -166,7 +164,7 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                     <Select
                         data={questions.map((question) => ({ value: question.id.toString(), label: question.shortcut }))}
                         placeholder="Select a question"
-                        label="(IF) Question"
+                        // label="(IF) Question"
                         value={selectedQuestionId}
                         ref={selectedQuestionIdRef}
                         onChange={(value) => { handleIfQuestionChange(value) }}
@@ -178,7 +176,7 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                             <Select
                                 data={LogicConditions}
                                 placeholder="Select a condition"
-                                label="(IF) Condition"
+                                // label="(IF) Condition"
                                 value={selectedCondition}
                                 ref={selectedConditionRef}
                                 onChange={(value) => {
@@ -198,42 +196,40 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                                 <>
                                     <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />
                                     {selectedCondition === 'In between' ? (
-                                        <Fieldset legend={`Value (${selectedCondition})`} p={5}>
-                                            <Group gap={'xs'} mt={5}>
-                                                <NumberInput
-                                                    value={selectedFromValue}
-                                                    placeholder="From"
-                                                    style={{ width: 80 }}
-                                                    onChange={(value) => {
-                                                        setSelectedFromValue(value);
-                                                        handleAnswerChange([value as unknown as string, selectedToValue as unknown as string]);
-                                                    }}
-                                                />
-                                                <NumberInput
-                                                    value={selectedToValue}
-                                                    placeholder="To"
-                                                    style={{ width: 80 }}
-                                                    onChange={(value) => {
-                                                        setSelectedToValue(value)
-                                                        handleAnswerChange([selectedFromValue as unknown as string, value as unknown as string]);
-                                                    }}
-                                                />
-                                            </Group>
-                                        </Fieldset>
+                                        <Group gap={0}>
+                                            <NumberInput
+                                                value={selectedFromValue}
+                                                placeholder="From"
+                                                style={{ width: 80 }}
+                                                onChange={(value) => {
+                                                    setSelectedFromValue(value);
+                                                    handleAnswerChange([value as unknown as string, selectedToValue as unknown as string]);
+                                                }}
+                                            />
+                                            <IconLine className={classes.connector} stroke={1.5} />
+                                            <NumberInput
+                                                value={selectedToValue}
+                                                placeholder="To"
+                                                style={{ width: 80 }}
+                                                onChange={(value) => {
+                                                    setSelectedToValue(value)
+                                                    handleAnswerChange([selectedFromValue as unknown as string, value as unknown as string]);
+                                                }}
+                                            />
+                                        </Group>
                                     ) : (
                                         QuestionTypesWithOptions.includes(selectedQuestion.questionType) ? (
                                             <MultiSelect
                                                 data={recreateAnswerList(selectedQuestion)}
-                                                placeholder="Select"
-                                                label={`Answer (${selectedCondition})`}
+                                                placeholder="Select answer(s)"
                                                 value={selectedAnswer as string[]}
                                                 ref={selectedAnswerRef}
                                                 onChange={(value) => handleAnswerChange(value)} />
                                         ) : (
                                             NumericQuestionTypes.includes(selectedQuestion.questionType) ? (
                                                 <NumberInput
-                                                    placeholder="Type here"
-                                                    label={`Answer (${selectedCondition})`}
+                                                    placeholder="Type answer"
+                                                    // label={`Answer (${selectedCondition})`}
                                                     value={selectedAnswer as number}
                                                     ref={selectedAnswerRef}
                                                     onChange={() => {
@@ -243,8 +239,8 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                                                 />
                                             ) : (
                                                 <TextInput
-                                                    placeholder="Type here"
-                                                    label={`Answer (${selectedCondition})`}
+                                                    placeholder="Type answer"
+                                                    // label={`Answer (${selectedCondition})`}
                                                     value={selectedAnswer as string}
                                                     ref={selectedAnswerRef}
                                                     onChange={() => {
@@ -259,8 +255,8 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                                             <IconArrowRightCircle className={classes.right_arrow} stroke={1.5} />
                                             <Select
                                                 data={LogicActions}
-                                                placeholder="Select"
-                                                label="Action (Do)"
+                                                placeholder="Select action"
+                                                // label="Action (Do)"
                                                 value={selectedAction}
                                                 ref={selectedActionRef}
                                                 onChange={(value) => {
@@ -290,7 +286,7 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                                                             })
                                                         }
                                                         placeholder="Select a question"
-                                                        label={`(${selectedAction}) Target`}
+                                                        // label={`(${selectedAction}) Target`}
                                                         value={selectedTargetQuestionId}
                                                         ref={selectedTargetQuestionIdRef}
                                                         onChange={(value) => { handleTargetQuestionChange(value) }}
@@ -302,7 +298,7 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                                                             {NumericQuestionTypes.includes(selectedTargetQuestion?.questionType) && (
                                                                 <NumberInput
                                                                     placeholder="Type value to set"
-                                                                    label={`'${selectedTargetQuestion.shortcut}' Value`}
+                                                                    // label={`'${selectedTargetQuestion.shortcut}' Value`}
                                                                     value={selectedSetValue as number}
                                                                     ref={selectedSetValueRef}
                                                                     onChange={() => {
@@ -316,7 +312,7 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                                                             {TextQuestionTypes.includes(selectedTargetQuestion?.questionType) && (
                                                                 <TextInput
                                                                     placeholder="Type value to set"
-                                                                    label={`Set '${selectedTargetQuestion.shortcut}' Value`}
+                                                                    // label={`Set '${selectedTargetQuestion.shortcut}' Value`}
                                                                     value={selectedSetValue as string}
                                                                     ref={selectedSetValueRef}
                                                                     onChange={() => {
@@ -329,8 +325,8 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                                                             {MultipleChoiceQuestionTypes.includes(selectedTargetQuestion?.questionType) && (
                                                                 <MultiSelect
                                                                     data={selectedTargetQuestion.options?.map((option: Option) => ({ value: option.index.toString(), label: option.index + ' - ' + option.name }))}
-                                                                    placeholder="Select"
-                                                                    label={`Set '${selectedTargetQuestion.shortcut}' Values`}
+                                                                    placeholder="Select option(s)"
+                                                                    // label={`Set '${selectedTargetQuestion.shortcut}' Values`}
                                                                     value={selectedSetValue as string[]}
                                                                     ref={selectedSetValueMultiSelectRef}
                                                                     onChange={(value) => {
@@ -341,8 +337,8 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                                                             {SingleChoiceQuestionTypes.includes(selectedTargetQuestion?.questionType) && (
                                                                 <Select
                                                                     data={selectedTargetQuestion.options?.map((option: Option) => ({ value: option.index.toString(), label: option.index + ' - ' + option.name }))}
-                                                                    placeholder="Select"
-                                                                    label={`Set '${selectedTargetQuestion.shortcut}' Value`}
+                                                                    placeholder="Select option"
+                                                                    // label={`Set '${selectedTargetQuestion.shortcut}' Value`}
                                                                     value={selectedSetValue as string}
                                                                     ref={selectedSetValueSingleSelectRef}
                                                                     onChange={(value) => {
@@ -361,6 +357,6 @@ export default function Logic({ logicData, onClose }: { logicData: any, onClose?
                         </>
                     )}
                 </Group>
-            </Paper>)
+            </Paper >)
     )
 }

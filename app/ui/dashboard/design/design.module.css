@@ -36,7 +36,6 @@
 .new_template,
 .template {
   cursor: pointer;
-  transition: all 0.5s;
   height: 6rem;
   width: 13rem;
 }

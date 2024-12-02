@@ -2,6 +2,12 @@ import Text from "@/app/ui/dashboard/questiontypes/text";
 import Numeric from "@/app/ui/dashboard/questiontypes/numeric";
 import Single from "@/app/ui/dashboard/questiontypes/single";
 import Multiple from "@/app/ui/dashboard/questiontypes/multiple";
+import NumericSlider from "@/app/ui/dashboard/questiontypes/numericslider";
+import StarRating from "@/app/ui/dashboard/questiontypes/starrating";
+import OptionSlider from "@/app/ui/dashboard/questiontypes/optionslider";
+import MoodRating from "@/app/ui/dashboard/questiontypes/moodrating";
+import NetPromoterScore from "@/app/ui/dashboard/questiontypes/netpromoter";
+import Ranking from "@/app/ui/dashboard/questiontypes/ranking";
 
 import SingleListControl from "@/app/ui/surveys/controltypes/singlelist";
 import TextInputControl from "@/app/ui/surveys/controltypes/textinput";
@@ -9,23 +15,21 @@ import NumericInputControl from "@/app/ui/surveys/controltypes/numericinput";
 import MultipleListControl from "@/app/ui/surveys/controltypes/multiplelist";
 import SingleButtons from "@/app/ui/surveys/controltypes/singlebuttons";
 import SingleMenu from "@/app/ui/surveys/controltypes/singlemenu";
-import NumericSlider from "@/app/ui/dashboard/questiontypes/numericslider";
 import NumericSliderControl from "@/app/ui/surveys/controltypes/numericslider";
-import OptionSlider from "@/app/ui/dashboard/questiontypes/optionslider";
 import OptionSliderControl from "@/app/ui/surveys/controltypes/optionslider";
-import StarRating from "@/app/ui/dashboard/questiontypes/starrating";
 import StarRatingControl from "@/app/ui/surveys/controltypes/starrating";
-import MoodRating from "@/app/ui/dashboard/questiontypes/moodrating";
 import MoodRatingControl from "@/app/ui/surveys/controltypes/moodrating";
-import NetPromoterScore from "@/app/ui/dashboard/questiontypes/netpromoter";
 import NetPromoterScoreControl from "@/app/ui/surveys/controltypes/netpromoter";
+import RankingControl from "@/app/ui/surveys/controltypes/ranking";
+import IntroPageControl from "@/app/ui/surveys/controltypes/intropage";
 
 export const QuestionControls = [
     {
         group: 'Text', items: [
+            { value: "Text Page", disabled: false },
             { value: "Text Input", disabled: false },
-            { value: "Text Area", disabled: false },
-            { value: "Text Page", disabled: true }]
+            { value: "Text Area", disabled: false }
+        ]
     },
     {
         group: 'Numeric', items: [
@@ -46,12 +50,27 @@ export const QuestionControls = [
     },
     {
         group: 'Multiple Choice', items: [
-            { value: "Multiple Choice List", disabled: false }
+            { value: "Multiple Choice List", disabled: false },
+            { value: "Multiple Choice Buttons", disabled: true },
+            { value: "Multi Select Slider", disabled: true },
+            { value: "Ranking", disabled: false }
+        ]
+    },
+    {
+        group: 'Miscellaneous', items: [
+            { value: "Date Time Input", disabled: true },
+            { value: "File Upload", disabled: true },
+            { value: "Location Input", disabled: true },
+            { value: "Autocomplete", disabled: true },
         ]
     }
 ];
 
 export const QuestionTypeMappings: Record<string, { Component: React.ComponentType, Control: React.ComponentType }> = {
+    "Text Page": {
+        Component: null,
+        Control: IntroPageControl,
+    },
     "Text Input": {
         Component: Text,
         Control: TextInputControl
@@ -99,6 +118,10 @@ export const QuestionTypeMappings: Record<string, { Component: React.ComponentTy
     "Net Promoter Score": {
         Component: NetPromoterScore,
         Control: NetPromoterScoreControl
+    },
+    "Ranking": {
+        Component: Ranking,
+        Control: RankingControl
     }
 };
 
@@ -106,8 +129,8 @@ export const QuestionTypesWithOptions = ["Single Choice List", "Multiple Choice 
 
 export const SingleChoiceQuestionTypes = ["Single Choice List", "Single Choice Buttons", "Dropdown Menu", "Options Silder"];
 
-export const MultipleChoiceQuestionTypes = ["Multiple Choice List"];
+export const MultipleChoiceQuestionTypes = ["Multiple Choice List", "Multiple Choice Buttons", "Multi Select Slider", "Ranking"];
 
 export const NumericQuestionTypes = ["Numeric Input", "Numeric Slider", "Star Rating", "Mood Rating", "Net Promoter Score"];
 
-export const TextQuestionTypes = ["Text Input", "Text Area"];
+export const TextQuestionTypes = ["Text Page", "Text Input", "Text Area"];

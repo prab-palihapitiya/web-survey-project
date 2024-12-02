@@ -24,7 +24,7 @@ export default function NetPromoterScoreControl({ currentQuestion }: { currentQu
 
     return (
         <div>
-            <Flex justify="space-between" style={{ width: '29.5rem' }} mb={rem(18)}> {/* Use Flex for alignment */}
+            <Flex justify="space-between" style={{ width: '29.5rem' }} mb={rem(16)}>
                 <Text size="sm">{currentQuestion.config?.leftLabel || '0 - Not at all likely'}</Text>
                 <Text size="sm">{currentQuestion.config?.rightLabel || 'Extremely likely - 10'}</Text>
             </Flex>
@@ -34,10 +34,10 @@ export default function NetPromoterScoreControl({ currentQuestion }: { currentQu
                         return (
                             <ActionIcon
                                 key={value}
-                                variant={value === answerEntry?.answer ? "filled" : "outline"}
                                 size={'lg'}
                                 onClick={() => setAnswer(currentQuestion.id.toString(), value, [])}
-                                color={getColor(value)}
+                                color={value === answerEntry?.answer ? getColor(value) : 'var(--mantine-color-gray-4)'}
+                                style={{ fontWeight: 500 }}
                             >
                                 {value - 1}
                             </ActionIcon>

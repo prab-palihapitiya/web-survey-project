@@ -104,11 +104,11 @@ export const deleteQuestionnaire = async (questionnaireId: string) => {
     }
 };
 
-export const generateQuestionnaire = async (text: string, flag: string) => {
+export const generateQuestionnaire = async (text: string, flag: string, steps?: string) => {
     try {
         let response;
         if (flag === "topic") {
-            response = await axios.post(`${apiUrl}/prompt`, { survey_topic: text });
+            response = await axios.post(`${apiUrl}/prompt`, { survey_topic: text, survey_steps: steps });
         } else if (flag === "text") {
             response = await axios.post(`${apiUrl}/prompt/generate`, { survey_prompt: text });
         }

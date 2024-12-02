@@ -71,8 +71,8 @@
 .import_questionnaire:hover {
   background: linear-gradient(
     45deg,
-    var(--mantine-color-blue-8) 0%,
-    var(--mantine-color-cyan-8) 100%
+    var(--mantine-color-gray-7) 0%,
+    var(--mantine-color-gray-7) 100%
   );
 }
 
@@ -80,11 +80,19 @@
   display: none;
 }
 
+.hidden_text {
+  display: block;
+}
 .questionnaire:hover .hidden_buttons,
 .new_questionnaire:hover .hidden_buttons,
 .import_questionnaire:hover .hidden_buttons {
   transition: all 0.5s;
   display: inline-flex;
+}
+
+.new_questionnaire:hover .hidden_text,
+.import_questionnaire:hover .hidden_text {
+  display: none;
 }
 
 .questionnaire_text {
@@ -102,11 +110,7 @@
 }
 
 .table_row:hover {
-  background: linear-gradient(
-    45deg,
-    var(--mantine-color-blue-6) 0%,
-    var(--mantine-color-cyan-6) 100%
-  );
+  background-color: var(--mantine-color-gray-7);
 }
 
 .menu_icon {
@@ -173,8 +177,6 @@
   left: calc(80px);
   width: -moz-available;
   width: -webkit-fill-available;
-  /* min-width: calc(100% - 80px); */
-  /* z-index: 301; */
 }
 
 .select_dropdown {

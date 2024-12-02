@@ -26,6 +26,7 @@ export default function Page() {
     const [lastModified, setLastModified] = useState(new Date());
     const [nextLogicIndex, setNextLogicIndex] = useState(0);
     const [published, setPublished] = useState(false);
+    const [newlyCreated, setNewlyCreated] = useState(false);
 
     const questionnaireId = useQuestionnaireStore((state) => state.id);
     const setQuestionnaireId = useQuestionnaireStore((state) => state.setId);
@@ -65,6 +66,7 @@ export default function Page() {
                     setQuestionnaire(response.data.obj);
                     setSelectedQuestionnaireId(response.data.id);
                     setPublished(response.data.status === Status.PUBLISHED);
+                    setNewlyCreated(response.data.status === Status.NEW);
                 })
                 .finally(() => {
                     setIsLoading(false);
@@ -114,11 +116,9 @@ export default function Page() {
         if (firstLoaded) {
             return <DateTime datetime={lastModified} prefix="Saved" />;
         }
-
         if (isSaving) {
             return 'Saving...';
         }
-
         return <DateTime datetime={lastModified} prefix="Saved" />;
     }
 
@@ -143,12 +143,11 @@ export default function Page() {
                         <Group justify="flex-end">
                             {paramId &&
                                 <Badge
-                                    color={published ? 'green' : 'red'}
-                                    variant={'dot'}
+                                    size="lg"
+                                    color={published ? 'green' : (newlyCreated ? 'gray' : 'red')}
                                     style={{ border: 'none', paddingInlineEnd: '0.3rem' }}
                                     styles={{
                                         label: {
-                                            color: 'var(--mantine-color-gray-6)',
                                             fontSize: 'var(--mantine-font-size-xs)',
                                             fontWeight: 600
                                         }
@@ -162,8 +161,6 @@ export default function Page() {
                 </GridCol>
             </Grid>
             <Space h="md" />
-            <Space h="xs" />
-
             {isLoading ? (
                 <div className={classes.loading_wrapper}>
                     <Loader size={30} />
@@ -173,6 +170,27 @@ export default function Page() {
                     <GridCol>
                         {questions.length > 0 && (
                             <>
+                                {/* <Group>
+                                    <Text size="xs" pl={0}>Filter by</Text>
+                                    <Select
+                                        placeholder="Start Question"
+                                        data={["Q1", "Q2"]}
+                                    />
+                                    <Select
+                                        placeholder="Condition"
+                                        data={["Has", "Equals"]}
+                                    />
+                                    <Select
+                                        placeholder="Action"
+                                        data={["Set Value", "Show", "Hide"]}
+                                    />
+                                    <Select
+                                        placeholder="Target Question"
+                                        data={["Q1", "Q2"]}
+                                    />
+                                </Group> */}
+
+                                <Space h="xs" />
                                 {logic.map((l, index) => (
                                     <div key={index}>
                                         <Logic
@@ -186,8 +204,9 @@ export default function Page() {
                                 <Flex justify="center">
                                     <ActionIcon
                                         title="Add Logic"
+                                        color="green"
+                                        variant="light"
                                         className={classes.plus_icon}
-                                        variant="transparent"
                                         onClick={handleCreateLogic}
                                     >
                                         <IconPlus size={16} />
